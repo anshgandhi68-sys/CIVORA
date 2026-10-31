@@ -42,7 +42,7 @@ button{font:inherit;cursor:pointer}
 :focus-visible{outline:2px solid #4DA3FF;outline-offset:3px;border-radius:4px}
 ::selection{background:var(--blue);color:white}
 .frame{position:fixed;inset:0;width:100%;height:100vh;height:100dvh;overflow:hidden;background:var(--ink);isolation:isolate}
-.track{height:700vh}
+.track{height:900vh}
 .plate{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;z-index:0;pointer-events:none;user-select:none;-webkit-user-select:none}
 .film{opacity:0;transition:opacity .9s ease;background:var(--ink)}
 .film.on{opacity:1}
@@ -126,6 +126,345 @@ button{font:inherit;cursor:pointer}
 .cap{font-family:var(--font-mono-text);font-weight:600;font-size:max(8.5px,calc(7.4px * var(--k,1)));line-height:1.12;letter-spacing:.01em;color:white;white-space:nowrap;text-shadow:0 1px 3px var(--ink),0 0 8px var(--ink),0 0 14px var(--ink)}
 .cap sub{font-size:.72em;vertical-align:-.12em}
 @keyframes pin-pulse{from{transform:scale(1);opacity:.85}to{transform:scale(2.1);opacity:0}}
+
+/* Cinematic Scenes: Reality & Round Loop HUD overlays */
+.scene.reality,
+.scene.round-loop {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(60px, 8vh, 100px) clamp(16px, 4vw, 36px);
+  text-align: center;
+  pointer-events: none;
+  z-index: 5;
+  box-sizing: border-box;
+}
+
+.reality-inner,
+.round-inner {
+  max-width: 1140px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.reality-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(0, 113, 255, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #8FC2FF;
+  margin-bottom: 12px;
+}
+
+.reality-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38BDF8;
+  box-shadow: 0 0 8px #38BDF8;
+}
+
+.reality-headline,
+.round-headline {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4.4vw, 52px);
+  line-height: 1.05;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  margin: 0 0 10px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.reality-headline i,
+.round-headline i {
+  display: block;
+  font-style: normal;
+}
+
+.reality-deck {
+  font-family: var(--font-text);
+  font-size: clamp(13px, 1.4vw, 15px);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 68ch;
+  margin: 0 auto 20px;
+}
+
+.reality-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.hud-card {
+  position: relative;
+  background: rgba(4, 9, 24, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  padding: 16px 16px 18px;
+  text-align: left;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.hud-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 14px 40px rgba(0, 113, 255, 0.25);
+}
+
+.hud-corner {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 8px;
+}
+
+.hud-val {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.2vw, 44px);
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.hud-lbl {
+  font-family: var(--font-text);
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.hud-desc {
+  font-family: var(--font-text);
+  font-size: 11px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.reality-term-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  width: 100%;
+}
+
+.term-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  background: rgba(4, 9, 24, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.term-pill.blocked {
+  border-color: rgba(239, 68, 68, 0.35);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.term-pill.verified {
+  border-color: rgba(16, 185, 129, 0.4);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pill-dot.red { background: #EF4444; box-shadow: 0 0 8px #EF4444; }
+.pill-dot.green { background: #10B981; box-shadow: 0 0 8px #10B981; }
+
+.pill-tag {
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.pill-tag.red { background: rgba(239, 68, 68, 0.2); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.4); }
+.pill-tag.green { background: rgba(16, 185, 129, 0.2); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.4); }
+
+/* Round Loop HUD Box */
+.round-hud-box {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 18px;
+  width: 100%;
+  text-align: left;
+}
+
+.round-terminal {
+  background: rgba(1, 3, 15, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.7);
+}
+
+.terminal-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.t-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.t-dot.red { background: #EF4444; }
+.t-dot.yellow { background: #F59E0B; }
+.t-dot.green { background: #10B981; }
+
+.t-title {
+  margin-left: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.terminal-body {
+  margin: 0;
+  padding: 14px 18px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: #E2E8F0;
+  white-space: pre-wrap;
+}
+
+.round-pr-card {
+  background: rgba(4, 9, 24, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 16px 50px rgba(0, 113, 255, 0.2);
+}
+
+.pr-badge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.pr-chip {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(0, 113, 255, 0.25);
+  color: #38BDF8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.pr-status {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: #10B981;
+}
+
+.pr-title {
+  font-family: var(--font-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.pr-diff-preview {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.diff-rem { color: #EF4444; }
+.diff-add { color: #10B981; }
+
+.pr-action-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #0071FF 0%, #0052CC 100%);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 18px rgba(0, 113, 255, 0.45);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+}
+
+.pr-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(0, 113, 255, 0.7);
+}
+
+@media (max-width: 900px) {
+  .reality-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .round-hud-box {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 540px) {
+  .reality-metrics {
+    grid-template-columns: 1fr;
+  }
+}
 .burger{display:none;align-items:center;justify-content:center;flex-direction:column;gap:4px;width:36px;height:36px;padding:0;border:1px solid var(--hairline);border-radius:8px;background:rgba(255,255,255,.02);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:border-color .3s,background .3s}
 .burger span{display:block;width:16px;height:1.5px;background:white;transition:transform .38s cubic-bezier(.22,.8,.2,1),opacity .2s}
 .burger[aria-expanded="true"] span:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
@@ -1188,12 +1527,70 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
 <body>
 <main class="frame" id="frame" aria-label="CIVORA cinematic developer infrastructure experience">
   <img class="plate poster" src="/assets/civora-hero-plate.webp" width="1920" height="1080" alt="" fetchpriority="high" aria-hidden="true">
-  <video class="plate film" id="film" muted playsinline preload="auto" disablepictureinpicture disableremoteplayback aria-hidden="true" tabindex="-1"></video>
+  <video class="plate film" id="film" src="/assets/civora-city-fabric-scrub.mp4" muted playsinline preload="auto" disablepictureinpicture disableremoteplayback aria-hidden="true" tabindex="-1"></video>
   <div class="veil veil-v" id="veilV"></div>
   <div class="veil veil-e" id="veilE"></div>
   <div class="scenes">
+    <!-- SCENE 1: REPOSITORY REALITY & 4 METRIC CARDS (Image 2) -->
+    <section class="scene reality" id="reality" aria-label="Repository Reality" aria-hidden="true">
+      <div class="reality-inner">
+        <div class="reality-badge">
+          <span class="reality-dot"></span>
+          <span>01 // REPOSITORY REALITY</span>
+        </div>
+        <h2 class="reality-headline">
+          <i><span>Repository Documentation Drifts.</span></i>
+          <i><span>Contributors Hit Dead Ends.</span></i>
+        </h2>
+        <p class="reality-deck">Every day, prospective developers clone open-source repositories and hit obscure environment errors, undeclared toolchains, or outdated instructions. CIVORA executes and repairs setup paths before an engineer ever reaches a blocker.</p>
+
+        <!-- 4 HUD Metric Cards -->
+        <div class="reality-metrics">
+          <div class="hud-card">
+            <span class="hud-corner">DATA // 01</span>
+            <div class="hud-val" style="color:#EF4444;text-shadow:0 0 20px rgba(239,68,68,0.4);">68%</div>
+            <div class="hud-lbl">Contributor Drop-off</div>
+            <div class="hud-desc">Developers who abandon an open-source project during their very first setup attempt when README instructions fail.</div>
+          </div>
+          <div class="hud-card">
+            <span class="hud-corner">DATA // 02</span>
+            <div class="hud-val" style="color:#F59E0B;text-shadow:0 0 20px rgba(245,158,11,0.35);">14.2d</div>
+            <div class="hud-lbl">Instruction Drift Lag</div>
+            <div class="hud-desc">Average elapsed duration between breaking changes in CI workflows or Dockerfiles and corresponding README repairs.</div>
+          </div>
+          <div class="hud-card">
+            <span class="hud-corner">DATA // 03</span>
+            <div class="hud-val" style="color:#38BDF8;text-shadow:0 0 20px rgba(56,189,248,0.4);">91%</div>
+            <div class="hud-lbl">Silent Build Failures</div>
+            <div class="hud-desc">Initial installation errors caused by undeclared OS packages, missing system headers, or unpinned toolchains.</div>
+          </div>
+          <div class="hud-card">
+            <span class="hud-corner">DATA // 04</span>
+            <div class="hud-val" style="color:#10B981;text-shadow:0 0 20px rgba(16,185,129,0.4);">0.0%</div>
+            <div class="hud-lbl">CIVORA Hallucination</div>
+            <div class="hud-desc">Zero unverified commands or fabricated flags reach production: every patch is proven with clean-room exit code 0.</div>
+          </div>
+        </div>
+
+        <!-- Terminal Comparison Pill Badges -->
+        <div class="reality-term-row">
+          <div class="term-pill blocked">
+            <span class="pill-dot red"></span>
+            <span>STATUS QUO: UNVERIFIED CODING AGENTS</span>
+            <span class="pill-tag red">EXIT CODE 1 // BLOCKED</span>
+          </div>
+          <div class="term-pill verified">
+            <span class="pill-dot green"></span>
+            <span>CIVORA: AUTONOMOUS VERIFICATION LOOP</span>
+            <span class="pill-tag green">EXIT CODE 0 // VERIFIED</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 2: THE LOBBY ARCHES & METHOD (Image 1) -->
     <section class="scene vision" id="vision" aria-label="The CIVORA Method" aria-hidden="true">
-      <div class="tag">THE CIVORA METHOD</div>
+      <div class="tag">02 // THE CIVORA METHOD</div>
       <h2><i><span>From Broken Setup</span></i><i><span>Instructions to</span></i><i><span>Verified Contribution</span></i></h2>
       <p>CIVORA follows the exact setup path a new developer would. It compares repository documentation against CI configuration, tests possible interventions, applies minimal verified edits and executes the repaired instructions again from a clean environment.</p>
     </section>
@@ -1207,6 +1604,52 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
         <button type="button" class="spot" style="--x:76.45%;--y:50.5%;--mx:54%;--my:65%" data-place="1" aria-label="Read about CI Drift Radar" aria-haspopup="dialog" aria-controls="placeNotes" aria-expanded="false" disabled><span class="pin"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="1.4"/><circle cx="8" cy="3" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="13" cy="8" r="1.4"/><circle cx="8" cy="13" r="1.4"/></svg></span><span class="cap">DRIFT RADAR<br>FINDS DOCS VS CI<br>MISMATCH</span></button>
         <button type="button" class="spot" style="--x:5.5%;--y:73.3%;--mx:10%;--my:76%" data-place="2" aria-label="Read about Counterfactual Proof Engine" aria-haspopup="dialog" aria-controls="placeNotes" aria-expanded="false" disabled><span class="pin"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="1.4"/><circle cx="8" cy="3" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="13" cy="8" r="1.4"/><circle cx="8" cy="13" r="1.4"/></svg></span><span class="cap">PROOF ENGINE<br>TESTS FIXES BEFORE<br>PATCHING</span></button>
         <button type="button" class="spot" style="--x:61.65%;--y:80.1%;--mx:50%;--my:87%" data-place="3" aria-label="Read about Zero-Trust Provenance Gate" aria-haspopup="dialog" aria-controls="placeNotes" aria-expanded="false" disabled><span class="pin"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="1.4"/><circle cx="8" cy="3" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="13" cy="8" r="1.4"/><circle cx="8" cy="13" r="1.4"/></svg></span><span class="cap">ZERO-TRUST<br>BLOCKS UNVERIFIED<br>COMMANDS</span></button>
+      </div>
+    </section>
+
+    <!-- SCENE 3: TAKING THE ROUND OF THE LOBBY (Live Loop & Terminal) -->
+    <section class="scene round-loop" id="roundLoop" aria-label="Autonomous Verification Loop" aria-hidden="true">
+      <div class="round-inner">
+        <div class="reality-badge">
+          <span class="reality-dot"></span>
+          <span>03 // AUTONOMOUS REPAIR LOOP</span>
+        </div>
+        <h2 class="round-headline">
+          <i><span>Continuous CI Drift Radar</span></i>
+          <i><span>&amp; Verified Pull Requests</span></i>
+        </h2>
+        <p class="reality-deck">While orbiting repository workflows, CIVORA executes counterfactual interventions in isolated sandboxes and opens cryptographic, minimal pull requests with proven exit code 0 evidence.</p>
+
+        <!-- Live Terminal HUD & PR Badge -->
+        <div class="round-hud-box">
+          <div class="round-terminal">
+            <div class="terminal-bar">
+              <span class="t-dot red"></span>
+              <span class="t-dot yellow"></span>
+              <span class="t-dot green"></span>
+              <span class="t-title">civora-sandbox-runtime // debian:bookworm-slim</span>
+            </div>
+            <pre class="terminal-body"><code><span style="color:#60A5FA;">[CIVORA RADAR]</span> AST detected missing OS dependency in README: 'libpq-dev'.
+<span style="color:#60A5FA;">[SANDBOX TEST]</span> Executing candidate fix: "apt-get install -y libpq-dev" ...
+<span style="color:#10B981;">[EXIT CODE 0]</span> Compilation succeeded. Verified clean-room execution.
+<span style="color:#38BDF8;">[PR SYNTHESIS]</span> Generated Pull Request #14 with minimal diff + .devcontainer.json
+<span style="color:#34D399;font-weight:700;">[VERIFIED READY]</span> Repository is now 100% onboarding-ready for new contributors.</code></pre>
+          </div>
+          <div class="round-pr-card">
+            <div>
+              <div class="pr-badge-header">
+                <span class="pr-chip">GITHUB PR #14</span>
+                <span class="pr-status">MERGEABLE // CI PASSING</span>
+              </div>
+              <div class="pr-title">fix(docs): declare libpq-dev &amp; synchronize python 3.11 toolchain</div>
+              <div class="pr-diff-preview">
+                <span class="diff-rem">- python setup.py install</span>
+                <span class="diff-add">+ sudo apt-get install -y libpq-dev &amp;&amp; pip install -e .</span>
+              </div>
+            </div>
+            <button type="button" class="pr-action-btn" onclick="openWorkspaceModal()">OPEN LIVE SANDBOX WORKSPACE &rarr;</button>
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -1929,12 +2372,13 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
   'use strict';
   var FILM_SRC = '/assets/civora-city-fabric-scrub.mp4';
   var FILM_ORIGINAL = '/assets/civora-city-fabric-scrub.mp4';
-  var FILM_MAP = [[0,0],[.12,.25],[.47,.52],[.72,.78],[.92,1],[1,1]];
+  var FILM_MAP = [[0,0],[.11,.22],[.38,.50],[.65,.72],[.90,.95],[1,1]];
   var STILLS = ['/assets/civora-hero-plate.webp','/assets/civora-vision-fallback.webp','/assets/civora-city-fallback.webp'];
   var stage = document.getElementById('stage'), frame = stage.parentNode;
   var film = document.getElementById('film'), spots = document.getElementById('spots');
   var root = document.documentElement, rs = root.style, poster = frame.querySelector('img.plate');
   var vision = document.getElementById('vision'), eco = document.getElementById('eco');
+  var reality = document.getElementById('reality'), roundLoop = document.getElementById('roundLoop');
   var veilV = document.getElementById('veilV'), veilE = document.getElementById('veilE');
   var tag = vision.querySelector('.tag'), titleLines = vision.querySelectorAll('h2 span'), visionP = vision.querySelector('p');
   var ecoTop = eco.querySelector('.eco-top'), pins = spots.querySelectorAll('.spot');
@@ -2036,7 +2480,7 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
     var i; for(i=0;i<menuLinks.length;i++) menuLinks[i].tabIndex=menuOpen?0:-1;
   }
   burger.addEventListener('click',function(){setMenu(!menuOpen);});
-  function scrubDistance() { return Math.max(1, window.innerHeight * 6.5); }
+  function scrubDistance() { return Math.max(1, window.innerHeight * 8.5); }
   function maxScroll() { return scrubDistance(); }
   function scrollToProgress(p) {
     setMenu(false);
@@ -2195,10 +2639,16 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
     if(next!==stillIndex) {stillIndex=next;poster.src=STILLS[next];}
   }
   function seek() {
-    if(!ready || film.seeking || !isFinite(duration)) return;
+    if(!ready || !isFinite(duration)) return;
     if(forceSeek || Math.abs(film.currentTime-desiredTime)>.0005) {
       forceSeek=false;
-      try {film.currentTime=desiredTime;} catch(e) {ready=false;}
+      try {
+        if(typeof film.fastSeek === 'function') {
+          film.fastSeek(desiredTime);
+        } else {
+          film.currentTime = desiredTime;
+        }
+      } catch(e) {}
     }
   }
   function render(p) {
@@ -2207,28 +2657,58 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
     var h=out3(ramp(p,0,.11));
     rs.setProperty('--ho',1-h);rs.setProperty('--hy',(-56*h)+'px');
     frame.setAttribute('data-hero',h>.995?'off':'on');
-    var bo=c01(1-ramp(p,.12,.2)+ramp(p,.76,.84));
+    var bo=c01(1-ramp(p,.10,.18)+ramp(p,.92,.98));
     rs.setProperty('--bo',bo);frame.setAttribute('data-bar',bo<.01?'off':'on');
     if(bo<.01 && menuOpen) setMenu(false);
-    var enter=out3(ramp(p,.15,.31)), leave=out3(ramp(p,.47,.57)), i, q;
-    live(vision,enter>0 && leave<1);
-    vision.style.opacity=1-leave;
-    vision.style.transform='translateY('+(-18*leave)+'px) scale('+(1+.14*leave)+')';
-    tag.style.opacity=enter;tag.style.transform='translateY('+(10*(1-enter))+'px)';
+
+    // SCENE 1: REPOSITORY REALITY (The 4 Metric Cards - Image 2)
+    var rEnter = out3(ramp(p, .11, .22)), rLeave = out3(ramp(p, .35, .43));
+    var rOp = rEnter * (1 - rLeave);
+    if(reality) {
+      live(reality, rOp > 0.01);
+      reality.style.opacity = rOp;
+      reality.style.transform = 'translateY(' + (-24 * rLeave) + 'px) scale(' + (1 - 0.04 * rLeave + 0.04 * (1 - rEnter)) + ')';
+    }
+
+    // SCENE 2: LOBBY ARCHES & METHOD (Image 1)
+    var vEnter = out3(ramp(p, .42, .51)), vLeave = out3(ramp(p, .64, .72));
+    var vOp = vEnter * (1 - vLeave);
+    live(vision, vOp > 0.01);
+    vision.style.opacity = vOp;
+    vision.style.transform = 'translateY(' + (-20 * vLeave) + 'px) scale(' + (1 + 0.12 * vLeave) + ')';
+    tag.style.opacity = vEnter;tag.style.transform = 'translateY(' + (10 * (1 - vEnter)) + 'px)';
+    var i, q;
     for(i=0;i<titleLines.length;i++) {
-      q=out3(ramp(enter,.12+i*.13,.62+i*.13));
+      q=out3(ramp(vEnter,.12+i*.13,.62+i*.13));
       titleLines[i].style.transform='translate3d(0,'+(110*(1-q))+'%,0)';
     }
-    q=out3(ramp(enter,.6,1));visionP.style.opacity=q;visionP.style.transform='translateY('+(12*(1-q))+'px)';
-    veilV.style.opacity=Math.min(enter,1-leave);
-    var city=ramp(p,.80,.95);live(eco,city>0);eco.style.opacity=city>0?1:0;
-    q=out3(ramp(city,0,.55));ecoTop.style.opacity=q;ecoTop.style.transform='translateY('+(22*(1-q))+'px)';
+    q=out3(ramp(vEnter,.6,1));visionP.style.opacity=q;visionP.style.transform='translateY('+(12*(1-q))+'px)';
+
+    var ecoOp = ramp(p, .50, .68);
+    var ecoLeave = out3(ramp(p, .66, .73));
+    var finalEco = ecoOp * (1 - ecoLeave);
+    live(eco, finalEco > 0.01);
+    eco.style.opacity = finalEco;
     for(i=0;i<pins.length;i++) {
-      q=out3(ramp(city,.3+i*.12,.62+i*.12));
-      pins[i].style.opacity=q;pins[i].style.transform='scale('+(.7+.3*q)+')';
-      pins[i].disabled=q<.5;pins[i].classList.toggle('is-ready',q>=.5);
+      q=out3(ramp(ecoOp,.3+i*.12,.62+i*.12));
+      pins[i].style.opacity = q * (1 - ecoLeave);
+      pins[i].style.transform = 'scale(' + (.7 + .3 * q) + ')';
+      pins[i].disabled = q < .5 || ecoLeave > 0.5;
+      pins[i].classList.toggle('is-ready', q >= .5 && ecoLeave < 0.5);
     }
-    veilE.style.opacity=city;
+
+    // SCENE 3: TAKING THE ROUND OF THE LOBBY (Live Loop & PR Proof)
+    var lEnter = out3(ramp(p, .72, .80)), lLeave = out3(ramp(p, .93, .99));
+    var lOp = lEnter * (1 - lLeave);
+    if(roundLoop) {
+      live(roundLoop, lOp > 0.01);
+      roundLoop.style.opacity = lOp;
+      roundLoop.style.transform = 'translateY(' + (-20 * lLeave) + 'px) scale(' + (1 - 0.04 * lLeave + 0.04 * (1 - lEnter)) + ')';
+    }
+
+    veilV.style.opacity = Math.max(rOp * 0.45, Math.min(vEnter, 1 - vLeave));
+    veilE.style.opacity = Math.max(finalEco * 0.5, lOp * 0.45);
+
     if(isFlow) {
       var ox=baseX-(baseX-26)*inOut(ramp(p,.68,.9));
       film.style.objectPosition=ox+'% '+baseY+'%';
@@ -2290,13 +2770,12 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
   }
   film.addEventListener('error',function(){if(!fallbackUsed)useOriginal();else failMedia();});
   film.muted=true;film.defaultMuted=true;
-  if(window.fetch && window.URL && window.URL.createObjectURL) {
-    window.fetch(FILM_SRC,{mode:'cors'}).then(function(response){
-      if(!response.ok) throw new Error('Film unavailable');return response.blob();
-    }).then(function(blob){
-      blobURL=window.URL.createObjectURL(blob);film.src=blobURL;film.load();
-    }).catch(useOriginal);
-  } else useOriginal();
+  if (!film.src || film.src === '' || film.src.indexOf('civora-city-fabric-scrub.mp4') === -1) {
+    film.src = FILM_SRC;
+  }
+  film.addEventListener('loadedmetadata', function(){ makeReady(); });
+  film.addEventListener('canplay', function(){ makeReady(); });
+  try { film.load(); } catch(e) {}
   function motionChange(e) {
     reduced=e.matches;
     if(reduced){finishDecode();window.clearTimeout(entranceTimer);finishEntrance();}

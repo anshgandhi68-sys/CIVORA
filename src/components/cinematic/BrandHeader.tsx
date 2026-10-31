@@ -82,18 +82,26 @@ export const BrandHeader: React.FC<BrandHeaderProps> = ({
             <path d="M1 1 5 5 9 1" />
           </svg>
         </a>
-        <button 
+        <button
           type="button"
           onClick={onOpenBenchmark}
           className="hover:text-[#8FC2FF] focus-visible:text-[#8FC2FF] focus-visible:outline-none text-[12px] font-semibold tracking-[0.085em] flex items-center gap-[9px]"
         >
           BENCHMARK
         </button>
+        <button
+          type="button"
+          onClick={onOpenWorkspace}
+          className="hover:text-[#8FC2FF] focus-visible:text-[#8FC2FF] focus-visible:outline-none text-[12px] font-semibold tracking-[0.085em] flex items-center gap-[6px] text-[#38BDF8]"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          TRUEFOUNDRY AGENT
+        </button>
       </nav>
 
       {/* Top-Right CTA: Open Workspace */}
       <div className="hidden md:flex">
-        <button 
+        <button
           type="button"
           onClick={onOpenWorkspace}
           className="navcta group focus-visible:outline-none"

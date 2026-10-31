@@ -55,3 +55,39 @@ export interface SystemNoteData {
   result: string;
 }
 
+export type ExecutionMode = 'scenarios' | 'truefoundry-agent';
+
+export interface MCPToolCall {
+  id: string;
+  toolName: 'repo_get_metadata' | 'repo_list_tree' | 'repo_read_file' | 'ci_get_workflows' | 'ci_get_check_runs' | 'docs_extract_setup_steps';
+  timestamp: string;
+  arguments: Record<string, any>;
+  response: Record<string, any>;
+  durationMs: number;
+}
+
+export interface DiscoveredSetupStep {
+  stepId: string;
+  category: string;
+  command: string;
+  sourceFile: string;
+  lineNumber: number;
+}
+
+export interface TrueFoundryAgentWork {
+  agentName: string;
+  repo: string;
+  ref: string;
+  model: string;
+  reasoningTrace: { step: string; timestamp: string; detail: string; status: 'done' | 'active' }[];
+  toolCalls: MCPToolCall[];
+  discoveredSteps: DiscoveredSetupStep[];
+  provenInterventions: Intervention[];
+  patchPreview: {
+    targetFile: string;
+    originalLines: string;
+    patchedLines: string;
+    devcontainerJson: string;
+  };
+}
+

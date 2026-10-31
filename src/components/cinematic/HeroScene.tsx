@@ -23,8 +23,10 @@ export const HeroScene: React.FC<HeroSceneProps> = ({
       }}
     >
       {/* Eyebrow */}
-      <div className="hero-eyebrow">
-        AUTONOMOUS OPEN-SOURCE ENGINEERING
+      <div className="hero-eyebrow flex items-center justify-center gap-2">
+        <span>AUTONOMOUS OPEN-SOURCE ENGINEERING</span>
+        <span className="opacity-40">•</span>
+        <span className="text-[#38BDF8]">POWERED BY TRUEFOUNDRY AGENT & MCP</span>
       </div>
 
       {/* Main Headline */}

@@ -38,22 +38,24 @@ async def test_system_info_endpoint(async_client: AsyncClient):
     assert data["project_name"] == "CIVORA Core Backend"
     assert data["mcp_endpoint"] == "/mcp"
     assert data["mcp_server_name"] == "civora-engineer"
-    assert data["mcp_server_available"] is False
-    assert data["mcp_status"] == "not_mounted"
+    assert data["mcp_server_available"] is True
+    assert data["mcp_status"] == "mounted_read_only"
+    assert data["github_integration_available"] is False
+    assert data["github_integration_status"] == "not_configured"
     assert "README.md" in data["allowed_patch_files"]
     assert data["provenance_enforced"] is False
 
 
 @pytest.mark.asyncio
-async def test_mcp_server_never_prematurely_available(async_client: AsyncClient):
-    """Verify system info never reports MCP server as available before Phase 2 registration."""
+async def test_mcp_server_mounted_read_only(async_client: AsyncClient):
+    """Verify system info accurately reports MCP server as mounted in read-only mode."""
     response = await async_client.get("/api/v1/system/info")
     assert response.status_code == 200
     data = response.json()
-    assert (
-        data["mcp_server_available"] is False
-    ), "MCP server must not report True before Phase 2 endpoint registration"
-    assert data["mcp_status"] == "not_mounted"
+    assert data["mcp_server_available"] is True
+    assert data["mcp_status"] == "mounted_read_only"
+    assert data["github_integration_available"] is False
+    assert data["github_integration_status"] == "not_configured"
 
 
 @pytest.mark.asyncio

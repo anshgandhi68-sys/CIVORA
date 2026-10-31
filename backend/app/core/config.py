@@ -70,12 +70,20 @@ class Settings(BaseSettings):
     MCP_SERVER_NAME: str = Field(default="civora-engineer", description="MCP Server Name")
     MCP_SERVER_VERSION: str = Field(default="0.1.0", description="MCP Server Version")
     MCP_ENDPOINT: str = Field(default="/mcp", description="Streamable HTTP MCP endpoint")
+    MCP_AUTH_HEADER_NAME: str = Field(
+        default="X-CIVORA-MCP-TOKEN",
+        description="HTTP header name containing bearer authentication token",
+    )
     MCP_AUTH_TOKEN: str = Field(
         default="civora-mcp-local-dev-token",
         description="Token required to connect TrueForge to the MCP endpoint",
     )
 
     # GitHub App Credentials
+    GITHUB_API_BASE_URL: str = Field(
+        default="https://api.github.com",
+        description="Base URL for the GitHub REST API origin",
+    )
     GITHUB_APP_ID: Optional[str] = Field(default=None, description="GitHub App ID")
     GITHUB_APP_PRIVATE_KEY_PATH: Optional[str] = Field(default=None, description="Path to PEM file")
     GITHUB_APP_WEBHOOK_SECRET: Optional[str] = Field(default=None, description="Webhook secret")

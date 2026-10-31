@@ -81,14 +81,24 @@ async def readiness_check(
 )
 async def system_info() -> SystemInfoResponse:
     """Returns runtime configuration, MCP status and sandbox policy."""
+    import os
+    gh_configured = bool(
+        settings.GITHUB_APP_ID
+        and settings.GITHUB_APP_PRIVATE_KEY_PATH
+        and os.path.exists(settings.GITHUB_APP_PRIVATE_KEY_PATH)
+    )
+    gh_status = "configured" if gh_configured else "not_configured"
+
     return SystemInfoResponse(
         project_name=settings.PROJECT_NAME,
         version="0.1.0",
         environment=settings.ENVIRONMENT,
         mcp_endpoint=settings.MCP_ENDPOINT,
         mcp_server_name=settings.MCP_SERVER_NAME,
-        mcp_server_available=False,
-        mcp_status="not_mounted",
+        mcp_server_available=True,
+        mcp_status="mounted_read_only",
+        github_integration_available=gh_configured,
+        github_integration_status=gh_status,
         allowed_patch_files=settings.ALLOWED_PATCH_FILES,
         sandbox_backend=settings.SANDBOX_BACKEND,
         provenance_enforced=False,

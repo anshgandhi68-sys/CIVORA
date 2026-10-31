@@ -14,6 +14,7 @@ from app.core.database import engine
 from app.core.exceptions import CivoraException
 from app.core.logging import logger
 from app.models.base import Base
+from app.mcp import mcp_server, get_mcp_routes, refresh_mcp_session_manager
 
 
 @asynccontextmanager
@@ -29,7 +30,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
             await conn.run_sync(Base.metadata.create_all)
         logger.info("SQLite local development tables initialized successfully.")
 
-    yield
+    # Refresh session manager for current lifespan
+    refresh_mcp_session_manager()
+    # Start Model Context Protocol (MCP) Streamable HTTP session manager
+    async with mcp_server.session_manager.run():
+        logger.info("CIVORA Engineering MCP Server session manager running.")
+        yield
 
     logger.info("Shutting down CIVORA Core Backend...")
     await engine.dispose()
@@ -85,6 +91,11 @@ def create_application() -> FastAPI:
 
     # Include API Routers
     app.include_router(api_router)
+
+    # Register Model Context Protocol (MCP) Streamable HTTP routes
+    for mcp_route in get_mcp_routes():
+        app.routes.append(mcp_route)
+    logger.info("Mounted MCP Streamable HTTP endpoint at %s", settings.MCP_ENDPOINT)
 
     return app
 

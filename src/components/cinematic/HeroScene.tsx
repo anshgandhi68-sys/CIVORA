@@ -72,11 +72,11 @@ export const HeroScene: React.FC<HeroSceneProps> = ({
             }
           }}
           className="cta open-ai-chat group !relative !left-auto !top-auto !translate-y-0"
-          aria-label="Chat with TrueFoundry AI Agent"
+          aria-label="Chat with CIVORA AI Agent"
         >
-          <span className="cta-label text-white group-hover:text-[#8FC2FF] transition-colors flex items-center gap-2">
+          <span className="cta-label !text-white group-hover:!text-[#8FC2FF] transition-colors flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] shadow-[0_0_6px_#38BDF8]" />
-            AI CHAT BOT
+            CIVORA AI
           </span>
           <span className="square">
             <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">

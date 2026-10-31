@@ -122,12 +122,12 @@ export const BrandHeader: React.FC<BrandHeaderProps> = ({
               document.getElementById('civora-widget-trigger')?.click();
             }
           }}
-          className="navcta open-ai-chat group focus-visible:outline-none !static hover:text-[#8FC2FF] transition-colors"
-          aria-label="Open TrueFoundry AI Chatbot"
+          className="navcta open-ai-chat group focus-visible:outline-none !static text-white hover:text-[#8FC2FF] transition-colors"
+          aria-label="Open CIVORA AI Chatbot"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] shadow-[0_0_6px_#38BDF8]" />
           <span className="text-[12px] font-semibold tracking-[0.085em]">
-            AI CHAT BOT
+            CIVORA AI
           </span>
           <span className="square">
             <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">

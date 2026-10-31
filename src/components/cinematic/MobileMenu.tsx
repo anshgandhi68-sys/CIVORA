@@ -101,7 +101,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           className="w-full py-3.5 px-6 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-white font-mono text-xs font-semibold tracking-widest rounded-lg flex items-center justify-center gap-3 transition-colors"
         >
           <span className="w-2 h-2 rounded-full bg-[#38BDF8] shadow-[0_0_6px_#38BDF8]" />
-          <span>AI CHAT BOT</span>
+          <span>CIVORA AI</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-[#38BDF8]">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>

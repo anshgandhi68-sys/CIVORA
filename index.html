@@ -76,9 +76,10 @@ button{font:inherit;cursor:pointer}
 .headline i span{display:block}
 .headline i:last-child span{font-style:italic}
 .headline,.cta,.sub,.scroll,.hudgroup{translate:0 var(--hy,0px)}
-.cta{position:absolute;left:40.5px;top:calc(379.5px + (100% - 720px) * .22);width:206px;height:56px;border:1px solid var(--hairline);border-radius:8px;background:rgba(255,255,255,.02);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:border-color .3s,background .3s;text-decoration:none;pointer-events:auto}
+.cta{position:absolute;left:40.5px;top:calc(379.5px + (100% - 720px) * .22);width:206px;height:56px;border:1px solid var(--hairline);border-radius:8px;background:rgba(255,255,255,.02);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:border-color .3s,background .3s;text-decoration:none;pointer-events:auto;color:var(--white)}
 .cta:hover,.cta:focus-visible,.burger:hover,.mobile-cta:hover{background:rgba(255,255,255,.07);border-color:white}
-.cta-label{position:absolute;left:16.5px;top:50%;transform:translateY(calc(-50% + 1.5px));font-family:var(--font-text);font-weight:600;font-size:11.5px;line-height:1;letter-spacing:.07em;white-space:nowrap;word-spacing:normal}
+.cta:hover .cta-label,.cta:focus-visible .cta-label{color:#8FC2FF}
+.cta-label{position:absolute;left:16.5px;top:50%;transform:translateY(calc(-50% + 1.5px));font-family:var(--font-text);font-weight:600;font-size:11.5px;line-height:1;letter-spacing:.07em;white-space:nowrap;word-spacing:normal;color:var(--white)}
 .cta .square{position:absolute;left:auto;right:16px;top:16px}
 .sub{position:absolute;left:42px;bottom:44px;margin:0;font-size:var(--t-body);line-height:var(--lh-body);font-weight:var(--w-body);letter-spacing:var(--tr-body)}
 .sub b{display:block;font-weight:var(--w-body-strong);letter-spacing:var(--tr-body-strong)}
@@ -513,9 +514,9 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
         <a href="#benchmark" id="navBenchmark">BENCHMARK<svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1 5 5 9 1"/></svg></a>
         <a href="https://github.com/anshgandhi68-sys/CIVORA" target="_blank" rel="noopener noreferrer" id="navProject" aria-label="CIVORA GitHub Project Repository">PROJECT<svg viewBox="0 0 24 24" fill="currentColor" style="width:13px;height:13px;opacity:0.85;margin-left:2px;"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
       </nav>
-      <a class="navcta open-ai-chat" href="#ai-chat" id="btnOpenAIChat" style="right: 215px;">
+      <a class="navcta open-ai-chat" href="#ai-chat" id="btnOpenAIChat" style="right: 215px; color: #ffffff;">
         <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#38BDF8;margin-right:2px;box-shadow:0 0 6px #38BDF8;"></span>
-        AI CHAT BOT
+        CIVORA AI
         <span class="square">
           <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -529,10 +530,10 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
       <h1 class="headline"><i><span>Every Repository</span></i><i><span>Deserves a</span></i><i><span>Working First Run</span></i></h1>
       <div style="position:absolute;left:40.5px;top:calc(379.5px + (100% - 720px) * .22);display:flex;gap:16px;pointer-events:auto;z-index:4;">
         <a class="cta" href="#vision" data-progress=".34" style="position:relative;left:auto;top:auto;"><span class="cta-label">EXPLORE THE ENGINE</span><span class="square"><svg viewBox="0 0 13 13" aria-hidden="true"><path d="M2 11 11 2M2 2h9v9"/></svg></span></a>
-        <button type="button" class="cta open-ai-chat" id="heroOpenAIChat" style="position:relative;left:auto;top:auto;cursor:pointer;" aria-label="Chat with TrueFoundry AI Agent">
-          <span class="cta-label" style="display:flex;align-items:center;gap:6px;">
+        <button type="button" class="cta open-ai-chat" id="heroOpenAIChat" style="position:relative;left:auto;top:auto;cursor:pointer;color:#ffffff;" aria-label="Chat with CIVORA AI Agent">
+          <span class="cta-label" style="display:flex;align-items:center;gap:6px;color:#ffffff;">
             <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#38BDF8;box-shadow:0 0 6px #38BDF8;"></span>
-            AI CHAT BOT
+            CIVORA AI
           </span>
           <span class="square">
             <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;">
@@ -564,7 +565,7 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
       <a href="#benchmark" class="open-benchmark-trigger" tabindex="-1">BENCHMARK</a>
       <a class="mobile-cta open-ai-chat" href="#ai-chat" tabindex="-1" style="margin-bottom:8px;background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);color:#FFFFFF;">
         <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#38BDF8;margin-right:6px;box-shadow:0 0 6px #38BDF8;"></span>
-        AI CHAT BOT
+        CIVORA AI
         <span class="square"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="width:13px;height:13px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></span>
       </a>
       <a class="mobile-cta open-workspace-trigger" href="#workspace" tabindex="-1">OPEN WORKSPACE<span class="square"><svg viewBox="0 0 13 13" aria-hidden="true"><path d="M2 11 11 2M2 2h9v9"/></svg></span></a>

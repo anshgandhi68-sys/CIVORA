@@ -340,3 +340,4 @@ async def get_developer_account_endpoint():
     """Retrieve developer account profile and subscription tier."""
     account = dev_db.get_default_account()
     return account.to_dict()
+

@@ -17,3 +17,4 @@ curl -s -X POST "${CIVORA_URL}/chat/completions" \
     ],
     "temperature": 0.7
   }' | jq .
+

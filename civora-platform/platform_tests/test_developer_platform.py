@@ -282,3 +282,4 @@ def test_embeddings_endpoint(client, test_key):
     assert data["object"] == "list"
     assert len(data["data"]) == 2
     assert len(data["data"][0]["embedding"]) == 1536
+

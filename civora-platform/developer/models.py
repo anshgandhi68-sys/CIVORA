@@ -160,3 +160,4 @@ class DeveloperAnalyticsResponse(BaseModel):
     avg_latency_ms: float
     models_breakdown: List[Dict[str, Any]]
     recent_requests: List[Dict[str, Any]]
+

@@ -76,3 +76,4 @@ class SlidingWindowRateLimiter:
 
 # Global singleton instance
 rate_limiter = SlidingWindowRateLimiter(window_seconds=60.0)
+

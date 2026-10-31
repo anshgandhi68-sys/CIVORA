@@ -201,3 +201,4 @@ async def verify_api_key(
     dev_db.update_key_last_used(key_record.id)
 
     return key_record, account
+

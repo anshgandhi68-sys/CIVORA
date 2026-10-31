@@ -37,3 +37,4 @@ def test_malformed_key():
 if __name__ == "__main__":
     test_invalid_key()
     test_malformed_key()
+

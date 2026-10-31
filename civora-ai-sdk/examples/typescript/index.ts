@@ -45,3 +45,4 @@ async function example() {
 if (process.env.RUN_EXAMPLE) {
   example().catch(console.error);
 }
+

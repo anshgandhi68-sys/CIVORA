@@ -1,8 +1,22 @@
 """Application Settings and Configuration."""
 
-from typing import List, Optional
-from pydantic import Field, field_validator
+from typing import List, Optional, Set
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+INSECURE_DEV_SECRETS: Set[str] = {
+    "civora-super-secret-development-key-32-bytes-minimum!",
+    "civora-mcp-local-dev-token",
+    "civora-provenance-validation-secret-key-32-bytes",
+    "change-this-in-production-to-a-secure-32-byte-hex-string",
+    "change-this-provenance-key-in-production",
+    "secret",
+    "password",
+    "admin",
+    "changeme",
+    "development",
+    "test",
+}
 
 
 class Settings(BaseSettings):
@@ -95,6 +109,45 @@ class Settings(BaseSettings):
         if v.startswith("postgresql://"):
             return v.replace("postgresql://", "postgresql+asyncpg://")
         return v
+
+    @model_validator(mode="after")
+    def validate_production_secrets(self) -> "Settings":
+        """Strictly validates secrets when running in production environment."""
+        if self.ENVIRONMENT.lower() == "production":
+            # 1. SECRET_KEY validation
+            secret = (self.SECRET_KEY or "").strip()
+            if not secret or len(secret) < 32:
+                raise ValueError(
+                    "Production requires a strong SECRET_KEY with at least 32 characters."
+                )
+            if secret.lower() in {s.lower() for s in INSECURE_DEV_SECRETS}:
+                raise ValueError(
+                    "Known development default SECRET_KEY is strictly prohibited in production."
+                )
+
+            # 2. MCP_AUTH_TOKEN validation
+            token = (self.MCP_AUTH_TOKEN or "").strip()
+            if not token or len(token) < 24:
+                raise ValueError(
+                    "Production requires a strong MCP_AUTH_TOKEN with at least 24 characters."
+                )
+            if token.lower() in {s.lower() for s in INSECURE_DEV_SECRETS}:
+                raise ValueError(
+                    "Known development default MCP_AUTH_TOKEN is strictly prohibited in production."
+                )
+
+            # 3. PROVENANCE_HMAC_SECRET validation
+            hmac_secret = (self.PROVENANCE_HMAC_SECRET or "").strip()
+            if not hmac_secret or len(hmac_secret) < 32:
+                raise ValueError(
+                    "Production requires a strong PROVENANCE_HMAC_SECRET with at least 32 characters."
+                )
+            if hmac_secret.lower() in {s.lower() for s in INSECURE_DEV_SECRETS}:
+                raise ValueError(
+                    "Known development default PROVENANCE_HMAC_SECRET is strictly prohibited in production."
+                )
+
+        return self
 
 
 settings = Settings()

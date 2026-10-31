@@ -10,6 +10,8 @@ class SystemInfoResponse(BaseModel):
     environment: str
     mcp_endpoint: str
     mcp_server_name: str
+    mcp_server_available: bool = False
+    mcp_status: str = "not_mounted"
     allowed_patch_files: List[str]
     sandbox_backend: str
     provenance_enforced: bool = False

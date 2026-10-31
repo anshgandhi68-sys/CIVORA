@@ -18,9 +18,9 @@ RUN groupadd -g 1001 civora && useradd -u 1001 -g civora -s /bin/bash -m civora
 
 WORKDIR /app
 
-# Install Python requirements
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies with strict SHA-256 hash verification
+COPY requirements.lock .
+RUN pip install --no-cache-dir --require-hashes -r requirements.lock
 
 # Copy backend application code
 COPY . .

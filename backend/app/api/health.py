@@ -87,6 +87,8 @@ async def system_info() -> SystemInfoResponse:
         environment=settings.ENVIRONMENT,
         mcp_endpoint=settings.MCP_ENDPOINT,
         mcp_server_name=settings.MCP_SERVER_NAME,
+        mcp_server_available=False,
+        mcp_status="not_mounted",
         allowed_patch_files=settings.ALLOWED_PATCH_FILES,
         sandbox_backend=settings.SANDBOX_BACKEND,
         provenance_enforced=False,

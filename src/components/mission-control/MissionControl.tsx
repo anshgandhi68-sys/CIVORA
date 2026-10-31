@@ -389,8 +389,8 @@ export const MissionControl: React.FC<MissionControlProps> = ({
         ...prev,
         { id: 'l3', timestamp: '00:01.10', stream: 'system', text: `[STAGE 02] Spawning pristine Docker sandbox container (debian:bookworm-slim)...` },
         { id: 'l4', timestamp: '00:01.45', stream: 'stdout', text: `$ git clone https://github.com/${scenario.repo}.git /workspace && cd /workspace` },
-        { id: 'l5', timestamp: '00:01.88', stream: 'stderr', text: scenario.id === 'clean-cli' 
-          ? `[EXECUTION FAILURE] SyntaxError: invalid syntax in cli/core.py line 42` 
+        { id: 'l5', timestamp: '00:01.88', stream: 'stderr', text: scenario.id === 'clean-cli'
+          ? `[EXECUTION FAILURE] SyntaxError: invalid syntax in cli/core.py line 42`
           : `[EXECUTION FAILURE] Command failed with exit code 1. Environment error detected.` },
       ]);
       setStages(prev => prev.map((s, idx) => idx === 1 ? { ...s, status: 'success' } : s));
@@ -399,7 +399,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
     setTimeout(() => {
       // Stage 3 & 4
       setStages(prev => prev.map((s, idx) => idx === 2 ? { ...s, status: 'running' } : idx === 3 ? { ...s, status: 'running' } : s));
-      
+
       if (scenario.id === 'pulse-api') {
         const item1: Intervention = {
           id: 'int-1',
@@ -461,7 +461,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
     setTimeout(() => {
       // Stage 5 & 6 (Gemma Reasoning & Zero-Trust Gate)
       setStages(prev => prev.map((s, idx) => idx === 4 ? { ...s, status: 'running' } : idx === 5 ? { ...s, status: 'running' } : s));
-      
+
       if (scenario.id === 'red-team') {
         setLogs(prev => [
           ...prev,
@@ -527,8 +527,8 @@ export const MissionControl: React.FC<MissionControlProps> = ({
       {/* Top Engineering Nav */}
       <header className="h-16 border-b border-white/10 px-6 flex items-center justify-between bg-[#040917]/80 backdrop-blur-md sticky top-0 z-40">
         <div className="flex items-center gap-6">
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={onReturnToSite}
             className="flex items-center gap-3 text-white/80 hover:text-white transition-colors"
           >
@@ -558,7 +558,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
           <button
             type="button"
             onClick={() => setIsInspectorOpen(true)}
-            className="px-3.5 py-1.5 rounded-lg text-xs font-mono text-white bg-gradient-to-r from-[#0071FF]/30 to-[#8B5CF6]/30 hover:from-[#0071FF]/50 hover:to-[#8B5CF6]/50 border border-[#38BDF8]/40 hover:border-[#38BDF8] shadow-[0_0_15px_rgba(56,189,248,0.25)] transition-all flex items-center gap-2"
+            className="px-3.5 py-1.5 rounded-lg text-xs font-mono text-white bg-gradient-to-r from-[#0071FF]/25 to-[#38BDF8]/25 hover:from-[#0071FF]/40 hover:to-[#38BDF8]/40 border border-[#38BDF8]/40 hover:border-[#38BDF8] shadow-[0_0_15px_rgba(56,189,248,0.25)] transition-all flex items-center gap-2"
           >
             <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 fill-none stroke-currentColor stroke-[1.8]">
               <circle cx="8" cy="8" r="6" />
@@ -569,14 +569,14 @@ export const MissionControl: React.FC<MissionControlProps> = ({
             <span className="text-[10px] bg-white/20 text-white px-1.5 py-0.2 rounded font-mono">INSPECT</span>
           </button>
 
-          <button 
+          <button
             type="button"
             onClick={onOpenRadar}
             className="px-3 py-1.5 rounded text-xs font-mono text-white/80 hover:text-white border border-white/10 hover:border-white/20 bg-white/5 transition-colors hidden md:block"
           >
             CI-VS-DOCS RADAR
           </button>
-          <button 
+          <button
             type="button"
             onClick={onOpenBenchmark}
             className="px-3 py-1.5 rounded text-xs font-mono text-white/80 hover:text-white border border-white/10 hover:border-white/20 bg-white/5 transition-colors hidden md:block"
@@ -693,7 +693,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                   </div>
                   <div className="flex items-center justify-between text-white/70">
                     <span>Reasoning Model:</span>
-                    <span className="text-purple-300 font-medium">Gemma 4 26B-A4B MoE</span>
+                    <span className="text-[#38BDF8] font-medium">Gemma 4 26B-A4B MoE</span>
                   </div>
                   <div className="flex items-center justify-between text-white/70">
                     <span>MCP Transport:</span>
@@ -709,10 +709,10 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsInspectorOpen(true)}
-                  className="w-full py-2 px-3 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 rounded-lg text-purple-300 font-mono text-xs flex items-center justify-between transition-colors"
+                  className="w-full py-2 px-3 bg-[#0071FF]/10 hover:bg-[#0071FF]/20 border border-[#0071FF]/30 rounded-lg text-[#38BDF8] font-mono text-xs flex items-center justify-between transition-colors"
                 >
                   <span className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+                    <span className="w-2 h-2 rounded-full bg-[#38BDF8] animate-pulse" />
                     <span>SHOWING OUR WORK: WIRE TELEMETRY</span>
                   </span>
                   <span className="text-[11px] underline">INSPECT &rarr;</span>
@@ -819,7 +819,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
 
             <div className="flex flex-col gap-3">
               {stages.map((st, idx) => (
-                <div 
+                <div
                   key={st.id}
                   className="flex items-center justify-between p-2.5 rounded border border-white/5 bg-white/[0.02]"
                 >
@@ -884,7 +884,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
               {logs.map((log) => {
                 let colorClass = 'text-white/80';
                 if (log.stream === 'stderr') colorClass = 'text-red-400';
-                if (log.stream === 'ai') colorClass = 'text-purple-300';
+                if (log.stream === 'ai') colorClass = 'text-[#38BDF8]';
                 if (log.stream === 'security') colorClass = 'text-amber-400 font-semibold';
                 if (log.stream === 'system') colorClass = 'text-[#38BDF8]';
 

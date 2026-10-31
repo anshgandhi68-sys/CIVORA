@@ -71,14 +71,14 @@ export const HeroScene: React.FC<HeroSceneProps> = ({
               document.getElementById('civora-widget-trigger')?.click();
             }
           }}
-          className="cta open-ai-chat group !relative !left-auto !top-auto !translate-y-0 !w-[220px] !border-[#7C3AED]/50 !bg-[#7C3AED]/15 hover:!bg-[#7C3AED]/25 transition-all shadow-[0_0_20px_rgba(124,58,237,0.25)]"
+          className="cta open-ai-chat group !relative !left-auto !top-auto !translate-y-0"
           aria-label="Chat with TrueFoundry AI Agent"
         >
-          <span className="cta-label text-[#E0E7FF] group-hover:text-white transition-colors flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="cta-label text-white group-hover:text-[#8FC2FF] transition-colors flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] shadow-[0_0_6px_#38BDF8]" />
             AI CHAT BOT
           </span>
-          <span className="square !bg-[#7C3AED] shadow-[0_0_12px_rgba(124,58,237,0.6)]">
+          <span className="square">
             <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>

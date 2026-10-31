@@ -94,7 +94,7 @@ export const BrandHeader: React.FC<BrandHeaderProps> = ({
           onClick={onOpenWorkspace}
           className="hover:text-[#8FC2FF] focus-visible:text-[#8FC2FF] focus-visible:outline-none text-[12px] font-semibold tracking-[0.085em] flex items-center gap-[6px] text-[#38BDF8]"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] shadow-[0_0_6px_#38BDF8]" />
           TRUEFOUNDRY AGENT
         </button>
       </nav>
@@ -110,14 +110,14 @@ export const BrandHeader: React.FC<BrandHeaderProps> = ({
               document.getElementById('civora-widget-trigger')?.click();
             }
           }}
-          className="navcta open-ai-chat group focus-visible:outline-none !static !border !border-[#7C3AED]/40 !bg-[#7C3AED]/15 hover:!bg-[#7C3AED]/25 transition-all text-[#C4B5FD] hover:text-white"
+          className="navcta open-ai-chat group focus-visible:outline-none !static hover:text-[#8FC2FF] transition-colors"
           aria-label="Open TrueFoundry AI Chatbot"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] shadow-[0_0_6px_#38BDF8]" />
           <span className="text-[12px] font-semibold tracking-[0.085em]">
             AI CHAT BOT
           </span>
-          <span className="square !bg-[#7C3AED] shadow-[0_0_9px_rgba(124,58,237,.5)]">
+          <span className="square">
             <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>

@@ -60,7 +60,7 @@ button{font:inherit;cursor:pointer}
 .mark{position:absolute;left:35px;top:19.5px;width:32px;height:38px;overflow:visible}
 .mark path,.mark ellipse{fill:none;stroke:rgba(255,255,255,.88);stroke-width:1.15;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
 .wordmark{position:absolute;left:75.5px;top:20px;font-family:var(--font-mark);font-weight:var(--w-mark);font-size:27px;line-height:37px;letter-spacing:.13em;color:white}
-.nav{position:absolute;left:50%;margin-left:-197px;top:26px;height:24px;display:flex;align-items:center;gap:21.7px}
+.nav{position:absolute;left:50%;transform:translateX(-50%);margin-left:0;top:26px;height:24px;display:flex;align-items:center;gap:21.7px}
 .nav a,.navcta{font-family:var(--font-text);font-weight:var(--w-nav);font-size:var(--t-nav);line-height:1;letter-spacing:var(--tr-nav);display:flex;align-items:center;gap:9px;white-space:nowrap;text-decoration:none;transition:color .25s ease}
 .nav a:hover,.nav a:focus-visible,.navcta:hover,.navcta:focus-visible,.mnav>a:hover,.mnav>a:focus-visible{color:#8FC2FF}
 .chev{width:10px;height:6px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:square}
@@ -511,6 +511,7 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
         <a href="#eco" data-progress=".96">VERIFICATION<svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1 5 5 9 1"/></svg></a>
         <a href="#studio" data-progress="0">OVERVIEW</a>
         <a href="#benchmark" id="navBenchmark">BENCHMARK<svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1 5 5 9 1"/></svg></a>
+        <a href="https://github.com/anshgandhi68-sys/CIVORA" target="_blank" rel="noopener noreferrer" id="navProject" aria-label="CIVORA GitHub Project Repository">PROJECT<svg viewBox="0 0 24 24" fill="currentColor" style="width:13px;height:13px;opacity:0.85;margin-left:2px;"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
       </nav>
       <a class="navcta open-ai-chat" href="#ai-chat" id="btnOpenAIChat" style="right: 215px;">
         <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#38BDF8;margin-right:2px;box-shadow:0 0 6px #38BDF8;"></span>

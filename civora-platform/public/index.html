@@ -25,6 +25,9 @@
         .terminal { font-family: 'Fira Code', monospace; background: #000; border: 1px solid #1e293b; }
         .neon-border { box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
         .tab-active { border-left: 3px solid #10b981; background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .diff-add { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .diff-del { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+        .diff-hdr { background: rgba(56, 189, 248, 0.1); color: #38bdf8; font-weight: bold; }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden">
@@ -42,16 +45,22 @@
         </div>
 
         <nav class="flex-1 p-4 space-y-2 mt-4 text-sm font-medium">
-            <button onclick="showTab('dashboard')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all tab-active">
+            <button onclick="showTab('dashboard', this)" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all tab-active">
                 <i class="fas fa-th-large w-5"></i><span>Dashboard</span>
             </button>
-            <button onclick="showTab('intelligence')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all text-slate-400">
-                <i class="fas fa-search w-5"></i><span>Repo Intelligence</span>
+            <button onclick="showTab('agent', this)" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all text-slate-400">
+                <i class="fas fa-robot w-5 text-emerald-400"></i><span>Agent Orchestrator</span>
             </button>
-            <button onclick="showTab('terminal')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all text-slate-400">
+            <button onclick="showTab('intelligence', this)" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all text-slate-400">
+                <i class="fas fa-radar w-5"></i><span>Repo Intelligence</span>
+            </button>
+            <button onclick="showTab('patch', this)" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all text-slate-400">
+                <i class="fas fa-code-branch w-5 text-teal-400"></i><span>Patch Studio</span>
+            </button>
+            <button onclick="showTab('terminal', this)" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all text-slate-400">
                 <i class="fas fa-terminal w-5"></i><span>Sandbox Terminal</span>
             </button>
-            <button onclick="showTab('chat')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all text-slate-400">
+            <button onclick="showTab('chat', this)" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all text-slate-400">
                 <i class="fas fa-comment-dots w-5"></i><span>AI Engineering Chat</span>
             </button>
         </nav>
@@ -61,11 +70,11 @@
                 <div class="relative">
                     <div class="w-2 h-2 bg-emerald-500 rounded-full absolute -top-1 -right-1 animate-ping"></div>
                     <div class="w-2 h-2 bg-emerald-500 rounded-full absolute -top-1 -right-1"></div>
-                    <img src="https://ui-avatars.com/api/?name=Admin&background=10b981&color=fff" class="w-8 h-8 rounded-full border border-slate-700">
+                    <img src="https://ui-avatars.com/api/?name=Civora&background=10b981&color=fff" class="w-8 h-8 rounded-full border border-slate-700">
                 </div>
                 <div>
-                    <p class="text-xs font-bold text-white">Active Session</p>
-                    <p class="text-[10px] text-emerald-400">Agent Connected</p>
+                    <p class="text-xs font-bold text-white">Autonomous Core</p>
+                    <p class="text-[10px] text-emerald-400">Zero-Trust Active</p>
                 </div>
             </div>
         </div>
@@ -77,20 +86,17 @@
         <!-- TOP NAV -->
         <header class="h-16 border-b border-slate-800 flex items-center justify-between px-8 bg-dark-800/50 z-10">
             <div class="flex items-center space-x-4">
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Active Repository:</span>
-                <select id="repo-select" class="bg-slate-900 border border-slate-700 text-xs rounded-lg px-3 py-1.5 text-emerald-400 font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                    <option>facebook/react (main)</option>
-                    <option>expressjs/express (master)</option>
-                    <option>civora/engine (dev)</option>
-                </select>
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Target Workspace:</span>
+                <span class="bg-slate-900 border border-slate-700 text-xs rounded-lg px-3 py-1.5 text-emerald-400 font-mono" id="active-repo-badge">CIVORA-AI (Active Local Workspace)</span>
             </div>
             <div class="flex items-center space-x-6">
                 <div class="flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-700">
-                    <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
-                    <span class="text-[10px] font-bold text-slate-300 uppercase">Sandbox: Healthy</span>
+                    <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                    <span class="text-[10px] font-bold text-slate-300 uppercase">Sandbox: Zero-Trust Active</span>
                 </div>
-                <button class="text-slate-400 hover:text-white transition-colors"><i class="fas fa-bell"></i></button>
-                <button class="bg-emerald-500 text-dark-900 text-xs font-black px-4 py-1.5 rounded-lg shadow-lg shadow-emerald-500/20 hover:scale-105 transition-all">DEVOPS OPS</button>
+                <button onclick="showTab('agent', document.querySelectorAll('.nav-btn')[1])" class="bg-emerald-500 text-dark-900 text-xs font-black px-4 py-1.5 rounded-lg shadow-lg shadow-emerald-500/20 hover:scale-105 transition-all">
+                    <i class="fas fa-play mr-1.5"></i>RUN AUTONOMOUS AGENT
+                </button>
             </div>
         </header>
 
@@ -98,99 +104,164 @@
         <div id="tab-dashboard" class="tab-content flex-1 overflow-y-auto p-8 space-y-8">
             <div class="flex justify-between items-end">
                 <div>
-                    <h2 class="text-3xl font-black text-white">Engineering Overview</h2>
-                    <p class="text-slate-400 text-sm mt-1">Autonomous monitoring of repository health and documentation drift.</p>
+                    <h2 class="text-3xl font-black text-white">Autonomous Engineering Command</h2>
+                    <p class="text-slate-400 text-sm mt-1">Continuous verification of repository health, CI pipelines, and documentation drift.</p>
                 </div>
                 <button onclick="scanRepo()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-6 py-2.5 rounded-xl border border-slate-700 transition-all">
-                    <i class="fas fa-sync-alt mr-2"></i>Trigger Full Scan
+                    <i class="fas fa-sync-alt mr-2"></i>Trigger Radar Scan
                 </button>
             </div>
 
             <!-- Stats Grid -->
             <div class="grid grid-cols-4 gap-6">
                 <div class="glass p-6 rounded-2xl neon-border">
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Repos Analyzed</p>
-                    <h3 class="text-4xl font-black text-white mt-2">124</h3>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Active Workspace</p>
+                    <h3 class="text-2xl font-black text-white mt-2 truncate" id="stat-repo-name">CIVORA-AI</h3>
                     <div class="mt-4 flex items-center text-emerald-400 text-[10px] font-bold">
-                        <i class="fas fa-arrow-up mr-1"></i> 12% FROM LAST MONTH
+                        <i class="fas fa-check-circle mr-1"></i> MONITORED & SECURED
                     </div>
                 </div>
                 <div class="glass p-6 rounded-2xl">
                     <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Drift Detected</p>
-                    <h3 class="text-4xl font-black text-amber-500 mt-2">18</h3>
+                    <h3 class="text-3xl font-black text-amber-500 mt-2" id="stat-drift-count">0</h3>
                     <div class="mt-4 flex items-center text-amber-400 text-[10px] font-bold">
-                        <i class="fas fa-exclamation-triangle mr-1"></i> REQUIRES VERIFICATION
+                        <i class="fas fa-radar mr-1"></i> DRIFT RADAR SCAN
                     </div>
                 </div>
                 <div class="glass p-6 rounded-2xl">
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Patches Verified</p>
-                    <h3 class="text-4xl font-black text-teal-400 mt-2">892</h3>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Tools Registered</p>
+                    <h3 class="text-3xl font-black text-teal-400 mt-2">19 Tools</h3>
                     <div class="mt-4 flex items-center text-teal-400 text-[10px] font-bold">
-                        <i class="fas fa-check-circle mr-1"></i> 100% SUCCESS RATE
+                        <i class="fas fa-tools mr-1"></i> REPO • EXEC • REPAIR • VERIFY
                     </div>
                 </div>
                 <div class="glass p-6 rounded-2xl">
-                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Sandbox Runtime</p>
-                    <h3 class="text-4xl font-black text-white mt-2">420h</h3>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Proof Engine</p>
+                    <h3 class="text-3xl font-black text-white mt-2">Exit Code 0</h3>
                     <div class="mt-4 flex items-center text-slate-400 text-[10px] font-bold">
-                        <i class="fas fa-server mr-1"></i> ISOLATED DOCKER ENV
+                        <i class="fas fa-shield-alt mr-1"></i> ZERO SYNTHETIC PASSES
                     </div>
                 </div>
             </div>
 
-            <!-- Main Workspace Area -->
+            <!-- Pipeline Execution Overview -->
             <div class="grid grid-cols-3 gap-8">
                 <div class="col-span-2 glass rounded-3xl p-8 border border-slate-800">
-                    <h4 class="text-lg font-black text-white mb-6 flex items-center">
-                        <i class="fas fa-history text-emerald-500 mr-3"></i>Autonomous Workflow Pipeline
+                    <h4 class="text-lg font-black text-white mb-6 flex items-center justify-between">
+                        <span><i class="fas fa-microchip text-emerald-500 mr-3"></i>Autonomous Engineering Loop</span>
+                        <span class="text-xs font-mono text-slate-500">OBSERVE → PLAN → EXECUTE → ANALYZE → ITERATE → VERIFY → REPORT</span>
                     </h4>
-                    <div class="space-y-6">
+                    <div class="space-y-4">
                         <div class="flex items-center space-x-6 p-4 bg-slate-900/50 rounded-2xl border border-slate-800">
-                            <div class="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-black">1</div>
+                            <div class="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-black">1</div>
                             <div class="flex-1">
-                                <h5 class="text-sm font-bold text-white">Repository Ingestion</h5>
-                                <p class="text-xs text-slate-500">Mapping directory structure and manifest resolution.</p>
+                                <h5 class="text-sm font-bold text-white">Repository Ingestion & Mapping</h5>
+                                <p class="text-xs text-slate-500">AST parsing, languages, manifests, and documentation extraction.</p>
                             </div>
-                            <div class="text-emerald-500 text-[10px] font-bold uppercase tracking-widest bg-emerald-500/10 px-3 py-1 rounded-full">Completed</div>
+                            <div class="text-emerald-500 text-[10px] font-bold uppercase tracking-widest bg-emerald-500/10 px-3 py-1 rounded-full">Ready</div>
                         </div>
                         <div class="flex items-center space-x-6 p-4 bg-slate-900/50 rounded-2xl border border-slate-800">
-                            <div class="w-12 h-12 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center font-black">2</div>
+                            <div class="w-10 h-10 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center font-black">2</div>
                             <div class="flex-1">
-                                <h5 class="text-sm font-bold text-white">Documentation Drift Detection</h5>
-                                <p class="text-xs text-slate-500">Comparing README.md with package.json engine specs.</p>
+                                <h5 class="text-sm font-bold text-white">Documentation Drift Radar</h5>
+                                <p class="text-xs text-slate-500">Cross-checks README instructions against manifest dependencies and CI workflows.</p>
                             </div>
-                            <div class="text-amber-500 text-[10px] font-bold uppercase tracking-widest bg-amber-500/10 px-3 py-1 rounded-full">3 Issues Detected</div>
+                            <div class="text-amber-500 text-[10px] font-bold uppercase tracking-widest bg-amber-500/10 px-3 py-1 rounded-full">Active</div>
                         </div>
                         <div class="flex items-center space-x-6 p-4 bg-slate-900/50 rounded-2xl border border-slate-800">
-                            <div class="w-12 h-12 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center font-black">3</div>
+                            <div class="w-10 h-10 rounded-full bg-teal-500/10 text-teal-400 flex items-center justify-center font-black">3</div>
                             <div class="flex-1">
-                                <h5 class="text-sm font-bold text-white">Counterfactual Verification</h5>
-                                <p class="text-xs text-slate-500">Executing fix candidates in isolated sandbox.</p>
+                                <h5 class="text-sm font-bold text-white">Counterfactual Proof & Clean-Room Verification</h5>
+                                <p class="text-xs text-slate-500">Creates isolated clean-room sandbox to execute and verify exit code 0 independently.</p>
                             </div>
-                            <div class="text-slate-500 text-[10px] font-bold uppercase tracking-widest bg-slate-800 px-3 py-1 rounded-full">Waiting...</div>
+                            <div class="text-teal-400 text-[10px] font-bold uppercase tracking-widest bg-teal-500/10 px-3 py-1 rounded-full">Verified</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="glass rounded-3xl p-8 border border-slate-800 flex flex-col">
-                    <h4 class="text-lg font-black text-white mb-6">Recent Reports</h4>
+                    <h4 class="text-lg font-black text-white mb-6">Quick Controls</h4>
                     <div class="space-y-4 flex-1">
-                        <div class="p-4 bg-dark-900 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition-all cursor-pointer">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Verification</span>
-                                <span class="text-[10px] text-slate-500">2m ago</span>
-                            </div>
-                            <p class="text-xs font-bold text-white">Clean-room PR #422 verified successfully.</p>
-                        </div>
-                        <div class="p-4 bg-dark-900 rounded-xl border border-slate-800">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-[10px] font-black text-amber-500 uppercase tracking-widest">Security Audit</span>
-                                <span class="text-[10px] text-slate-500">1h ago</span>
-                            </div>
-                            <p class="text-xs font-bold text-white">Detected outdated Axios dependency (v1.3.4).</p>
+                        <button onclick="triggerQuickAction('audit')" class="w-full p-4 bg-dark-900 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition-all text-left">
+                            <span class="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Action</span>
+                            <p class="text-xs font-bold text-white mt-1">Audit Documentation Drift</p>
+                        </button>
+                        <button onclick="triggerQuickAction('test')" class="w-full p-4 bg-dark-900 rounded-xl border border-slate-800 hover:border-teal-500/50 transition-all text-left">
+                            <span class="text-[10px] font-black text-teal-400 uppercase tracking-widest">Verification</span>
+                            <p class="text-xs font-bold text-white mt-1">Run Automated Test Suites</p>
+                        </button>
+                        <button onclick="triggerQuickAction('patch')" class="w-full p-4 bg-dark-900 rounded-xl border border-slate-800 hover:border-amber-500/50 transition-all text-left">
+                            <span class="text-[10px] font-black text-amber-400 uppercase tracking-widest">Patch Studio</span>
+                            <p class="text-xs font-bold text-white mt-1">Review Proposed Unified Diffs</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AUTONOMOUS AGENT ORCHESTRATOR TAB -->
+        <div id="tab-agent" class="tab-content hidden flex-1 flex flex-col p-8 overflow-hidden">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-2xl font-black text-white flex items-center">
+                        <i class="fas fa-robot text-emerald-500 mr-3"></i>Central Autonomous Agent Orchestrator
+                    </h2>
+                    <p class="text-slate-400 text-sm">Real execution loop: OBSERVE → PLAN → EXECUTE → ANALYZE → REASON → ITERATE → VERIFY → REPORT.</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span id="agent-status-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700">
+                        IDLE
+                    </span>
+                    <button id="btn-stop-agent" onclick="stopAgent()" class="hidden bg-red-500 hover:bg-red-600 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all">
+                        <i class="fas fa-stop mr-1.5"></i>Stop Agent
+                    </button>
+                </div>
+            </div>
+
+            <!-- Agent Prompt Form -->
+            <div class="glass p-4 rounded-2xl mb-6 border border-slate-800 flex items-center space-x-4">
+                <div class="flex-1">
+                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-500 mb-1 block">Engineering Objective / User Request</label>
+                    <input id="agent-prompt-input" type="text" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono" value="Analyze repository for documentation drift, reproduce build defects in sandbox, formulate surgical patch, and independently verify in clean-room container.">
+                </div>
+                <button id="btn-start-agent" onclick="startAgent()" class="bg-emerald-500 hover:bg-emerald-600 text-dark-900 font-black text-xs px-6 py-3 rounded-xl transition-all self-end shadow-lg shadow-emerald-500/20">
+                    <i class="fas fa-play mr-2"></i>START AGENT LOOP
+                </button>
+            </div>
+
+            <!-- Main Agent Display: Steps Trace & Terminal Logs -->
+            <div class="grid grid-cols-2 gap-6 flex-1 min-h-0">
+                <!-- Step Execution Trace -->
+                <div class="glass rounded-2xl p-6 border border-slate-800 flex flex-col min-h-0 overflow-hidden">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center justify-between">
+                        <span><i class="fas fa-list-ol mr-2 text-emerald-400"></i>Execution Plan & Live Trace</span>
+                        <span id="agent-step-count" class="text-[10px] text-slate-500 font-mono">0 steps</span>
+                    </h3>
+                    <div id="agent-steps-list" class="flex-1 overflow-y-auto space-y-3 pr-2 text-xs">
+                        <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-800 text-slate-500 text-center">
+                            Press "START AGENT LOOP" to begin autonomous observation and execution.
                         </div>
                     </div>
-                    <button class="w-full mt-6 bg-slate-800 py-3 rounded-xl text-xs font-bold text-slate-300 hover:text-white transition-all">View All Reports</button>
+                </div>
+
+                <!-- Real-time Terminal & Proof Log -->
+                <div class="terminal rounded-2xl flex flex-col min-h-0 overflow-hidden border border-slate-800">
+                    <div class="bg-slate-900 px-4 py-2 border-b border-slate-800 flex justify-between items-center text-[10px] font-mono text-slate-400">
+                        <span><i class="fas fa-terminal mr-2 text-emerald-400"></i>Live Tool Execution & Output Stream</span>
+                        <span id="agent-stream-indicator" class="text-slate-600">OFFLINE</span>
+                    </div>
+                    <div id="agent-live-log" class="flex-1 p-4 font-mono text-xs text-slate-300 overflow-y-auto space-y-1">
+                        <p class="text-slate-600"># Autonomous tool calls, stdout, stderr, and verification telemetry will stream here in real time...</p>
+                    </div>
+                    <div id="agent-report-card" class="hidden p-4 bg-slate-900/80 border-t border-slate-800 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-emerald-400">Verification Report Ready</span>
+                            <p class="text-[10px] text-slate-500 font-mono" id="agent-report-meta"></p>
+                        </div>
+                        <button onclick="downloadReport()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs px-3 py-1.5 rounded-lg border border-slate-700">
+                            <i class="fas fa-download mr-1.5"></i>Download Report
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -200,55 +271,83 @@
             <div class="flex justify-between items-end">
                 <div>
                     <h2 class="text-3xl font-black text-white">Repository Intelligence & Drift Radar</h2>
-                    <p class="text-slate-400 text-sm mt-1">Cross-analyzing README instructions against CI workflows and package manifests.</p>
+                    <p class="text-slate-400 text-sm mt-1">Cross-analyzing README instructions against manifests, configurations, and CI workflows.</p>
                 </div>
                 <button onclick="scanRepo()" class="bg-emerald-500 hover:bg-emerald-600 text-dark-900 text-xs font-black px-6 py-2.5 rounded-xl transition-all">
                     <i class="fas fa-radar mr-2"></i>Run Radar Scan
                 </button>
             </div>
 
-            <div class="grid grid-cols-2 gap-6">
-                <div class="glass p-6 rounded-2xl border border-slate-800">
-                    <h4 class="text-sm font-bold text-white mb-4 flex items-center">
-                        <i class="fas fa-file-code text-emerald-400 mr-2"></i>Documentation Drift Analysis
-                    </h4>
-                    <div class="space-y-3 text-xs">
-                        <div class="p-3 bg-slate-900/70 rounded-lg border border-red-500/30 flex items-start justify-between">
-                            <div>
-                                <span class="font-bold text-red-400">[HIGH] Node.js Version Mismatch</span>
-                                <p class="text-slate-400 mt-1">README suggests v16.x but package.json engines require &gt;=18.0.0.</p>
-                            </div>
-                            <span class="text-[10px] font-mono text-red-400 bg-red-500/10 px-2 py-0.5 rounded">DRIFT</span>
-                        </div>
-                        <div class="p-3 bg-slate-900/70 rounded-lg border border-amber-500/30 flex items-start justify-between">
-                            <div>
-                                <span class="font-bold text-amber-400">[MEDIUM] Missing .env.example Key</span>
-                                <p class="text-slate-400 mt-1">DATABASE_URL referenced in source but absent from .env.example.</p>
-                            </div>
-                            <span class="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">CONFIG</span>
-                        </div>
+            <!-- Architecture Summary Bar -->
+            <div class="glass p-6 rounded-2xl border border-slate-800 grid grid-cols-4 gap-4 text-xs">
+                <div>
+                    <span class="text-slate-500 uppercase font-bold text-[10px] block">Primary Language</span>
+                    <span id="intel-lang" class="text-white font-bold text-sm">Python / JS</span>
+                </div>
+                <div>
+                    <span class="text-slate-500 uppercase font-bold text-[10px] block">Frameworks Detected</span>
+                    <span id="intel-frameworks" class="text-emerald-400 font-bold text-sm">FastAPI, Tailwind</span>
+                </div>
+                <div>
+                    <span class="text-slate-500 uppercase font-bold text-[10px] block">Scanned Files</span>
+                    <span id="intel-files" class="text-white font-bold text-sm">Loading...</span>
+                </div>
+                <div>
+                    <span class="text-slate-500 uppercase font-bold text-[10px] block">Environment Keys Detected</span>
+                    <span id="intel-envs" class="text-teal-400 font-bold text-sm">OPENAI_API_KEY</span>
+                </div>
+            </div>
+
+            <!-- Findings List -->
+            <div class="glass p-6 rounded-2xl border border-slate-800">
+                <h4 class="text-sm font-bold text-white mb-4 flex items-center justify-between">
+                    <span><i class="fas fa-exclamation-triangle text-amber-400 mr-2"></i>Documentation Drift Issues Identified</span>
+                    <span id="intel-issues-badge" class="text-[10px] text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full font-bold">0 ISSUES</span>
+                </h4>
+                <div id="intel-findings-list" class="space-y-3 text-xs">
+                    <p class="text-slate-500 text-center py-6">Click "Run Radar Scan" to analyze active repository documentation drift.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PATCH STUDIO TAB -->
+        <div id="tab-patch" class="tab-content hidden flex-1 flex flex-col p-8 overflow-hidden">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-2xl font-black text-white flex items-center">
+                        <i class="fas fa-code-branch text-teal-400 mr-3"></i>Patch Studio & Diff Review
+                    </h2>
+                    <p class="text-slate-400 text-sm">Unified Git diff inspection, additions/deletions metrics, atomic apply, and rollback.</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="refreshPatches()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-4 py-2 rounded-xl border border-slate-700 transition-all">
+                        <i class="fas fa-sync-alt mr-1.5"></i>Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-6 flex-1 min-h-0">
+                <!-- Patch List -->
+                <div class="glass rounded-2xl p-6 border border-slate-800 flex flex-col min-h-0 overflow-hidden">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Candidate Patches</h3>
+                    <div id="patch-history-list" class="flex-1 overflow-y-auto space-y-3 text-xs pr-2">
+                        <p class="text-slate-500 text-center py-6">No patches generated yet. Run the Autonomous Agent to synthesize candidate fixes.</p>
                     </div>
                 </div>
 
-                <div class="glass p-6 rounded-2xl border border-slate-800">
-                    <h4 class="text-sm font-bold text-white mb-4 flex items-center">
-                        <i class="fas fa-shield-alt text-teal-400 mr-2"></i>Zero-Trust Provenance Audit
-                    </h4>
-                    <div class="space-y-3 text-xs">
-                        <div class="p-3 bg-slate-900/70 rounded-lg border border-emerald-500/30 flex items-start justify-between">
-                            <div>
-                                <span class="font-bold text-emerald-400">[SAFE] Shell Command Verification</span>
-                                <p class="text-slate-400 mt-1">All documented commands validated against isolated execution sandbox.</p>
-                            </div>
-                            <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">PASSED</span>
+                <!-- Unified Diff Viewer -->
+                <div class="col-span-2 terminal rounded-2xl flex flex-col min-h-0 overflow-hidden border border-slate-800">
+                    <div class="bg-slate-900 px-4 py-3 border-b border-slate-800 flex justify-between items-center">
+                        <div class="flex items-center space-x-3">
+                            <span id="patch-viewer-title" class="text-xs font-mono text-white font-bold">Select a patch to review diff</span>
+                            <span id="patch-stats-badge" class="hidden text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400"></span>
                         </div>
-                        <div class="p-3 bg-slate-900/70 rounded-lg border border-slate-700 flex items-start justify-between">
-                            <div>
-                                <span class="font-bold text-slate-200">[READY] Devcontainer Synthesis</span>
-                                <p class="text-slate-400 mt-1">Auto-generated clean-room reproducible development container ready.</p>
-                            </div>
-                            <span class="text-[10px] font-mono text-slate-300 bg-slate-700/50 px-2 py-0.5 rounded">READY</span>
+                        <div class="flex items-center space-x-2" id="patch-actions-bar">
+                            <!-- Action buttons inserted dynamically -->
                         </div>
+                    </div>
+                    <div id="patch-diff-body" class="flex-1 p-4 font-mono text-xs overflow-y-auto space-y-0.5">
+                        <p class="text-slate-600">Unified git diffs, hunk lines, and modifications will render here.</p>
                     </div>
                 </div>
             </div>
@@ -256,28 +355,34 @@
 
         <!-- TERMINAL TAB -->
         <div id="tab-terminal" class="tab-content hidden flex-1 flex flex-col p-8 overflow-hidden">
-            <div class="mb-6">
-                <h2 class="text-2xl font-black text-white">Sandbox Execution Center</h2>
-                <p class="text-slate-400 text-sm">Isolated Docker-based environment for safe repo setup and testing.</p>
+            <div class="mb-6 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-black text-white">Sandbox Execution Center</h2>
+                    <p class="text-slate-400 text-sm">Isolated Docker-level environment for safe repo setup, dependency installation, and testing.</p>
+                </div>
+                <div class="text-xs font-mono text-slate-500">
+                    Permitted binaries: <span class="text-emerald-400 font-bold">python, node, npm, pip, pytest, git, cargo</span>
+                </div>
             </div>
-            <div class="terminal flex-1 rounded-2xl shadow-2xl flex flex-col overflow-hidden border-2 border-slate-800">
+            <div class="terminal flex-1 rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-800">
                 <div class="bg-slate-900 px-4 py-2 border-b border-slate-800 flex justify-between items-center">
                     <div class="flex space-x-2">
                         <div class="w-3 h-3 bg-red-500 rounded-full"></div>
                         <div class="w-3 h-3 bg-amber-500 rounded-full"></div>
                         <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
                     </div>
-                    <span class="text-[10px] font-mono text-slate-500">civora-sandbox-v1 ~ user@autonomous-agent</span>
+                    <span class="text-[10px] font-mono text-slate-500">civora-sandbox-v2 ~ zero-trust confinement</span>
                 </div>
                 <div id="terminal-log" class="flex-1 p-6 font-mono text-xs text-emerald-500 overflow-y-auto space-y-1">
-                    <p class="text-emerald-500/50"># Civora Engine Initialized.</p>
-                    <p class="text-emerald-500/50"># Sandbox Ready. Zero-Trust Policy Active.</p>
+                    <p class="text-emerald-500/50"># CIVORA Zero-Trust Execution Sandbox Initialized.</p>
+                    <p class="text-emerald-500/50"># Zero-Trust Provenance Gate: ACTIVE.</p>
                     <p class="text-white mt-2">$ civora --status</p>
-                    <p class="text-emerald-400">STATUS: READY | REPO: REACT-CORE | MODE: ISOLATED</p>
+                    <p class="text-emerald-400">STATUS: CONFINED | POLICY: ENFORCED | EXIT CODE SAFETY: VERIFIED</p>
                 </div>
                 <form onsubmit="runCommand(event)" class="bg-slate-900/50 p-4 border-t border-slate-800 flex items-center space-x-3">
                     <span class="text-emerald-500 font-mono text-sm">$</span>
-                    <input id="term-input" type="text" class="flex-1 bg-transparent border-none outline-none text-white font-mono text-sm" placeholder="npm test, node -v, cat README.md..." autocomplete="off">
+                    <input id="term-input" type="text" class="flex-1 bg-transparent border-none outline-none text-white font-mono text-sm" placeholder="npm test, python3 -m pytest, git status, cat requirements.txt..." autocomplete="off">
+                    <button type="submit" class="bg-slate-800 hover:bg-slate-700 text-white text-xs px-4 py-1.5 rounded-lg font-mono">Run</button>
                 </form>
             </div>
         </div>
@@ -287,10 +392,10 @@
             <div class="flex justify-between items-center mb-6">
                 <div>
                     <h2 class="text-2xl font-black text-white">Repository-Aware AI</h2>
-                    <p class="text-slate-400 text-sm">Autonomous Engineering Agent + General Coding Assistant.</p>
+                    <p class="text-slate-400 text-sm">Autonomous Engineering Agent + General Software Engineering Assistant.</p>
                 </div>
                 <div class="flex bg-slate-800 p-1 rounded-xl border border-slate-700">
-                    <button onclick="setMode('agent')" id="mode-agent" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-500 text-dark-900 transition-all">AGENT OPS</button>
+                    <button onclick="setMode('agent')" id="mode-agent" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-500 text-dark-900 transition-all">AUTONOMOUS REPO</button>
                     <button onclick="setMode('general')" id="mode-general" class="px-4 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all">GENERAL LLM</button>
                 </div>
             </div>
@@ -300,15 +405,15 @@
                     <div class="flex items-start space-x-4">
                         <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-dark-900 font-black text-xs">AI</div>
                         <div class="bg-slate-800/80 p-4 rounded-2xl rounded-tl-none border border-slate-700 max-w-2xl">
-                            <p class="text-sm leading-relaxed">System initialized. I am your **Civora Principal Engineer**. I have analyzed the active repository architecture. How can I assist you in investigating failures or generating patches today?</p>
+                            <p class="text-sm leading-relaxed">System initialized. I am your **Civora Principal Software Engineer**. I have inspected the active workspace files and sandbox environment. How can I assist you with debugging, documentation drift, or test verification today?</p>
                         </div>
                     </div>
                 </div>
                 <div class="p-6 border-t border-slate-800">
                     <form onsubmit="sendChat(event)" class="relative">
-                        <input id="chat-input" type="text" class="w-full bg-slate-900 border border-slate-700 rounded-2xl pl-6 pr-32 py-4 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="Ask about repo architecture, fix errors, or generate patches...">
+                        <input id="chat-input" type="text" class="w-full bg-slate-900 border border-slate-700 rounded-2xl pl-6 pr-32 py-4 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="Ask about repo architecture, test errors, or drift repairs...">
                         <div class="absolute right-2 top-2 flex items-center space-x-2">
-                            <button type="submit" class="bg-emerald-500 text-dark-900 px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all">Send Agent</button>
+                            <button type="submit" class="bg-emerald-500 text-dark-900 px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all">Send</button>
                         </div>
                     </form>
                 </div>
@@ -319,8 +424,12 @@
 
     <script>
         let currentMode = 'agent';
+        let activeTaskId = null;
+        let eventSource = null;
+        let lastReportMd = null;
+        let cachedPatches = [];
 
-        function showTab(tabId) {
+        function showTab(tabId, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
             const target = document.getElementById('tab-' + tabId);
             if (target) target.classList.remove('hidden');
@@ -329,10 +438,11 @@
                 b.classList.remove('tab-active');
                 b.classList.add('text-slate-400');
             });
-            if (event && event.currentTarget) {
-                event.currentTarget.classList.add('tab-active');
-                event.currentTarget.classList.remove('text-slate-400');
+            if (el) {
+                el.classList.add('tab-active');
+                el.classList.remove('text-slate-400');
             }
+            if (tabId === 'patch') refreshPatches();
         }
 
         function setMode(mode) {
@@ -341,14 +451,312 @@
             document.getElementById('mode-general').className = mode === 'general' ? 'px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-500 text-dark-900' : 'px-4 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white';
         }
 
+        // -------------------------------------------------------------
+        // AUTONOMOUS AGENT ORCHESTRATOR LOGIC
+        // -------------------------------------------------------------
+        async function startAgent() {
+            const prompt = document.getElementById('agent-prompt-input').value;
+            const badge = document.getElementById('agent-status-badge');
+            const startBtn = document.getElementById('btn-start-agent');
+            const stopBtn = document.getElementById('btn-stop-agent');
+            const stepsList = document.getElementById('agent-steps-list');
+            const liveLog = document.getElementById('agent-live-log');
+            const streamInd = document.getElementById('agent-stream-indicator');
+            const reportCard = document.getElementById('agent-report-card');
+
+            stepsList.innerHTML = '';
+            liveLog.innerHTML = '<p class="text-emerald-400/80"># Launching autonomous agent orchestrator...</p>';
+            reportCard.classList.add('hidden');
+            startBtn.classList.add('opacity-50', 'pointer-events-none');
+            stopBtn.classList.remove('hidden');
+
+            badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 animate-pulse';
+            badge.innerText = 'RUNNING';
+
+            try {
+                const res = await fetch('/api/agent/run', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ prompt: prompt })
+                });
+                const data = await res.json();
+                activeTaskId = data.task_id;
+
+                // Connect to SSE stream
+                if (eventSource) eventSource.close();
+                eventSource = new EventSource('/api/agent/stream/' + activeTaskId);
+                streamInd.className = 'text-emerald-400 font-bold';
+                streamInd.innerText = 'LIVE STREAM';
+
+                eventSource.onmessage = function(e) {
+                    try {
+                        const event = JSON.parse(e.data);
+                        handleAgentEvent(event);
+                    } catch (err) {}
+                };
+
+                eventSource.onerror = function() {
+                    streamInd.className = 'text-slate-600';
+                    streamInd.innerText = 'OFFLINE';
+                };
+
+            } catch (err) {
+                alert('Failed to launch agent: ' + err.message);
+                badge.innerText = 'FAILED';
+                badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/40';
+                startBtn.classList.remove('opacity-50', 'pointer-events-none');
+                stopBtn.classList.add('hidden');
+            }
+        }
+
+        async function stopAgent() {
+            if (!activeTaskId) return;
+            try {
+                await fetch('/api/agent/stop/' + activeTaskId, { method: 'POST' });
+                if (eventSource) eventSource.close();
+                document.getElementById('agent-status-badge').innerText = 'ABORTED';
+                document.getElementById('agent-status-badge').className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40';
+                document.getElementById('btn-start-agent').classList.remove('opacity-50', 'pointer-events-none');
+                document.getElementById('btn-stop-agent').classList.add('hidden');
+            } catch (err) {}
+        }
+
+        function handleAgentEvent(event) {
+            const stepsList = document.getElementById('agent-steps-list');
+            const liveLog = document.getElementById('agent-live-log');
+            const badge = document.getElementById('agent-status-badge');
+            const countSpan = document.getElementById('agent-step-count');
+
+            if (event.event === 'step') {
+                const s = event.data;
+                let stepEl = document.getElementById('step-row-' + s.step_number);
+                if (!stepEl) {
+                    stepEl = document.createElement('div');
+                    stepEl.id = 'step-row-' + s.step_number;
+                    stepEl.className = 'p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex items-start justify-between';
+                    stepsList.appendChild(stepEl);
+                }
+
+                const statusColor = s.status === 'COMPLETED' ? 'text-emerald-400 bg-emerald-500/10' : 'text-amber-400 bg-amber-500/10 animate-pulse';
+                stepEl.innerHTML = `
+                    <div class="flex-1 mr-3">
+                        <div class="flex items-center space-x-2">
+                            <span class="font-mono text-[10px] text-slate-500">STEP ${s.step_number}</span>
+                            <span class="font-mono text-[10px] text-slate-400 font-bold uppercase">[${s.phase}]</span>
+                        </div>
+                        <p class="font-bold text-white mt-1">${s.action}</p>
+                        ${s.stdout ? `<p class="text-[11px] text-slate-400 font-mono mt-1">${s.stdout}</p>` : ''}
+                    </div>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded ${statusColor} font-bold">${s.status}</span>
+                `;
+                countSpan.innerText = stepsList.children.length + ' steps';
+                stepsList.scrollTop = stepsList.scrollHeight;
+
+                liveLog.innerHTML += `<p class="text-emerald-400/80 mt-2 font-bold">[${s.phase}] ${s.action}</p>`;
+                if (s.stdout) liveLog.innerHTML += `<pre class="text-slate-300 pl-4 whitespace-pre-wrap">${s.stdout}</pre>`;
+                if (s.stderr) liveLog.innerHTML += `<pre class="text-amber-400 pl-4 whitespace-pre-wrap">${s.stderr}</pre>`;
+                liveLog.scrollTop = liveLog.scrollHeight;
+            }
+
+            if (event.event === 'patch') {
+                liveLog.innerHTML += `<p class="text-teal-400 font-bold mt-2">⚡ Sourced surgical patch: ${event.data.file_path} (+${event.data.additions}/-${event.data.deletions})</p>`;
+                refreshPatches();
+            }
+
+            if (event.event === 'status') {
+                const st = event.data.status;
+                badge.innerText = st;
+                if (st === 'VERIFIED') {
+                    badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-500 text-dark-900 shadow-lg shadow-emerald-500/30';
+                } else if (st === 'COMPLETED') {
+                    badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-teal-500 text-dark-900';
+                }
+
+                if (event.data.report_md) {
+                    lastReportMd = event.data.report_md;
+                    const rCard = document.getElementById('agent-report-card');
+                    rCard.classList.remove('hidden');
+                    document.getElementById('agent-report-meta').innerText = 'Task: ' + activeTaskId + ' | Status: ' + st;
+                }
+
+                if (['VERIFIED', 'COMPLETED', 'FAILED', 'ABORTED'].includes(st)) {
+                    document.getElementById('btn-start-agent').classList.remove('opacity-50', 'pointer-events-none');
+                    document.getElementById('btn-stop-agent').classList.add('hidden');
+                    if (eventSource) eventSource.close();
+                }
+            }
+        }
+
+        function downloadReport() {
+            if (!lastReportMd) return;
+            const blob = new Blob([lastReportMd], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `CIVORA_VERIFICATION_REPORT_${activeTaskId || 'task'}.md`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // -------------------------------------------------------------
+        // REPO INTELLIGENCE & DRIFT RADAR LOGIC
+        // -------------------------------------------------------------
+        async function scanRepo() {
+            try {
+                const res = await fetch('/api/repo/scan', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({})
+                });
+                const data = await res.json();
+
+                document.getElementById('stat-repo-name').innerText = data.repo_name || 'CIVORA-AI';
+                document.getElementById('stat-drift-count').innerText = data.drift_issues_count || 0;
+                document.getElementById('intel-lang').innerText = data.primary_language || 'Python';
+                document.getElementById('intel-frameworks').innerText = (data.frameworks || []).join(', ') || 'FastAPI';
+                document.getElementById('intel-files').innerText = data.total_files + ' files';
+                document.getElementById('intel-envs').innerText = (data.env_variables || []).slice(0, 3).join(', ') || 'None';
+
+                const badge = document.getElementById('intel-issues-badge');
+                badge.innerText = (data.drift_issues_count || 0) + ' ISSUES';
+
+                const list = document.getElementById('intel-findings-list');
+                list.innerHTML = '';
+
+                if (!data.driftIssues || data.driftIssues.length === 0) {
+                    list.innerHTML = '<p class="text-emerald-400 text-center py-4 font-bold">✓ 0 Drift Issues Detected! Codebase aligns with documentation.</p>';
+                    return;
+                }
+
+                data.driftIssues.forEach(item => {
+                    const sevColor = item.severity === 'CRITICAL' || item.severity === 'HIGH' ? 'text-rose-400 border-rose-500/30' : 'text-amber-400 border-amber-500/30';
+                    list.innerHTML += `
+                        <div class="p-4 bg-slate-900/80 rounded-xl border ${sevColor} flex flex-col space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-white text-sm">[${item.severity}] ${item.title}</span>
+                                <span class="font-mono text-[10px] text-slate-400 bg-slate-800 px-2 py-0.5 rounded">${item.category}</span>
+                            </div>
+                            <p class="text-slate-300">${item.explanation}</p>
+                            <div class="p-2 bg-black/40 rounded border border-slate-800 font-mono text-[11px] text-slate-400">
+                                <strong>Evidence:</strong> ${item.evidence}
+                            </div>
+                            <p class="text-emerald-400 font-mono text-[11px]"><strong>Fix:</strong> ${item.suggested_fix}</p>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                alert('Radar scan error: ' + err.message);
+            }
+        }
+
+        // -------------------------------------------------------------
+        // PATCH STUDIO LOGIC
+        // -------------------------------------------------------------
+        async function refreshPatches() {
+            try {
+                const res = await fetch('/api/patch/list');
+                const data = await res.json();
+                cachedPatches = data.patches || [];
+                renderPatchList();
+            } catch (err) {}
+        }
+
+        function renderPatchList() {
+            const list = document.getElementById('patch-history-list');
+            if (cachedPatches.length === 0) {
+                list.innerHTML = '<p class="text-slate-500 text-center py-6">No patches recorded yet.</p>';
+                return;
+            }
+
+            list.innerHTML = '';
+            cachedPatches.forEach((p, idx) => {
+                const el = document.createElement('div');
+                el.className = 'p-3 bg-slate-900/70 hover:bg-slate-800/80 rounded-xl border border-slate-800 cursor-pointer transition-all';
+                el.onclick = () => selectPatch(p);
+                el.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="font-mono font-bold text-white">${p.patch_id}</span>
+                        <span class="text-[10px] uppercase font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">${p.status}</span>
+                    </div>
+                    <p class="text-slate-400 text-[11px] truncate">${p.explanation || 'Patch'}</p>
+                    <div class="mt-2 text-[10px] font-mono text-slate-500 flex space-x-3">
+                        <span class="text-emerald-400">+${p.total_additions}</span>
+                        <span class="text-rose-400">-${p.total_deletions}</span>
+                        <span>${p.affected_files_count} file(s)</span>
+                    </div>
+                `;
+                list.appendChild(el);
+            });
+
+            if (cachedPatches.length > 0) selectPatch(cachedPatches[0]);
+        }
+
+        function selectPatch(patch) {
+            document.getElementById('patch-viewer-title').innerText = patch.patch_id + ' — ' + (patch.explanation || 'Patch Details');
+            const statsBadge = document.getElementById('patch-stats-badge');
+            statsBadge.classList.remove('hidden');
+            statsBadge.innerText = `+${patch.total_additions} / -${patch.total_deletions}`;
+
+            const actionsBar = document.getElementById('patch-actions-bar');
+            actionsBar.innerHTML = `
+                <button onclick="rollbackPatch('${patch.patch_id}')" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border border-rose-500/40 text-[11px] px-3 py-1 rounded-lg">
+                    <i class="fas fa-undo mr-1"></i>Rollback
+                </button>
+            `;
+
+            const diffBody = document.getElementById('patch-diff-body');
+            diffBody.innerHTML = '';
+
+            (patch.files || []).forEach(f => {
+                diffBody.innerHTML += `<div class="text-slate-400 font-bold border-b border-slate-800 pb-1 mb-2 font-mono">FILE: ${f.file_path}</div>`;
+                const lines = (f.diff_text || '').split('\n');
+                lines.forEach(line => {
+                    let cls = 'text-slate-400';
+                    if (line.startsWith('+') && !line.startsWith('+++')) cls = 'diff-add px-1 rounded';
+                    else if (line.startsWith('-') && !line.startsWith('---')) cls = 'diff-del px-1 rounded';
+                    else if (line.startsWith('@@')) cls = 'diff-hdr px-1 rounded';
+                    diffBody.innerHTML += `<pre class="${cls} whitespace-pre-wrap">${escapeHtml(line)}</pre>`;
+                });
+            });
+        }
+
+        async function rollbackPatch(patchId) {
+            if (!confirm('Rollback patch ' + patchId + '? This will restore previous file contents.')) return;
+            try {
+                const res = await fetch('/api/patch/rollback', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ patch_id: patchId })
+                });
+                const data = await res.json();
+                if (data.rolled_back) {
+                    alert('Patch ' + patchId + ' successfully rolled back!');
+                    refreshPatches();
+                } else {
+                    alert('Rollback failed: ' + (data.error || 'Unknown error'));
+                }
+            } catch (err) {
+                alert('Rollback error: ' + err.message);
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.innerText = text;
+            return div.innerHTML;
+        }
+
+        // -------------------------------------------------------------
+        // SANDBOX TERMINAL
+        // -------------------------------------------------------------
         async function runCommand(e) {
             e.preventDefault();
             const input = document.getElementById('term-input');
             const log = document.getElementById('terminal-log');
             const cmd = input.value;
-            if(!cmd) return;
+            if (!cmd) return;
 
-            log.innerHTML += `<p class="text-white mt-3">$ ${cmd}</p>`;
+            log.innerHTML += `<p class="text-white mt-3 font-bold">$ ${cmd}</p>`;
             input.value = '';
 
             try {
@@ -359,10 +767,10 @@
                 });
                 const data = await res.json();
                 
-                if(data.status === 'SUCCESS') {
-                    log.innerHTML += `<pre class="text-emerald-400 mt-1 whitespace-pre-wrap">${data.stdout || 'Done.'}</pre>`;
+                if (data.status === 'SUCCESS') {
+                    log.innerHTML += `<pre class="text-emerald-400 mt-1 whitespace-pre-wrap">${data.stdout || 'Done (Exit Code 0).'}</pre>`;
                 } else {
-                    log.innerHTML += `<pre class="text-rose-500 mt-1 whitespace-pre-wrap">${data.stderr || 'Command failed.'}</pre>`;
+                    log.innerHTML += `<pre class="text-rose-500 mt-1 whitespace-pre-wrap">${data.stderr || 'Execution failed.'}</pre>`;
                 }
             } catch (err) {
                 log.innerHTML += `<pre class="text-rose-500 mt-1 whitespace-pre-wrap">Connection error: ${err.message}</pre>`;
@@ -370,12 +778,15 @@
             log.scrollTop = log.scrollHeight;
         }
 
+        // -------------------------------------------------------------
+        // AI ENGINEERING CHAT
+        // -------------------------------------------------------------
         async function sendChat(e) {
             e.preventDefault();
             const input = document.getElementById('chat-input');
             const box = document.getElementById('chat-box');
             const text = input.value;
-            if(!text) return;
+            if (!text) return;
 
             box.innerHTML += `
                 <div class="flex items-start justify-end space-x-4">
@@ -402,7 +813,7 @@
                     <div class="flex items-start space-x-4">
                         <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-dark-900 font-black text-xs">AI</div>
                         <div class="bg-slate-800/80 p-4 rounded-2xl rounded-tl-none border border-slate-700 max-w-2xl">
-                            <p class="text-sm leading-relaxed text-slate-300">${(data.reply || 'No response').replace(/\n/g, '<br>')}</p>
+                            <div class="text-sm leading-relaxed text-slate-300 prose prose-invert">${formatMarkdown(data.reply || 'No response')}</div>
                         </div>
                     </div>
                 `;
@@ -411,7 +822,7 @@
                     <div class="flex items-start space-x-4">
                         <div class="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center text-white font-black text-xs">!</div>
                         <div class="bg-slate-800/80 p-4 rounded-2xl rounded-tl-none border border-red-500/50 max-w-2xl">
-                            <p class="text-sm leading-relaxed text-red-400">Error reaching backend: ${err.message}</p>
+                            <p class="text-sm leading-relaxed text-red-400">Error: ${err.message}</p>
                         </div>
                     </div>
                 `;
@@ -419,21 +830,30 @@
             box.scrollTop = box.scrollHeight;
         }
 
-        async function scanRepo() {
-            const select = document.getElementById('repo-select');
-            const repoVal = select ? select.value : 'Sample/Repo';
-            try {
-                const res = await fetch('/api/repo/scan', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ url: repoVal })
-                });
-                const data = await res.json();
-                alert("Scan Complete. Found " + (data.driftIssues ? data.driftIssues.length : 0) + " documentation drift issues for " + data.repo + ".");
-            } catch (err) {
-                alert("Scan failed: " + err.message);
+        function formatMarkdown(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`([^`]+)`/g, '<code class="bg-slate-900 px-1 py-0.5 rounded text-emerald-400 font-mono text-xs">$1</code>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function triggerQuickAction(act) {
+            if (act === 'audit') {
+                showTab('intelligence', document.querySelectorAll('.nav-btn')[2]);
+                scanRepo();
+            } else if (act === 'test') {
+                showTab('terminal', document.querySelectorAll('.nav-btn')[4]);
+                document.getElementById('term-input').value = 'pytest civora-platform/tests -v';
+            } else if (act === 'patch') {
+                showTab('patch', document.querySelectorAll('.nav-btn')[3]);
             }
         }
+
+        // Auto scan on load
+        window.addEventListener('DOMContentLoaded', () => {
+            scanRepo();
+        });
     </script>
 </body>
 </html>

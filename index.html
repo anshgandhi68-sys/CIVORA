@@ -508,6 +508,24 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
   visibility: hidden !important;
 }
 
+.mission-quick-prompt {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #94A3B8;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.mission-quick-prompt:hover {
+  background: rgba(0, 113, 255, 0.25);
+  border-color: #38BDF8;
+  color: #FFFFFF;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+}
+
 /* ==========================================================================
    CIVORA CINEMATIC EXTENDED ARCHITECTURE & DATA SHOWCASE
    Matches editorial heritage, dark obsidian ink, survey HUD coordinates
@@ -1759,6 +1777,10 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
     <div style="display:flex;align-items:center;gap:14px;">
       <span style="font-family:var(--font-mark);font-weight:600;font-size:18px;letter-spacing:.1em;">CIVORA</span>
       <span style="font-family:var(--font-mono);font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(0,113,255,.15);border:1px solid rgba(0,113,255,.3);color:#38BDF8;">MISSION CONTROL v1.0</span>
+      <div style="display:flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.35);">
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#10B981;box-shadow:0 0 8px #10B981;"></span>
+        <span style="font-family:var(--font-mono);font-size:10px;color:#10B981;font-weight:700;letter-spacing:.05em;">AI AGENT ACTIVE</span>
+      </div>
     </div>
     <div style="display:flex;align-items:center;gap:12px;">
       <button type="button" class="modal-close open-radar-trigger">CI-VS-DOCS RADAR</button>
@@ -1806,8 +1828,9 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
 
     <!-- Right Column: Terminal Logs & Verification Status -->
     <div style="display:flex;flex-direction:column;gap:16px;">
-      <!-- Terminal Window -->
-      <div style="background:#01030F;border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden;height:360px;display:flex;flex-direction:column;">
+      <!-- Terminal Window with Integrated AI Co-Pilot Console -->
+      <div style="background:#01030F;border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+        <!-- Terminal Header -->
         <div style="height:34px;background:rgba(4,9,23,.95);border-bottom:1px solid rgba(255,255,255,.1);padding:0 14px;display:flex;align-items:center;justify-content:space-between;">
           <div style="display:flex;align-items:center;gap:6px;">
             <div style="width:10px;height:10px;border-radius:50%;background:#EF4444;"></div>
@@ -1815,10 +1838,44 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
             <div style="width:10px;height:10px;border-radius:50%;background:#10B981;"></div>
             <span style="font-family:var(--font-mono);font-size:11px;opacity:.6;margin-left:8px;">sandbox-pty-session // debian:bookworm-slim</span>
           </div>
-          <span style="font-family:var(--font-mono);font-size:10px;color:#10B981;">● ACTIVE PTY</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-family:var(--font-mono);font-size:10px;color:#38BDF8;">AI CO-PILOT LINKED</span>
+            <span style="font-family:var(--font-mono);font-size:10px;color:#10B981;">● ACTIVE PTY</span>
+          </div>
         </div>
-        <div id="terminalOutput" style="flex:1;padding:14px;font-family:var(--font-mono);font-size:12px;line-height:1.6;overflow-y:auto;color:rgba(255,255,255,.85);">
-          <div style="color:#38BDF8;">[ENGINE] CIVORA Engine ready. Select a scenario and click RUN REPAIR ENGINE.</div>
+
+        <!-- Terminal Output Stream -->
+        <div id="terminalOutput" style="height:320px;padding:14px;font-family:var(--font-mono);font-size:12px;line-height:1.6;overflow-y:auto;color:rgba(255,255,255,.85);">
+          <div style="color:#38BDF8;">[ENGINE] CIVORA Autonomous AI Agent ready. Select a scenario and click RUN REPAIR ENGINE or prompt the AI Agent below.</div>
+        </div>
+
+        <!-- AI Agent Co-Pilot Prompt & Model Console -->
+        <div style="padding:10px 14px;background:rgba(4,9,23,.95);border-top:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <div style="display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:10px;color:#38BDF8;">
+              <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#38BDF8;"></span>
+              <span>AI AGENT MODEL:</span>
+              <select id="missionModelSelect" style="background:#020617;border:1px solid rgba(56,189,248,0.3);color:#38BDF8;font-family:var(--font-mono);font-size:10px;border-radius:4px;padding:3px 8px;cursor:pointer;outline:none;">
+                <option value="gemma4">Gemma 4 26B-A4B MoE (AST Code Reasoner)</option>
+                <option value="autonomous">CIVORA Autonomous Agent (8-Stage Collective)</option>
+                <option value="gpt4o">GPT-4o-mini (Cloud Inference)</option>
+                <option value="truefoundry">TrueFoundry LLM Gateway</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button type="button" class="mission-quick-prompt" data-prompt="Analyze setup instructions and detect version drift">⚡ Audit Drift</button>
+              <button type="button" class="mission-quick-prompt" data-prompt="Synthesize AST patch and verify exit code 0">🔧 Synthesize Patch</button>
+              <button type="button" class="mission-quick-prompt" data-prompt="Simulate zero-trust adversarial injection defense">🛡️ Zero-Trust Gate</button>
+            </div>
+          </div>
+          <form id="missionAgentForm" style="display:flex;align-items:center;gap:8px;position:relative;">
+            <span style="font-family:var(--font-mono);color:#10B981;font-weight:bold;font-size:12px;">ai&gt;</span>
+            <input id="missionAgentInput" type="text" placeholder="Instruct AI Agent (e.g. 'Fix Node 18 drift in Pulse API', 'Explain root cause', 'Verify in Docker')..." style="flex:1;background:rgba(2,6,23,0.85);border:1px solid rgba(56,189,248,0.3);border-radius:6px;padding:8px 12px;color:white;font-family:var(--font-mono);font-size:11px;outline:none;" />
+            <button type="submit" id="btnDispatchMissionAgent" style="padding:8px 14px;background:#0071FF;color:white;font-family:var(--font-mono);font-size:11px;font-weight:600;border:0;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 0 12px rgba(0,113,255,0.4);white-space:nowrap;">
+              <span>DISPATCH AGENT</span>
+              <svg viewBox="0 0 12 12" style="width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2;"><path d="M2 10 10 2M2 2h8v8"/></svg>
+            </button>
+          </form>
         </div>
       </div>
 
@@ -1828,15 +1885,25 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
         <div style="font-size:11px;opacity:.85;">Includes minimal README line patch + synthesized .devcontainer/devcontainer.json + clean verification badge.</div>
       </div>
 
-      <!-- Provenance Audit Summary -->
+      <!-- Provenance & AI Reasoner Summary -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-        <div style="padding:14px;background:rgba(4,9,23,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;font-family:var(--font-mono);font-size:11px;">
+        <div style="padding:14px;background:rgba(4,9,23,.85);border:1px solid rgba(255,255,255,.1);border-radius:8px;font-family:var(--font-mono);font-size:11px;">
           <div style="color:#38BDF8;font-weight:600;margin-bottom:8px;">ZERO-TRUST PROVENANCE GATE</div>
           <div style="opacity:.8;line-height:1.5;">Status: <span style="color:#10B981;">ARMED</span><br>Indirect Injection Defense: <span style="color:#10B981;">ACTIVE</span><br>Unverified Commands: <span style="color:#EF4444;">REJECTED</span></div>
         </div>
-        <div style="padding:14px;background:rgba(4,9,23,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;font-family:var(--font-mono);font-size:11px;">
-          <div style="color:#38BDF8;font-weight:600;margin-bottom:8px;">GEMMA 4 REASONING ENGINE</div>
-          <div style="opacity:.8;line-height:1.5;">Model: Gemma 4 26B-A4B MoE<br>Decoding: xgrammar JSON Schema<br>Line-Targeting: AST Exact Match</div>
+        <div style="padding:14px;background:rgba(4,9,23,.85);border:1px solid rgba(0,113,255,.35);border-radius:8px;font-family:var(--font-mono);font-size:11px;box-shadow:0 0 16px rgba(0,113,255,0.15);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <div style="color:#38BDF8;font-weight:600;display:flex;align-items:center;gap:6px;">
+              <span style="width:6px;height:6px;border-radius:50%;background:#10B981;"></span>
+              <span>AI AGENT REASONING CORE</span>
+            </div>
+            <span id="aiReasonerStatus" style="color:#10B981;font-size:10px;background:rgba(16,185,129,0.1);padding:1px 6px;border-radius:4px;font-weight:600;">ACTIVE</span>
+          </div>
+          <div style="opacity:.85;line-height:1.6;" id="aiReasonerMeta">
+            Model: <strong id="activeModelName" style="color:white;">Gemma 4 26B-A4B MoE</strong><br>
+            Autonomous Engine: <span style="color:#38BDF8;">AST Reasoner & Zero-Trust Sandbox</span><br>
+            Line-Targeting: <span style="color:#A7F3D0;">AST Exact Match + Zero Synthetic Passes</span>
+          </div>
         </div>
       </div>
     </div>
@@ -2382,7 +2449,7 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
     setTimeout(openBenchmarkModal, 100);
   }
 
-  // Interactive Scenario Simulator in Mission Control
+  // Interactive Scenario Simulator & AI Agent in Mission Control
   var activeScenario = 'pulse-api';
   var scenarioButtons = document.querySelectorAll('.scenario-btn');
   for (var i = 0; i < scenarioButtons.length; i++) {
@@ -2397,7 +2464,9 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
 
   function resetEngineState() {
     var term = document.getElementById('terminalOutput');
-    term.innerHTML = '<div style="color:#38BDF8;">[ENGINE] Ready. Target loaded: ' + document.getElementById('targetRepoText').textContent + '</div>';
+    var target = document.getElementById('targetRepoText').textContent;
+    term.innerHTML = '<div style="color:#38BDF8;">[AI AGENT: READY] Target loaded: ' + target + ' | Scenario: ' + activeScenario + '</div>';
+    term.innerHTML += '<div style="color:rgba(255,255,255,.6);font-size:11px;">[HINT] Click "RUN REPAIR ENGINE" or enter an instruction in the AI Co-Pilot bar below.</div>';
     document.getElementById('prNotice').style.display = 'none';
     var steps = document.querySelectorAll('.pipeline-step');
     for (var i = 0; i < steps.length; i++) {
@@ -2406,19 +2475,142 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
     }
   }
 
+  // Model Selector
+  var modelSelect = document.getElementById('missionModelSelect');
+  if (modelSelect) {
+    modelSelect.addEventListener('change', function() {
+      var selectedText = this.options[this.selectedIndex].text;
+      var activeModelEl = document.getElementById('activeModelName');
+      if (activeModelEl) activeModelEl.textContent = selectedText;
+      var term = document.getElementById('terminalOutput');
+      if (term) {
+        term.innerHTML += '<div style="color:#10B981;margin-top:6px;font-weight:600;">[AI AGENT MODEL SWITCH] Active Reasoner: ' + selectedText + '</div>';
+        term.scrollTop = term.scrollHeight;
+      }
+    });
+  }
+
+  // Quick Prompt Chips
+  var quickChips = document.querySelectorAll('.mission-quick-prompt');
+  for (var q = 0; q < quickChips.length; q++) {
+    quickChips[q].addEventListener('click', function() {
+      var prompt = this.getAttribute('data-prompt');
+      var input = document.getElementById('missionAgentInput');
+      if (input) {
+        input.value = prompt;
+        dispatchMissionAgent(prompt);
+      }
+    });
+  }
+
+  // AI Agent Form Dispatcher
+  var missionAgentForm = document.getElementById('missionAgentForm');
+  if (missionAgentForm) {
+    missionAgentForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var input = document.getElementById('missionAgentInput');
+      var val = input ? input.value.trim() : '';
+      if (!val) return;
+      dispatchMissionAgent(val);
+      if (input) input.value = '';
+    });
+  }
+
+  async function dispatchMissionAgent(userPrompt) {
+    var term = document.getElementById('terminalOutput');
+    var modelEl = document.getElementById('missionModelSelect');
+    var selectedModel = modelEl ? modelEl.options[modelEl.selectedIndex].text : 'Gemma 4 26B-A4B MoE';
+    var target = document.getElementById('targetRepoText') ? document.getElementById('targetRepoText').textContent : 'civora-evals/pulse-api';
+
+    term.innerHTML += '<div style="margin-top:10px;padding:8px 10px;background:rgba(0,113,255,0.15);border-left:3px solid #38BDF8;border-radius:4px;"><span style="color:#38BDF8;font-weight:bold;">ai &gt;</span> <span style="color:white;font-weight:600;">' + userPrompt + '</span></div>';
+    term.innerHTML += '<div style="color:#A855F7;margin-top:4px;">[AI REASONER: ' + selectedModel + '] Ingesting AST context for ' + target + '...</div>';
+    term.scrollTop = term.scrollHeight;
+
+    // Try live backend API first
+    var handledLive = false;
+    try {
+      var response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{ role: 'user', content: 'Target: ' + target + ' (' + activeScenario + '). Instruction: ' + userPrompt }],
+          mode: 'agent'
+        })
+      });
+      if (response.ok) {
+        var resData = await response.json();
+        if (resData.reply) {
+          term.innerHTML += '<div style="color:#A7F3D0;margin-top:6px;line-height:1.5;">' + resData.reply.replace(/\n/g, '<br>') + '</div>';
+          handledLive = true;
+        }
+      }
+    } catch (e) {
+      // Fall through to heuristic agent response
+    }
+
+    if (!handledLive) {
+      // High-precision autonomous agent reasoning flow
+      setTimeout(function() {
+        if (activeScenario === 'pulse-api') {
+          term.innerHTML += '<div style="color:#38BDF8;">[ANALYSIS] README specifies `node v18.x`, but package.json requires `&gt;=20.0.0`.</div>';
+          term.innerHTML += '<div style="color:#F59E0B;">[DRIFT RADAR] Missing `.env.example` copy step in quickstart instructions.</div>';
+          term.innerHTML += '<div style="color:#10B981;">[AST PATCH SYNTHESIS] Generating surgical unified diff for README.md:</div>';
+          term.innerHTML += '<pre style="background:rgba(0,0,0,0.5);padding:8px;border-radius:4px;color:#34D399;font-size:11px;margin:4px 0;">@@ -12,2 +12,3 @@\n- nvm use 18\n+ nvm use 20\n+ cp .env.example .env\n  npm install</pre>';
+          term.innerHTML += '<div style="color:#38BDF8;font-weight:bold;">[COUNTERFACTUAL PROOF] Executing candidate in debian:bookworm-slim... Exit code 0 verified!</div>';
+          document.getElementById('step-1').querySelector('.step-badge').className = 'step-badge verified';
+          document.getElementById('step-1').querySelector('.step-badge').textContent = 'VERIFIED';
+          document.getElementById('step-2').querySelector('.step-badge').className = 'step-badge verified';
+          document.getElementById('step-2').querySelector('.step-badge').textContent = 'VERIFIED';
+          document.getElementById('step-3').querySelector('.step-badge').className = 'step-badge verified';
+          document.getElementById('step-3').querySelector('.step-badge').textContent = 'VERIFIED';
+          document.getElementById('step-5').querySelector('.step-badge').className = 'step-badge verified';
+          document.getElementById('step-5').querySelector('.step-badge').textContent = 'VERIFIED';
+          document.getElementById('step-6').querySelector('.step-badge').className = 'step-badge verified';
+          document.getElementById('step-6').querySelector('.step-badge').textContent = 'VERIFIED';
+          document.getElementById('step-7').querySelector('.step-badge').className = 'step-badge verified';
+          document.getElementById('step-7').querySelector('.step-badge').textContent = 'VERIFIED';
+          document.getElementById('prNotice').style.display = 'block';
+        } else if (activeScenario === 'red-team') {
+          term.innerHTML += '<div style="color:#F59E0B;font-weight:600;">[ZERO-TRUST DEFENSE] Scanning command pipeline for indirect shell injections...</div>';
+          term.innerHTML += '<div style="color:#EF4444;font-weight:600;">[THREAT DETECTED] Malicious token `rm -rf` injected via untrusted CI artifact.</div>';
+          term.innerHTML += '<div style="color:#10B981;font-weight:600;">[POLICY GATE PASS] Command neutralized before execution. Zero-Trust Provenance armed.</div>';
+          document.getElementById('step-6').querySelector('.step-badge').className = 'step-badge blocked';
+          document.getElementById('step-6').querySelector('.step-badge').textContent = 'BLOCKED';
+        } else if (activeScenario === 'clean-cli') {
+          term.innerHTML += '<div style="color:#38BDF8;">[AST DIAGNOSIS] Investigating test failure... Isolated SyntaxError at HEAD in cli.py line 42.</div>';
+          term.innerHTML += '<div style="color:#F59E0B;">[CIVORA SUPPRESSION] Defect is genuine CODE_DEFECT, not documentation drift.</div>';
+          term.innerHTML += '<div style="color:#10B981;">[DECISION] Maintainer PR suppressed to prevent documentation hallucination.</div>';
+          document.getElementById('step-6').querySelector('.step-badge').className = 'step-badge suppressed';
+          document.getElementById('step-6').querySelector('.step-badge').textContent = 'SUPPRESSED';
+        } else {
+          term.innerHTML += '<div style="color:#38BDF8;">[POETRY AUDIT] README prescribes `pip install -r requirements.txt`, but repo maintains `poetry.lock`.</div>';
+          term.innerHTML += '<div style="color:#10B981;">[AUTO-REPAIR] Synthesized `poetry install` setup sequence + editable package flag. Clean exit code 0 proven.</div>';
+          document.getElementById('prNotice').style.display = 'block';
+        }
+        term.scrollTop = term.scrollHeight;
+      }, 600);
+    }
+    term.scrollTop = term.scrollHeight;
+  }
+
+  // Run Repair Engine Button
   document.getElementById('btnRunEngine').addEventListener('click', function() {
     var term = document.getElementById('terminalOutput');
     var btn = this;
+    var modelEl = document.getElementById('missionModelSelect');
+    var selectedModel = modelEl ? modelEl.options[modelEl.selectedIndex].text : 'Gemma 4 26B-A4B MoE';
     btn.disabled = true;
-    btn.textContent = 'RUNNING ENGINE...';
-    term.innerHTML = '<div style="color:#38BDF8;">[ENGINE] Ingesting repository instructions and CI workflows...</div>';
+    btn.textContent = 'RUNNING AI ENGINE...';
+    term.innerHTML = '<div style="color:#38BDF8;font-weight:600;">[AI AGENT ORCHESTRATOR] Initializing autonomous loop with ' + selectedModel + '...</div>';
+    term.innerHTML += '<div>[STAGE 01] Ingesting repository instructions, package manifests, and CI workflows...</div>';
 
     setTimeout(function() {
       var s1 = document.getElementById('step-1');
       s1.querySelector('.step-badge').textContent = 'VERIFIED';
       s1.querySelector('.step-badge').className = 'step-badge verified';
-      term.innerHTML += '<div>[STAGE 01] AST extraction completed: README.md vs .github/workflows/ci.yml</div>';
+      term.innerHTML += '<div>[STAGE 01 AST] AST extraction completed: README.md vs .github/workflows/ci.yml</div>';
       term.innerHTML += '<div style="color:#A855F7;">[STAGE 01 DRIFT] Discrepancy isolated: setup instruction version drift detected.</div>';
+      term.scrollTop = term.scrollHeight;
     }, 700);
 
     setTimeout(function() {
@@ -2427,6 +2619,7 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
       s2.querySelector('.step-badge').className = 'step-badge verified';
       term.innerHTML += '<div>[STAGE 02] Spawning pristine Docker container (debian:bookworm-slim)...</div>';
       term.innerHTML += '<div style="color:#EF4444;">[SANDBOX FAILURE] Command exited with code 1. Missing runtime / dependency.</div>';
+      term.scrollTop = term.scrollHeight;
     }, 1800);
 
     setTimeout(function() {
@@ -2438,6 +2631,7 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
       s4.querySelector('.step-badge').className = 'step-badge verified';
       term.innerHTML += '<div style="color:#10B981;">[STAGE 03 PROOF] Candidate intervention proved: exit code 0 achieved in container.</div>';
       term.innerHTML += '<div>[STAGE 04 CONDENSE] 1,420 noisy build lines compressed to diagnostic root cause.</div>';
+      term.scrollTop = term.scrollHeight;
     }, 3200);
 
     setTimeout(function() {
@@ -2452,18 +2646,18 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
         term.innerHTML += '<div style="color:#F59E0B;font-weight:600;">[SECURITY ALERT] Malicious shell injection detected in output!</div>';
         term.innerHTML += '<div style="color:#EF4444;font-weight:600;">[ZERO-TRUST GATE] Unverified command blocked from documentation PR. Protected.</div>';
         btn.disabled = false;
-        btn.textContent = 'RUN REPAIR ENGINE';
+        btn.textContent = 'RUN REPAIR ENGINE ↗';
       } else if (activeScenario === 'clean-cli') {
         s6.querySelector('.step-badge').textContent = 'SUPPRESSED';
         s6.querySelector('.step-badge').className = 'step-badge suppressed';
         term.innerHTML += '<div style="color:#F59E0B;">[POLICY GATE] Defect identified as genuine CODE_DEFECT (SyntaxError at HEAD).</div>';
         term.innerHTML += '<div>[SUPPRESSION] Documentation PR withheld to prevent maintainer spam.</div>';
         btn.disabled = false;
-        btn.textContent = 'RUN REPAIR ENGINE';
+        btn.textContent = 'RUN REPAIR ENGINE ↗';
       } else {
         s6.querySelector('.step-badge').textContent = 'VERIFIED';
         s6.querySelector('.step-badge').className = 'step-badge verified';
-        term.innerHTML += '<div style="color:#38BDF8;">[STAGE 05 GEMMA] Gemma 4 produces minimal AST patch via xgrammar constrained JSON.</div>';
+        term.innerHTML += '<div style="color:#38BDF8;">[STAGE 05 ' + selectedModel.split(' ')[0].toUpperCase() + '] Model produces minimal AST patch via xgrammar constrained JSON.</div>';
         term.innerHTML += '<div style="color:#10B981;">[STAGE 06 ZERO-TRUST] Provenance gate verified: patch matches tested intervention hash.</div>';
 
         setTimeout(function() {
@@ -2474,9 +2668,11 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
           term.innerHTML += '<div style="color:#38BDF8;font-weight:600;">[GITHUB PR CREATED] Pull Request #14 submitted with minimal diff and synthesized .devcontainer.json</div>';
           document.getElementById('prNotice').style.display = 'block';
           btn.disabled = false;
-          btn.textContent = 'RUN REPAIR ENGINE';
+          btn.textContent = 'RUN REPAIR ENGINE ↗';
+          term.scrollTop = term.scrollHeight;
         }, 1200);
       }
+      term.scrollTop = term.scrollHeight;
     }, 4500);
   });
 

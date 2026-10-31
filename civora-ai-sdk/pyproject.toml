@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "civora-ai-sdk"
+version = "1.0.0"
+description = "CIVORA AI Universal Developer SDK and Integration Examples"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "openai>=1.12.0",
+    "httpx>=0.25.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+]

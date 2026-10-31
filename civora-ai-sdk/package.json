@@ -1,0 +1,23 @@
+{
+  "name": "@civora/ai-sdk",
+  "version": "1.0.0",
+  "description": "CIVORA AI Universal SDK & OpenAI-Compatible Integration Examples",
+  "type": "module",
+  "scripts": {
+    "quickstart:js": "node examples/javascript/quickstart.mjs",
+    "streaming:js": "node examples/javascript/streaming.mjs"
+  },
+  "dependencies": {
+    "openai": "^4.28.0"
+  },
+  "keywords": [
+    "civora",
+    "ai",
+    "agent",
+    "software-engineering",
+    "code-generation",
+    "openai-compatible"
+  ],
+  "author": "CIVORA AI Engineering Team",
+  "license": "Apache-2.0"
+}

@@ -30,6 +30,7 @@ if str(PLATFORM_ROOT) not in sys.path:
     sys.path.insert(0, str(PLATFORM_ROOT))
 
 from agent import AgentOrchestrator, AgentMemory, EventBroadcaster
+from developer import developer_router
 from intelligence import RepoScanner, DriftDetector, DiagnosticsEngine
 from patch_studio import DiffEngine
 from sandbox import SandboxManager, validate_command_policy, redact_credentials
@@ -330,7 +331,14 @@ Always give accurate, actionable, and verified technical answers. Never simulate
 
 
 # -----------------------------------------------------------------------------
-# 6. STATIC ASSETS & FRONTEND SERVING
+# 6. UNIVERSAL API & DEVELOPER PLATFORM ROUTES
+# -----------------------------------------------------------------------------
+
+app.include_router(developer_router)
+
+
+# -----------------------------------------------------------------------------
+# 7. STATIC ASSETS & FRONTEND SERVING
 # -----------------------------------------------------------------------------
 
 public_dir = os.path.join(os.path.dirname(__file__), "public")

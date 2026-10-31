@@ -63,6 +63,12 @@
             <button onclick="showTab('chat', this)" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all text-slate-400">
                 <i class="fas fa-comment-dots w-5"></i><span>AI Engineering Chat</span>
             </button>
+            <button onclick="showTab('developer', this)" class="nav-btn w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all text-slate-400">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-key w-5 text-amber-400"></i><span>Developer Platform</span>
+                </div>
+                <span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[9px] font-mono px-1.5 py-0.5 rounded font-bold">API v1</span>
+            </button>
         </nav>
 
         <div class="p-4 border-t border-slate-800 bg-slate-900/50">
@@ -420,6 +426,553 @@
             </div>
         </div>
 
+        <!-- DEVELOPER PLATFORM TAB -->
+        <div id="tab-developer" class="tab-content hidden flex-1 flex flex-col p-8 overflow-y-auto space-y-8">
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-800 pb-6">
+                <div>
+                    <div class="flex items-center space-x-3 mb-1">
+                        <span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-mono px-2 py-0.5 rounded font-black tracking-widest uppercase">Developer Platform</span>
+                        <span class="text-slate-500 text-xs font-mono">• OpenAI-Compatible v1 Endpoints</span>
+                    </div>
+                    <h2 class="text-3xl font-black text-white">CIVORA Universal API</h2>
+                    <p class="text-slate-400 text-sm mt-1">One API Key. Access CIVORA's autonomous software engineering intelligence from any IDE, language, or client.</p>
+                </div>
+                <div class="flex items-center space-x-3 bg-slate-900/90 border border-slate-800 rounded-xl px-4 py-2.5">
+                    <span class="text-xs text-slate-500 font-mono">Base URL:</span>
+                    <code id="dev-base-url" class="text-xs text-emerald-400 font-mono font-bold select-all">http://localhost:4000/v1</code>
+                    <button onclick="copyDevBaseUrl()" class="text-slate-400 hover:text-white text-xs px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 transition-all" title="Copy Base URL">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sub Navigation Tabs -->
+            <div class="flex flex-wrap gap-2 border-b border-slate-800 pb-4">
+                <button onclick="showDevSubTab('keys', this)" class="dev-nav-btn px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-dark-900 transition-all shadow-lg shadow-amber-500/20">
+                    <i class="fas fa-key mr-2"></i>API Keys
+                </button>
+                <button onclick="showDevSubTab('playground', this)" class="dev-nav-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+                    <i class="fas fa-play-circle mr-2"></i>API Playground
+                </button>
+                <button onclick="showDevSubTab('docs', this)" class="dev-nav-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+                    <i class="fas fa-book-open mr-2"></i>Documentation & SDKs
+                </button>
+                <button onclick="showDevSubTab('analytics', this)" class="dev-nav-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+                    <i class="fas fa-chart-line mr-2"></i>Usage & Analytics
+                </button>
+                <button onclick="showDevSubTab('integrations', this)" class="dev-nav-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+                    <i class="fas fa-plug mr-2"></i>Cursor & IDE Setup
+                </button>
+            </div>
+
+            <!-- SUB-SECTION 1: API KEYS -->
+            <div id="dev-sub-keys" class="dev-sub-section space-y-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Active API Keys</h3>
+                        <p class="text-xs text-slate-400">Keys are cryptographically hashed with SHA-256. Raw secrets are shown once upon creation.</p>
+                    </div>
+                    <button onclick="openCreateKeyModal()" class="bg-amber-500 hover:bg-amber-400 text-dark-900 text-xs font-black px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-amber-500/20 flex items-center space-x-2">
+                        <i class="fas fa-plus"></i><span>CREATE NEW API KEY</span>
+                    </button>
+                </div>
+
+                <!-- API Keys Table Card -->
+                <div class="glass rounded-2xl border border-slate-800 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="border-b border-slate-800 bg-slate-900/50 text-slate-400 font-mono uppercase tracking-wider">
+                                    <th class="p-4">Key Name</th>
+                                    <th class="p-4">Secret Prefix</th>
+                                    <th class="p-4">Environment</th>
+                                    <th class="p-4">Rate Limit</th>
+                                    <th class="p-4">Monthly Quota</th>
+                                    <th class="p-4">Created / Last Used</th>
+                                    <th class="p-4">Status</th>
+                                    <th class="p-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="api-keys-table-body" class="divide-y divide-slate-800 font-mono">
+                                <tr>
+                                    <td colspan="8" class="p-6 text-center text-slate-500">Loading API keys...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUB-SECTION 2: API PLAYGROUND -->
+            <div id="dev-sub-playground" class="dev-sub-section hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Interactive API Playground</h3>
+                        <p class="text-xs text-slate-400">Test real-time chat completions with streaming SSE and observe latency and token consumption metrics.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Left: Parameters & Input -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <div class="glass rounded-2xl p-6 border border-slate-800 space-y-4">
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1">Target Model</label>
+                                <select id="pg-model-select" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-amber-500 outline-none">
+                                    <option value="civora-coder">civora-coder (Senior Polyglot Engineer)</option>
+                                    <option value="civora-general">civora-general (System Architecture & Theory)</option>
+                                    <option value="civora-repository-agent">civora-repository-agent (Workspace & Drift Radar)</option>
+                                    <option value="civora-engineering-agent">civora-engineering-agent (Autonomous Loop & Diagnostics)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1">API Key to Authenticate</label>
+                                <select id="pg-key-select" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-amber-500 outline-none">
+                                    <option value="">Select an active key...</option>
+                                </select>
+                            </div>
+
+                            <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+                                <label class="text-xs text-slate-300 font-medium">Stream Response (SSE)</label>
+                                <input type="checkbox" id="pg-stream-toggle" checked class="w-4 h-4 rounded text-amber-500 bg-slate-900 border-slate-700 focus:ring-0">
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                    <span>Temperature</span>
+                                    <span id="pg-temp-val" class="font-mono text-white">0.7</span>
+                                </div>
+                                <input type="range" id="pg-temp-slider" min="0" max="1" step="0.1" value="0.7" oninput="document.getElementById('pg-temp-val').innerText = this.value" class="w-full accent-amber-500">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1">System Prompt (Optional)</label>
+                                <textarea id="pg-sys-prompt" rows="2" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-3 text-xs focus:ring-1 focus:ring-amber-500 outline-none resize-none font-mono" placeholder="You are an autonomous staff engineer..."></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1">User Message</label>
+                                <textarea id="pg-user-prompt" rows="4" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl p-3 text-xs focus:ring-1 focus:ring-amber-500 outline-none resize-none" placeholder="Explain the difference between event-driven architecture and message queues with Python examples."></textarea>
+                            </div>
+
+                            <button onclick="sendPlaygroundRequest()" id="btn-run-playground" class="w-full bg-amber-500 hover:bg-amber-400 text-dark-900 text-xs font-black py-3 rounded-xl transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center space-x-2">
+                                <i class="fas fa-paper-plane"></i><span>DISPATCH REQUEST (POST /v1/chat/completions)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Response Console -->
+                    <div class="lg:col-span-7 flex flex-col space-y-4">
+                        <!-- Metrics Bar -->
+                        <div class="grid grid-cols-4 gap-3">
+                            <div class="glass p-3 rounded-xl border border-slate-800 text-center">
+                                <span class="text-[10px] text-slate-500 font-mono block uppercase">Status</span>
+                                <span id="pg-metric-status" class="text-xs font-mono font-bold text-slate-400">—</span>
+                            </div>
+                            <div class="glass p-3 rounded-xl border border-slate-800 text-center">
+                                <span class="text-[10px] text-slate-500 font-mono block uppercase">Latency</span>
+                                <span id="pg-metric-latency" class="text-xs font-mono font-bold text-slate-400">—</span>
+                            </div>
+                            <div class="glass p-3 rounded-xl border border-slate-800 text-center">
+                                <span class="text-[10px] text-slate-500 font-mono block uppercase">Prompt Tok</span>
+                                <span id="pg-metric-prompt-tok" class="text-xs font-mono font-bold text-slate-400">—</span>
+                            </div>
+                            <div class="glass p-3 rounded-xl border border-slate-800 text-center">
+                                <span class="text-[10px] text-slate-500 font-mono block uppercase">Comp Tok</span>
+                                <span id="pg-metric-comp-tok" class="text-xs font-mono font-bold text-slate-400">—</span>
+                            </div>
+                        </div>
+
+                        <!-- Response Viewer -->
+                        <div class="glass rounded-2xl border border-slate-800 flex-1 flex flex-col overflow-hidden min-h-[380px]">
+                            <div class="bg-slate-900/80 px-4 py-2.5 border-b border-slate-800 flex justify-between items-center text-xs">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                                    <span class="font-mono text-slate-300 font-bold">API Response Terminal</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="copyPlaygroundOutput()" class="text-slate-400 hover:text-white px-2 py-1 rounded bg-slate-800 text-[10px] font-mono">
+                                        <i class="fas fa-copy mr-1"></i>Copy Output
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="pg-output-terminal" class="p-6 flex-1 overflow-y-auto font-mono text-xs leading-relaxed text-slate-300 bg-dark-900/60 whitespace-pre-wrap select-text">
+// Response output will stream here live when dispatched...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUB-SECTION 3: DOCUMENTATION & SDKS -->
+            <div id="dev-sub-docs" class="dev-sub-section hidden space-y-6">
+                <div>
+                    <h3 class="text-lg font-bold text-white">Quickstart & Client Integrations</h3>
+                    <p class="text-xs text-slate-400">Because CIVORA implements the OpenAI v1 specification, you can drop CIVORA directly into your existing OpenAI SDK setup.</p>
+                </div>
+
+                <!-- Code Switcher -->
+                <div class="glass rounded-2xl border border-slate-800 overflow-hidden">
+                    <div class="bg-slate-900/80 px-6 py-3 border-b border-slate-800 flex items-center justify-between">
+                        <div class="flex space-x-2">
+                            <button onclick="switchDocLang('python')" id="doc-btn-python" class="doc-lang-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-amber-500 text-dark-900">Python</button>
+                            <button onclick="switchDocLang('javascript')" id="doc-btn-javascript" class="doc-lang-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-slate-400 hover:text-white">JavaScript / Node.js</button>
+                            <button onclick="switchDocLang('typescript')" id="doc-btn-typescript" class="doc-lang-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-slate-400 hover:text-white">TypeScript</button>
+                            <button onclick="switchDocLang('curl')" id="doc-btn-curl" class="doc-lang-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-slate-400 hover:text-white">cURL</button>
+                        </div>
+                        <button onclick="copyActiveDocSnippet()" class="text-xs font-mono text-slate-400 hover:text-white bg-slate-800 px-3 py-1 rounded-lg">
+                            <i class="fas fa-copy mr-1"></i>Copy Code
+                        </button>
+                    </div>
+
+                    <!-- Python Snippet -->
+                    <pre id="doc-code-python" class="doc-snippet p-6 text-xs font-mono text-emerald-400 overflow-x-auto bg-dark-900/80 leading-relaxed">
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="civora_sk_live_YOUR_KEY_HERE",
+    base_url="http://localhost:4000/v1"  # Or your CIVORA deployed domain
+)
+
+# 1. Non-streaming call
+response = client.chat.completions.create(
+    model="civora-coder",
+    messages=[
+        {"role": "system", "content": "You are CIVORA Principal Software Engineer."},
+        {"role": "user", "content": "Explain and optimize this Python algorithm."}
+    ],
+    temperature=0.7,
+)
+print(response.choices[0].message.content)
+
+# 2. Real-time streaming call
+stream = client.chat.completions.create(
+    model="civora-repository-agent",
+    messages=[{"role": "user", "content": "Analyze repository drift"}],
+    stream=True,
+)
+for chunk in stream:
+    if chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+                    </pre>
+
+                    <!-- JavaScript Snippet -->
+                    <pre id="doc-code-javascript" class="doc-snippet hidden p-6 text-xs font-mono text-amber-400 overflow-x-auto bg-dark-900/80 leading-relaxed">
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.CIVORA_API_KEY || "civora_sk_live_YOUR_KEY_HERE",
+  baseURL: "http://localhost:4000/v1"
+});
+
+async function main() {
+  const response = await client.chat.completions.create({
+    model: "civora-coder",
+    messages: [
+      { role: "user", content: "Write a high-throughput Node.js microservice handler." }
+    ]
+  });
+
+  console.log(response.choices[0].message.content);
+}
+
+main().catch(console.error);
+                    </pre>
+
+                    <!-- TypeScript Snippet -->
+                    <pre id="doc-code-typescript" class="doc-snippet hidden p-6 text-xs font-mono text-teal-400 overflow-x-auto bg-dark-900/80 leading-relaxed">
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.CIVORA_API_KEY || "civora_sk_live_YOUR_KEY_HERE",
+  baseURL: "http://localhost:4000/v1"
+});
+
+interface EngineeringReply {
+  content: string;
+  model: string;
+}
+
+async function requestCivora(prompt: string): Promise<string> {
+  const res = await client.chat.completions.create({
+    model: "civora-engineering-agent",
+    messages: [{ role: "user", content: prompt }]
+  });
+  return res.choices[0].message.content ?? "";
+}
+                    </pre>
+
+                    <!-- cURL Snippet -->
+                    <pre id="doc-code-curl" class="doc-snippet hidden p-6 text-xs font-mono text-sky-400 overflow-x-auto bg-dark-900/80 leading-relaxed">
+curl -X POST http://localhost:4000/v1/chat/completions \
+  -H "Authorization: Bearer civora_sk_live_YOUR_KEY_HERE" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "civora-coder",
+    "messages": [
+      {"role": "user", "content": "How do I implement zero-trust sandbox execution?"}
+    ],
+    "temperature": 0.7,
+    "stream": false
+  }'
+                    </pre>
+                </div>
+
+                <!-- API Specifications Table -->
+                <div class="glass rounded-2xl p-6 border border-slate-800 space-y-4">
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider font-mono">Available v1 REST Endpoints</h4>
+                    <div class="space-y-3 font-mono text-xs">
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-bold">POST</span>
+                                <span class="text-white">/v1/chat/completions</span>
+                            </div>
+                            <span class="text-slate-400">OpenAI-compatible text & code generation (sync + SSE stream)</span>
+                        </div>
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <span class="bg-sky-500/20 text-sky-400 border border-sky-500/30 px-2 py-0.5 rounded text-[10px] font-bold">GET</span>
+                                <span class="text-white">/v1/models</span>
+                            </div>
+                            <span class="text-slate-400">List available CIVORA model cards</span>
+                        </div>
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <span class="bg-sky-500/20 text-sky-400 border border-sky-500/30 px-2 py-0.5 rounded text-[10px] font-bold">GET</span>
+                                <span class="text-white">/v1/usage</span>
+                            </div>
+                            <span class="text-slate-400">Query per-key token quota and consumption</span>
+                        </div>
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-bold">POST</span>
+                                <span class="text-white">/v1/embeddings</span>
+                            </div>
+                            <span class="text-slate-400">Generate 1536-dimensional semantic embeddings</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUB-SECTION 4: USAGE ANALYTICS -->
+            <div id="dev-sub-analytics" class="dev-sub-section hidden space-y-6">
+                <div>
+                    <h3 class="text-lg font-bold text-white">API Usage & Telemetry</h3>
+                    <p class="text-xs text-slate-400">Real-time metrics tracked across your developer account and API keys.</p>
+                </div>
+
+                <!-- 4 Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="glass p-6 rounded-2xl border border-slate-800">
+                        <span class="text-xs text-slate-500 font-mono uppercase">Total API Requests</span>
+                        <h4 id="stat-total-requests" class="text-3xl font-black text-white mt-1">0</h4>
+                        <p class="text-[10px] text-emerald-400 mt-2 font-mono"><i class="fas fa-check-circle mr-1"></i>All keys combined</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl border border-slate-800">
+                        <span class="text-xs text-slate-500 font-mono uppercase">Success Rate</span>
+                        <h4 id="stat-success-rate" class="text-3xl font-black text-emerald-400 mt-1">100%</h4>
+                        <p id="stat-failed-requests" class="text-[10px] text-slate-400 mt-2 font-mono">0 failed requests</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl border border-slate-800">
+                        <span class="text-xs text-slate-500 font-mono uppercase">Total Tokens</span>
+                        <h4 id="stat-total-tokens" class="text-3xl font-black text-amber-400 mt-1">0</h4>
+                        <p id="stat-token-split" class="text-[10px] text-slate-400 mt-2 font-mono">0 prompt / 0 comp</p>
+                    </div>
+                    <div class="glass p-6 rounded-2xl border border-slate-800">
+                        <span class="text-xs text-slate-500 font-mono uppercase">Avg Request Latency</span>
+                        <h4 id="stat-avg-latency" class="text-3xl font-black text-teal-400 mt-1">0 ms</h4>
+                        <p class="text-[10px] text-slate-400 mt-2 font-mono"><i class="fas fa-bolt mr-1"></i>Real-time telemetry</p>
+                    </div>
+                </div>
+
+                <!-- Recent Requests Table -->
+                <div class="glass rounded-2xl border border-slate-800 overflow-hidden">
+                    <div class="p-4 bg-slate-900/60 border-b border-slate-800 font-mono text-xs text-white font-bold flex justify-between items-center">
+                        <span>Recent API Requests Audit Log</span>
+                        <button onclick="loadDeveloperAnalytics()" class="text-slate-400 hover:text-white text-xs">
+                            <i class="fas fa-sync-alt mr-1"></i>Refresh
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="border-b border-slate-800 bg-slate-900/30 text-slate-400 font-mono uppercase">
+                                    <th class="p-3">Request ID</th>
+                                    <th class="p-3">Model</th>
+                                    <th class="p-3">Endpoint</th>
+                                    <th class="p-3">Tokens</th>
+                                    <th class="p-3">Latency</th>
+                                    <th class="p-3">Status</th>
+                                    <th class="p-3">Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="analytics-table-body" class="divide-y divide-slate-800 font-mono">
+                                <tr>
+                                    <td colspan="7" class="p-6 text-center text-slate-500">No requests recorded yet. Dispatch requests via Playground or SDK.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUB-SECTION 5: CURSOR & IDE INTEGRATIONS -->
+            <div id="dev-sub-integrations" class="dev-sub-section hidden space-y-6">
+                <div>
+                    <h3 class="text-lg font-bold text-white">Connect CIVORA to Cursor & VS Code</h3>
+                    <p class="text-xs text-slate-400">Configure your favorite AI-powered coding editor to use CIVORA as its primary intelligence engine.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Cursor Card -->
+                    <div class="glass rounded-2xl p-6 border border-slate-800 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-400 text-lg">
+                                <i class="fas fa-mouse-pointer"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">Cursor IDE Configuration</h4>
+                                <p class="text-[11px] text-slate-400">Point Cursor to CIVORA's OpenAI-compatible endpoint</p>
+                            </div>
+                        </div>
+                        <ol class="text-xs text-slate-300 space-y-2 list-decimal list-inside leading-relaxed">
+                            <li>Open <strong class="text-white">Cursor Settings</strong> (<kbd class="bg-slate-800 px-1 py-0.5 rounded text-[10px]">Cmd + ,</kbd> or <kbd class="bg-slate-800 px-1 py-0.5 rounded text-[10px]">Ctrl + ,</kbd>).</li>
+                            <li>Navigate to <strong class="text-white">Models</strong> tab.</li>
+                            <li>Toggle <strong class="text-white">OpenAI API Key</strong> and enter your <code class="text-amber-400">civora_sk_live_...</code> key.</li>
+                            <li>Toggle <strong class="text-white">Override OpenAI Base URL</strong> and enter:</li>
+                        </ol>
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 font-mono text-xs text-emerald-400 select-all">
+                            http://localhost:4000/v1
+                        </div>
+                        <p class="text-[11px] text-slate-400">Add custom model name <code class="text-white font-mono">civora-coder</code> or <code class="text-white font-mono">civora-engineering-agent</code> to the active models list.</p>
+                    </div>
+
+                    <!-- VS Code Continue / Cline Card -->
+                    <div class="glass rounded-2xl p-6 border border-slate-800 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-sky-500/20 border border-sky-500/30 flex items-center justify-center text-sky-400 text-lg">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">VS Code Continue / Cline Extension</h4>
+                                <p class="text-[11px] text-slate-400">Configure inside ~/.continue/config.json</p>
+                            </div>
+                        </div>
+                        <pre class="p-3 bg-slate-900 rounded-xl border border-slate-800 font-mono text-[11px] text-teal-400 overflow-x-auto leading-relaxed">
+{
+  "models": [
+    {
+      "title": "CIVORA Coder",
+      "provider": "openai",
+      "model": "civora-coder",
+      "apiKey": "civora_sk_live_...",
+      "apiBase": "http://localhost:4000/v1"
+    }
+  ]
+}
+                        </pre>
+                        <p class="text-[11px] text-slate-400">Restart VS Code. CIVORA will power your code completions, refactorings, and inline audits.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: CREATE API KEY -->
+        <div id="modal-create-key" class="fixed inset-0 bg-dark-900/80 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+            <div class="glass max-w-md w-full rounded-3xl p-6 border border-slate-700 shadow-2xl space-y-5 animate-scale-up">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-key text-amber-400"></i>
+                        <h3 class="text-base font-bold text-white">Generate CIVORA API Key</h3>
+                    </div>
+                    <button onclick="closeCreateKeyModal()" class="text-slate-400 hover:text-white text-sm"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Key Name / Description</label>
+                        <input id="create-key-name" type="text" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-2.5 text-xs focus:ring-1 focus:ring-amber-500 outline-none" placeholder="e.g. Cursor IDE, Production Agent, CI Pipeline">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Environment</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="flex items-center space-x-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700 cursor-pointer">
+                                <input type="radio" name="key-env" value="live" checked class="accent-emerald-500">
+                                <div>
+                                    <span class="text-xs font-bold text-emerald-400 block">Live Key</span>
+                                    <span class="text-[10px] text-slate-500 font-mono">civora_sk_live_...</span>
+                                </div>
+                            </label>
+                            <label class="flex items-center space-x-2 bg-slate-900/60 p-3 rounded-xl border border-slate-700 cursor-pointer">
+                                <input type="radio" name="key-env" value="test" class="accent-amber-500">
+                                <div>
+                                    <span class="text-xs font-bold text-amber-400 block">Test Key</span>
+                                    <span class="text-[10px] text-slate-500 font-mono">civora_sk_test_...</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-mono text-slate-400 mb-1">Monthly Quota</label>
+                            <select id="create-key-quota" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-amber-500 outline-none font-mono">
+                                <option value="100000">100,000 Tokens</option>
+                                <option value="500000">500,000 Tokens</option>
+                                <option value="1000000">1,000,000 Tokens</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono text-slate-400 mb-1">Rate Limit (RPM)</label>
+                            <select id="create-key-rpm" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-amber-500 outline-none font-mono">
+                                <option value="60">60 RPM</option>
+                                <option value="120">120 RPM</option>
+                                <option value="300">300 RPM</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-2 flex space-x-3">
+                    <button onclick="closeCreateKeyModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold py-2.5 rounded-xl transition-all">Cancel</button>
+                    <button onclick="submitCreateKey()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-dark-900 text-xs font-black py-2.5 rounded-xl transition-all shadow-lg shadow-amber-500/20">CREATE KEY</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: SECRET DISPLAY (SHOWN ONCE) -->
+        <div id="modal-key-generated" class="fixed inset-0 bg-dark-900/90 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+            <div class="glass max-w-lg w-full rounded-3xl p-8 border border-amber-500/50 shadow-2xl space-y-6">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl flex-shrink-0">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black text-white">Save Your API Key Secret</h3>
+                        <p class="text-xs text-amber-400 font-bold mt-1">Make sure to copy your API key now. You will not be able to see it again!</p>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-red-500/10 border border-red-500/30 rounded-2xl text-xs text-red-300 space-y-1">
+                    <p class="font-bold"><i class="fas fa-exclamation-triangle mr-1"></i>Zero-Trust Security Notice:</p>
+                    <p>CIVORA stores only an irreversible cryptographic SHA-256 hash. If you lose this key, you must regenerate it.</p>
+                </div>
+
+                <div class="space-y-2">
+                    <span class="text-xs font-mono text-slate-400 uppercase tracking-widest block">Secret API Key:</span>
+                    <div class="flex items-center space-x-2 bg-slate-900 border border-amber-500/50 rounded-2xl p-3">
+                        <input id="generated-secret-display" type="text" readonly class="flex-1 bg-transparent text-emerald-400 font-mono text-xs outline-none select-all font-bold">
+                        <button onclick="copyGeneratedSecret()" id="btn-copy-secret" class="bg-amber-500 hover:bg-amber-400 text-dark-900 text-xs font-black px-4 py-2 rounded-xl transition-all">
+                            <i class="fas fa-copy mr-1"></i>COPY
+                        </button>
+                    </div>
+                </div>
+
+                <button onclick="dismissSecretModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold py-3 rounded-xl transition-all">
+                    I HAVE STORED THIS SECRET SECURELY
+                </button>
+            </div>
+        </div>
+
     </main>
 
     <script>
@@ -443,6 +996,7 @@
                 el.classList.remove('text-slate-400');
             }
             if (tabId === 'patch') refreshPatches();
+            if (tabId === 'developer') refreshDeveloperPlatform();
         }
 
         function setMode(mode) {
@@ -847,6 +1401,397 @@
                 document.getElementById('term-input').value = 'pytest civora-platform/tests -v';
             } else if (act === 'patch') {
                 showTab('patch', document.querySelectorAll('.nav-btn')[3]);
+            }
+        }
+
+        // -------------------------------------------------------------
+        // DEVELOPER PLATFORM & UNIVERSAL API MANAGEMENT
+        // -------------------------------------------------------------
+        let activeDocLang = 'python';
+        let cachedApiKeys = [];
+
+        function refreshDeveloperPlatform() {
+            const baseEl = document.getElementById('dev-base-url');
+            if (baseEl) baseEl.innerText = window.location.origin + '/v1';
+            loadApiKeys();
+            loadDeveloperAnalytics();
+        }
+
+        function copyDevBaseUrl() {
+            const url = window.location.origin + '/v1';
+            navigator.clipboard.writeText(url);
+            alert('Base URL copied: ' + url);
+        }
+
+        function showDevSubTab(subId, btnEl) {
+            document.querySelectorAll('.dev-sub-section').forEach(s => s.classList.add('hidden'));
+            const target = document.getElementById('dev-sub-' + subId);
+            if (target) target.classList.remove('hidden');
+
+            document.querySelectorAll('.dev-nav-btn').forEach(b => {
+                b.className = 'dev-nav-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all';
+            });
+            if (btnEl) {
+                btnEl.className = 'dev-nav-btn px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-dark-900 transition-all shadow-lg shadow-amber-500/20';
+            }
+            if (subId === 'analytics') loadDeveloperAnalytics();
+        }
+
+        async function loadApiKeys() {
+            const tbody = document.getElementById('api-keys-table-body');
+            const pgSelect = document.getElementById('pg-key-select');
+            try {
+                const res = await fetch('/api/developer/keys');
+                const keys = await res.json();
+                cachedApiKeys = keys;
+
+                if (!keys || keys.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" class="p-6 text-center text-slate-500">No API keys found. Click "CREATE NEW API KEY" to generate your first key.</td></tr>';
+                    pgSelect.innerHTML = '<option value="">No keys available. Generate one first.</option>';
+                    return;
+                }
+
+                // Render table
+                tbody.innerHTML = keys.map(k => {
+                    const statusClass = k.is_active ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-red-500/20 text-red-400 border-red-500/30';
+                    const statusText = k.is_active ? 'ACTIVE' : 'REVOKED';
+                    const envClass = k.environment === 'live' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border-amber-500/30';
+                    const createdStr = new Date(k.created_at * 1000).toLocaleDateString();
+                    const lastUsedStr = k.last_used_at ? new Date(k.last_used_at * 1000).toLocaleDateString() : 'Never';
+
+                    return `
+                        <tr class="hover:bg-slate-800/30 transition-all">
+                            <td class="p-4 font-bold text-white">${k.name}</td>
+                            <td class="p-4 text-emerald-400">${k.key_prefix}</td>
+                            <td class="p-4"><span class="px-2 py-0.5 rounded border text-[10px] font-bold ${envClass}">${k.environment.toUpperCase()}</span></td>
+                            <td class="p-4 text-slate-300">${k.rate_limit_rpm} RPM</td>
+                            <td class="p-4 text-slate-300">${(k.quota_monthly || 100000).toLocaleString()} tok</td>
+                            <td class="p-4 text-slate-400">${createdStr} <span class="text-[10px] text-slate-600 block">used: ${lastUsedStr}</span></td>
+                            <td class="p-4"><span class="px-2 py-0.5 rounded border text-[10px] font-bold ${statusClass}">${statusText}</span></td>
+                            <td class="p-4 text-right space-x-2">
+                                ${k.is_active ? `
+                                    <button onclick="regenerateKey('${k.id}')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-400 text-[10px] font-bold transition-all" title="Rotate/Regenerate Key">Rotate</button>
+                                    <button onclick="revokeKey('${k.id}')" class="px-2.5 py-1 rounded bg-red-500/20 hover:bg-red-500/30 text-red-400 text-[10px] font-bold transition-all" title="Revoke Key">Revoke</button>
+                                ` : ''}
+                                <button onclick="deleteKey('${k.id}')" class="px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-500 hover:text-slate-300 text-[10px] font-bold" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                // Render playground key selector
+                pgSelect.innerHTML = keys.filter(k => k.is_active).map(k => `
+                    <option value="${k.id}">${k.name} (${k.key_prefix})</option>
+                `).join('') || '<option value="">No active keys</option>';
+
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-red-400">Failed to load API keys: ${err.message}</td></tr>`;
+            }
+        }
+
+        function openCreateKeyModal() {
+            document.getElementById('create-key-name').value = '';
+            document.getElementById('modal-create-key').classList.remove('hidden');
+        }
+
+        function closeCreateKeyModal() {
+            document.getElementById('modal-create-key').classList.add('hidden');
+        }
+
+        async function submitCreateKey() {
+            const name = document.getElementById('create-key-name').value.trim() || 'Default Developer Key';
+            const env = document.querySelector('input[name="key-env"]:checked').value;
+            const quota = parseInt(document.getElementById('create-key-quota').value);
+            const rpm = parseInt(document.getElementById('create-key-rpm').value);
+
+            try {
+                const res = await fetch('/api/developer/keys', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        name: name,
+                        environment: env,
+                        quota_monthly: quota,
+                        rate_limit_rpm: rpm
+                    })
+                });
+                const data = await res.json();
+                closeCreateKeyModal();
+
+                // Show generated secret modal (ONCE)
+                document.getElementById('generated-secret-display').value = data.secret_key;
+                document.getElementById('modal-key-generated').classList.remove('hidden');
+
+                // Cache active secret in sessionStorage for current playground session
+                sessionStorage.setItem('civora_last_key_' + data.id, data.secret_key);
+
+                loadApiKeys();
+            } catch (err) {
+                alert('Failed to generate key: ' + err.message);
+            }
+        }
+
+        function copyGeneratedSecret() {
+            const input = document.getElementById('generated-secret-display');
+            input.select();
+            navigator.clipboard.writeText(input.value);
+            const btn = document.getElementById('btn-copy-secret');
+            btn.innerHTML = '<i class="fas fa-check mr-1"></i>COPIED!';
+            setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy mr-1"></i>COPY'; }, 2000);
+        }
+
+        function dismissSecretModal() {
+            document.getElementById('modal-key-generated').classList.add('hidden');
+            document.getElementById('generated-secret-display').value = '';
+        }
+
+        async function revokeKey(keyId) {
+            if (!confirm('Are you sure you want to revoke this API key? Applications using this key will immediately be denied.')) return;
+            try {
+                await fetch(`/api/developer/keys/${keyId}/revoke`, { method: 'POST' });
+                loadApiKeys();
+            } catch (err) {
+                alert('Revoke failed: ' + err.message);
+            }
+        }
+
+        async function regenerateKey(keyId) {
+            if (!confirm('Regenerate key? The current key will be revoked immediately and a new secret key will be generated.')) return;
+            try {
+                const res = await fetch(`/api/developer/keys/${keyId}/regenerate`, { method: 'POST' });
+                const data = await res.json();
+                const newKey = data.new_key;
+                
+                document.getElementById('generated-secret-display').value = newKey.secret_key;
+                document.getElementById('modal-key-generated').classList.remove('hidden');
+                sessionStorage.setItem('civora_last_key_' + newKey.id, newKey.secret_key);
+
+                loadApiKeys();
+            } catch (err) {
+                alert('Regenerate failed: ' + err.message);
+            }
+        }
+
+        async function deleteKey(keyId) {
+            if (!confirm('Permanently delete this key record?')) return;
+            try {
+                await fetch(`/api/developer/keys/${keyId}`, { method: 'DELETE' });
+                loadApiKeys();
+            } catch (err) {
+                alert('Delete failed: ' + err.message);
+            }
+        }
+
+        async function sendPlaygroundRequest() {
+            const model = document.getElementById('pg-model-select').value;
+            const keySelect = document.getElementById('pg-key-select');
+            const keyId = keySelect.value;
+            const isStream = document.getElementById('pg-stream-toggle').checked;
+            const temp = parseFloat(document.getElementById('pg-temp-slider').value);
+            const sysPrompt = document.getElementById('pg-sys-prompt').value.trim();
+            const userPrompt = document.getElementById('pg-user-prompt').value.trim();
+
+            if (!userPrompt) {
+                alert('Please enter a user message to dispatch.');
+                return;
+            }
+
+            const term = document.getElementById('pg-output-terminal');
+            const statusEl = document.getElementById('pg-metric-status');
+            const latencyEl = document.getElementById('pg-metric-latency');
+            const promptTokEl = document.getElementById('pg-metric-prompt-tok');
+            const compTokEl = document.getElementById('pg-metric-comp-tok');
+            const btn = document.getElementById('btn-run-playground');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>EXECUTING /v1/chat/completions...';
+            term.innerText = '';
+            statusEl.innerText = 'CONNECTING';
+            statusEl.className = 'text-xs font-mono font-bold text-amber-400';
+
+            let rawSecret = sessionStorage.getItem('civora_last_key_' + keyId);
+            if (!rawSecret) {
+                try {
+                    const tempRes = await fetch('/api/developer/keys', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ name: 'Playground Session', environment: 'test', rate_limit_rpm: 60, quota_monthly: 100000 })
+                    });
+                    const tempKeyData = await tempRes.json();
+                    rawSecret = tempKeyData.secret_key;
+                    sessionStorage.setItem('civora_last_key_' + tempKeyData.id, rawSecret);
+                    loadApiKeys();
+                } catch (e) {
+                    rawSecret = 'civora_sk_live_fallback';
+                }
+            }
+
+            const startTime = performance.now();
+            const messages = [];
+            if (sysPrompt) messages.push({ role: 'system', content: sysPrompt });
+            messages.push({ role: 'user', content: userPrompt });
+
+            try {
+                if (isStream) {
+                    const response = await fetch('/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + rawSecret
+                        },
+                        body: JSON.stringify({
+                            model: model,
+                            messages: messages,
+                            temperature: temp,
+                            stream: true
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errData = await response.json();
+                        throw new Error(errData.detail?.error?.message || errData.message || response.statusText);
+                    }
+
+                    statusEl.innerText = '200 OK (STREAMING)';
+                    statusEl.className = 'text-xs font-mono font-bold text-emerald-400';
+
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder('utf-8');
+                    let compTokensCount = 0;
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        const chunk = decoder.decode(value);
+                        const lines = chunk.split('\n');
+                        for (const line of lines) {
+                            if (line.startsWith('data: ')) {
+                                const payload = line.replace('data: ', '').trim();
+                                if (payload === '[DONE]') break;
+                                try {
+                                    const parsed = JSON.parse(payload);
+                                    const delta = parsed.choices[0]?.delta?.content;
+                                    if (delta) {
+                                        term.innerText += delta;
+                                        compTokensCount += Math.ceil(delta.length / 4);
+                                        term.scrollTop = term.scrollHeight;
+                                    }
+                                } catch (e) {}
+                            }
+                        }
+                    }
+
+                    const elapsed = Math.round(performance.now() - startTime);
+                    statusEl.innerText = '200 OK (DONE)';
+                    latencyEl.innerText = elapsed + ' ms';
+                    promptTokEl.innerText = Math.ceil(userPrompt.length / 4);
+                    compTokEl.innerText = compTokensCount;
+                } else {
+                    const response = await fetch('/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + rawSecret
+                        },
+                        body: JSON.stringify({
+                            model: model,
+                            messages: messages,
+                            temperature: temp,
+                            stream: false
+                        })
+                    });
+
+                    const data = await response.json();
+                    const elapsed = Math.round(performance.now() - startTime);
+
+                    if (!response.ok) {
+                        throw new Error(data.detail?.error?.message || response.statusText);
+                    }
+
+                    statusEl.innerText = '200 OK';
+                    statusEl.className = 'text-xs font-mono font-bold text-emerald-400';
+                    latencyEl.innerText = elapsed + ' ms';
+                    promptTokEl.innerText = data.usage?.prompt_tokens || '—';
+                    compTokEl.innerText = data.usage?.completion_tokens || '—';
+
+                    term.innerText = data.choices[0]?.message?.content || JSON.stringify(data, null, 2);
+                }
+            } catch (err) {
+                statusEl.innerText = 'ERROR';
+                statusEl.className = 'text-xs font-mono font-bold text-red-400';
+                term.innerText = '[CIVORA API ERROR]: ' + err.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>DISPATCH REQUEST (POST /v1/chat/completions)';
+            }
+        }
+
+        function copyPlaygroundOutput() {
+            const text = document.getElementById('pg-output-terminal').innerText;
+            navigator.clipboard.writeText(text);
+            alert('Playground response copied to clipboard.');
+        }
+
+        function switchDocLang(lang) {
+            activeDocLang = lang;
+            document.querySelectorAll('.doc-snippet').forEach(s => s.classList.add('hidden'));
+            const el = document.getElementById('doc-code-' + lang);
+            if (el) el.classList.remove('hidden');
+
+            document.querySelectorAll('.doc-lang-btn').forEach(b => {
+                b.className = 'doc-lang-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-slate-400 hover:text-white';
+            });
+            const activeBtn = document.getElementById('doc-btn-' + lang);
+            if (activeBtn) activeBtn.className = 'doc-lang-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-amber-500 text-dark-900';
+        }
+
+        function copyActiveDocSnippet() {
+            const el = document.getElementById('doc-code-' + activeDocLang);
+            if (el) {
+                navigator.clipboard.writeText(el.innerText);
+                alert('Code snippet copied to clipboard.');
+            }
+        }
+
+        async function loadDeveloperAnalytics() {
+            try {
+                const res = await fetch('/api/developer/analytics');
+                const data = await res.json();
+
+                document.getElementById('stat-total-requests').innerText = (data.total_requests || 0).toLocaleString();
+                const totalReq = data.total_requests || 0;
+                const succRate = totalReq > 0 ? Math.round((data.successful_requests / totalReq) * 100) : 100;
+                document.getElementById('stat-success-rate').innerText = succRate + '%';
+                document.getElementById('stat-failed-requests').innerText = (data.failed_requests || 0) + ' failed requests';
+                document.getElementById('stat-total-tokens').innerText = (data.total_tokens || 0).toLocaleString();
+                document.getElementById('stat-token-split').innerText = `${data.total_prompt_tokens || 0} prompt / ${data.total_completion_tokens || 0} comp`;
+                document.getElementById('stat-avg-latency').innerText = (data.avg_latency_ms || 0) + ' ms';
+
+                const tbody = document.getElementById('analytics-table-body');
+                if (!data.recent_requests || data.recent_requests.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-500">No requests recorded yet. Dispatch requests via Playground or SDK.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = data.recent_requests.map(r => {
+                    const statusClass = r.status_code >= 200 && r.status_code < 400 ? 'text-emerald-400' : 'text-red-400';
+                    const timeStr = new Date(r.timestamp * 1000).toLocaleTimeString();
+                    return `
+                        <tr class="hover:bg-slate-800/30 transition-all">
+                            <td class="p-3 text-slate-400">${r.id}</td>
+                            <td class="p-3 font-bold text-white">${r.model}</td>
+                            <td class="p-3 text-slate-300">${r.endpoint}</td>
+                            <td class="p-3 text-amber-400">${(r.prompt_tokens + r.completion_tokens)} tok</td>
+                            <td class="p-3 text-teal-400">${Math.round(r.latency_ms)} ms</td>
+                            <td class="p-3 font-bold ${statusClass}">${r.status_code}</td>
+                            <td class="p-3 text-slate-500">${timeStr}</td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error('Failed to load analytics:', err);
             }
         }
 

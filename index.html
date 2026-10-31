@@ -512,12 +512,34 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
         <a href="#studio" data-progress="0">OVERVIEW</a>
         <a href="#benchmark" id="navBenchmark">BENCHMARK<svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1 5 5 9 1"/></svg></a>
       </nav>
+      <a class="navcta open-ai-chat" href="#ai-chat" id="btnOpenAIChat" style="right: 215px; background: rgba(124, 58, 237, 0.2); border: 1px solid rgba(124, 58, 237, 0.5); color: #C4B5FD;">
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#10B981;margin-right:2px;box-shadow:0 0 6px #10B981;"></span>
+        AI CHAT BOT
+        <span class="square" style="background:#7C3AED;box-shadow:0 0 9px rgba(124,58,237,.5);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </span>
+      </a>
       <a class="navcta" href="#workspace" id="btnOpenWorkspace">OPEN WORKSPACE<span class="square"><svg viewBox="0 0 13 13" aria-hidden="true"><path d="M2 11 11 2M2 2h9v9"/></svg></span></a>
       <button type="button" class="burger" id="burger" aria-controls="mnav" aria-expanded="false" aria-label="Open navigation"><span></span><span></span><span></span></button>
     </header>
     <div class="body" id="studio">
       <h1 class="headline"><i><span>Every Repository</span></i><i><span>Deserves a</span></i><i><span>Working First Run</span></i></h1>
-      <a class="cta" href="#vision" data-progress=".34"><span class="cta-label">EXPLORE THE ENGINE</span><span class="square"><svg viewBox="0 0 13 13" aria-hidden="true"><path d="M2 11 11 2M2 2h9v9"/></svg></span></a>
+      <div style="position:absolute;left:40.5px;top:calc(379.5px + (100% - 720px) * .22);display:flex;gap:16px;pointer-events:auto;z-index:4;">
+        <a class="cta" href="#vision" data-progress=".34" style="position:relative;left:auto;top:auto;"><span class="cta-label">EXPLORE THE ENGINE</span><span class="square"><svg viewBox="0 0 13 13" aria-hidden="true"><path d="M2 11 11 2M2 2h9v9"/></svg></span></a>
+        <button type="button" class="cta open-ai-chat" id="heroOpenAIChat" style="position:relative;left:auto;top:auto;width:220px;border-color:rgba(124,58,237,.6);background:rgba(124,58,237,.15);cursor:pointer;" aria-label="Chat with TrueFoundry AI Agent">
+          <span class="cta-label" style="display:flex;align-items:center;gap:6px;color:#E0E7FF;">
+            <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#10B981;box-shadow:0 0 6px #10B981;"></span>
+            AI CHAT BOT
+          </span>
+          <span class="square" style="background:#7C3AED;box-shadow:0 0 12px rgba(124,58,237,.6);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </span>
+        </button>
+      </div>
     </div>
     <div class="hudgroup">
       <button type="button" class="pill" data-place="0" aria-label="Inspect repository structure" aria-haspopup="dialog" aria-controls="placeNotes" aria-expanded="false"><span>REPOSITORY</span></button>
@@ -539,6 +561,11 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
       <a href="#eco" data-progress=".96" tabindex="-1">VERIFICATION</a>
       <a href="#studio" data-progress="0" tabindex="-1">OVERVIEW</a>
       <a href="#benchmark" class="open-benchmark-trigger" tabindex="-1">BENCHMARK</a>
+      <a class="mobile-cta open-ai-chat" href="#ai-chat" tabindex="-1" style="margin-bottom:8px;background:rgba(124,58,237,0.2);border-color:#7C3AED;color:#C4B5FD;">
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#10B981;margin-right:6px;"></span>
+        CHAT WITH AI AGENT
+        <span class="square" style="background:#7C3AED;"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="width:13px;height:13px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></span>
+      </a>
       <a class="mobile-cta open-workspace-trigger" href="#workspace" tabindex="-1">OPEN WORKSPACE<span class="square"><svg viewBox="0 0 13 13" aria-hidden="true"><path d="M2 11 11 2M2 2h9v9"/></svg></span></a>
     </nav>
   </div>
@@ -1119,7 +1146,7 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
   var workspaceModal = document.getElementById('workspaceModal');
   var radarModal = document.getElementById('radarModal');
   var benchmarkModal = document.getElementById('benchmarkModal');
-  
+
   function openWorkspaceModal() {
     setMenu(false);
     if(placeNotes.hasAttribute('open')) closePlaceNotes();
@@ -1127,7 +1154,7 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
     else workspaceModal.setAttribute('open', '');
     document.body.style.overflowY = 'hidden';
   }
-  
+
   function closeWorkspaceModal() {
     if(typeof workspaceModal.close === 'function') workspaceModal.close();
     else workspaceModal.removeAttribute('open');
@@ -1251,7 +1278,7 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
       var s6 = document.getElementById('step-6');
       s5.querySelector('.step-badge').textContent = 'VERIFIED';
       s5.querySelector('.step-badge').className = 'step-badge verified';
-      
+
       if (activeScenario === 'red-team') {
         s6.querySelector('.step-badge').textContent = 'BLOCKED';
         s6.querySelector('.step-badge').className = 'step-badge blocked';

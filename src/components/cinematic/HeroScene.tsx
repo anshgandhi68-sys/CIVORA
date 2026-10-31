@@ -14,12 +14,12 @@ export const HeroScene: React.FC<HeroSceneProps> = ({
   if (opacity <= 0.005) return null;
 
   return (
-    <div 
+    <div
       className="body transition-opacity duration-150"
-      style={{ 
-        opacity, 
+      style={{
+        opacity,
         transform: `translateY(${translateY})`,
-        pointerEvents: opacity < 0.05 ? 'none' : 'auto' 
+        pointerEvents: opacity < 0.05 ? 'none' : 'auto'
       }}
     >
       {/* Eyebrow */}
@@ -36,22 +36,55 @@ export const HeroScene: React.FC<HeroSceneProps> = ({
         <i><span>Working First Run</span></i>
       </h1>
 
-      {/* Explore CTA Button */}
-      <button 
-        type="button"
-        onClick={onExplore}
-        className="cta group"
-        aria-label="Explore the CIVORA engine"
+      {/* Primary Actions Group */}
+      <div
+        className="flex items-center gap-4 pointer-events-auto"
+        style={{
+          position: 'absolute',
+          left: '40.5px',
+          top: 'calc(379.5px + (100% - 720px) * .22)',
+          zIndex: 4,
+        }}
       >
-        <span className="cta-label text-white group-hover:text-[#8FC2FF] transition-colors">
-          EXPLORE THE ENGINE
-        </span>
-        <span className="square">
-          <svg viewBox="0 0 13 13" aria-hidden="true">
-            <path d="M2 11 11 2M2 2h9v9" />
-          </svg>
-        </span>
-      </button>
+        <button
+          type="button"
+          onClick={onExplore}
+          className="cta group !relative !left-auto !top-auto !translate-y-0"
+          aria-label="Explore the CIVORA engine"
+        >
+          <span className="cta-label text-white group-hover:text-[#8FC2FF] transition-colors">
+            EXPLORE THE ENGINE
+          </span>
+          <span className="square">
+            <svg viewBox="0 0 13 13" aria-hidden="true">
+              <path d="M2 11 11 2M2 2h9v9" />
+            </svg>
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            if ((window as any).openCivoraAIChat) {
+              (window as any).openCivoraAIChat();
+            } else {
+              document.getElementById('civora-widget-trigger')?.click();
+            }
+          }}
+          className="cta open-ai-chat group !relative !left-auto !top-auto !translate-y-0 !w-[220px] !border-[#7C3AED]/50 !bg-[#7C3AED]/15 hover:!bg-[#7C3AED]/25 transition-all shadow-[0_0_20px_rgba(124,58,237,0.25)]"
+          aria-label="Chat with TrueFoundry AI Agent"
+        >
+          <span className="cta-label text-[#E0E7FF] group-hover:text-white transition-colors flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            AI CHAT BOT
+          </span>
+          <span className="square !bg-[#7C3AED] shadow-[0_0_12px_rgba(124,58,237,0.6)]">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+          </span>
+        </button>
+      </div>
 
       {/* Supporting Copy */}
       <div className="sub">
@@ -64,11 +97,11 @@ export const HeroScene: React.FC<HeroSceneProps> = ({
       {/* Scroll Hint */}
       <div className="scroll" aria-hidden="true">
         <svg className="scroll-mark" viewBox="0 0 32 38">
-          <path 
-            d="M16 1 31 9.5v18.8L16 37 1 28.3V9.5ZM1 9.5 16 18l15-8.5M16 18v19M8.5 5.3 23.5 14v18.5M23.5 5.3 8.5 14v18.5M1 19l15 8.5L31 19M1 28.3 23.5 14M31 28.3 8.5 14" 
-            stroke="rgba(255,255,255,0.8)" 
-            strokeWidth="1.5" 
-            fill="none" 
+          <path
+            d="M16 1 31 9.5v18.8L16 37 1 28.3V9.5ZM1 9.5 16 18l15-8.5M16 18v19M8.5 5.3 23.5 14v18.5M23.5 5.3 8.5 14v18.5M1 19l15 8.5L31 19M1 28.3 23.5 14M31 28.3 8.5 14"
+            stroke="rgba(255,255,255,0.8)"
+            strokeWidth="1.5"
+            fill="none"
           />
           <ellipse cx="16" cy="28" rx="9" ry="5.1" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" fill="none" />
           <ellipse cx="16" cy="28" rx="6" ry="3.4" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" fill="none" />

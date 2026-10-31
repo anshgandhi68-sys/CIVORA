@@ -256,22 +256,42 @@
   document.body.appendChild(trigger);
   document.body.appendChild(container);
 
-  // Toggle widget
+  function openWidget() {
+    container.classList.add('active');
+    var input = document.getElementById('civora-chat-input');
+    if (input) input.focus();
+  }
+
+  function closeWidget() {
+    container.classList.remove('active');
+  }
+
+  window.openCivoraAIChat = openWidget;
+  window.closeCivoraAIChat = closeWidget;
+
+  // Global click delegate for any button with .open-ai-chat
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.open-ai-chat, [data-open-chat]');
+    if (btn) {
+      e.preventDefault();
+      openWidget();
+    }
+  });
+
+  // Toggle widget via floating button
   trigger.addEventListener('click', function () {
     var isOpen = container.classList.contains('active');
     if (isOpen) {
-      container.classList.remove('active');
+      closeWidget();
     } else {
-      container.classList.add('active');
-      var input = document.getElementById('civora-chat-input');
-      if (input) input.focus();
+      openWidget();
     }
   });
 
   var closeBtn = document.getElementById('civora-chat-close');
   if (closeBtn) {
     closeBtn.addEventListener('click', function () {
-      container.classList.remove('active');
+      closeWidget();
     });
   }
 

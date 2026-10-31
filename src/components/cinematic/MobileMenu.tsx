@@ -18,7 +18,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 md:hidden bg-[#01030F]/95 backdrop-blur-xl flex flex-col pt-24 px-8 pb-12 animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
@@ -26,8 +26,8 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
     >
       {/* Navigation links */}
       <nav className="flex flex-col gap-6 text-lg font-medium tracking-wide">
-        <a 
-          href="#overview" 
+        <a
+          href="#overview"
           onClick={(e) => {
             e.preventDefault();
             onNavigateProgress(0);
@@ -38,8 +38,8 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           01 // OVERVIEW
         </a>
 
-        <a 
-          href="#method" 
+        <a
+          href="#method"
           onClick={(e) => {
             e.preventDefault();
             onNavigateProgress(0.34);
@@ -50,8 +50,8 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           02 // THE CIVORA METHOD
         </a>
 
-        <a 
-          href="#verification" 
+        <a
+          href="#verification"
           onClick={(e) => {
             e.preventDefault();
             onNavigateProgress(0.96);
@@ -62,8 +62,8 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           03 // VERIFICATION ENGINE
         </a>
 
-        <button 
-          type="button" 
+        <button
+          type="button"
           onClick={() => {
             onClose();
             onOpenBenchmark();
@@ -74,8 +74,27 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
         </button>
       </nav>
 
-      {/* Main Workspace CTA */}
-      <div className="mt-auto pt-8">
+      {/* Main Workspace & AI Chat CTAs */}
+      <div className="mt-auto pt-8 flex flex-col gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            onClose();
+            if ((window as any).openCivoraAIChat) {
+              (window as any).openCivoraAIChat();
+            } else {
+              document.getElementById('civora-widget-trigger')?.click();
+            }
+          }}
+          className="w-full py-3.5 px-6 bg-[#7C3AED]/20 border border-[#7C3AED]/40 text-[#C4B5FD] font-mono text-xs font-semibold tracking-widest rounded-lg flex items-center justify-center gap-3 shadow-[0_0_15px_rgba(124,58,237,0.3)]"
+        >
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span>CHAT WITH TRUEFOUNDRY AI</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
+        </button>
+
         <button
           type="button"
           onClick={() => {
@@ -93,4 +112,3 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
     </div>
   );
 };
-

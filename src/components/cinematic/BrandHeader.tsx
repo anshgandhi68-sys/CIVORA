@@ -18,14 +18,14 @@ export const BrandHeader: React.FC<BrandHeaderProps> = ({
   opacity,
 }) => {
   return (
-    <header 
+    <header
       className="bar transition-opacity duration-200"
       style={{ opacity, pointerEvents: opacity < 0.05 ? 'none' : 'auto' }}
       aria-label="Site header"
     >
       {/* Brand logo & wordmark */}
-      <a 
-        href="#top" 
+      <a
+        href="#top"
         className="brand group flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4DA3FF] rounded-lg"
         onClick={(e) => {
           e.preventDefault();
@@ -33,18 +33,18 @@ export const BrandHeader: React.FC<BrandHeaderProps> = ({
         }}
         aria-label="CIVORA Homepage"
       >
-        <svg 
-          className="mark transition-transform duration-300 group-hover:scale-105" 
-          viewBox="0 0 32 38" 
+        <svg
+          className="mark transition-transform duration-300 group-hover:scale-105"
+          viewBox="0 0 32 38"
           aria-hidden="true"
         >
-          <path 
-            d="M16 1 31 9.5v18.8L16 37 1 28.3V9.5ZM1 9.5 16 18l15-8.5M16 18v19M8.5 5.3 23.5 14v18.5M23.5 5.3 8.5 14v18.5M1 19l15 8.5L31 19M1 28.3 23.5 14M31 28.3 8.5 14" 
-            stroke="rgba(255,255,255,0.9)" 
-            strokeWidth="1.15" 
-            fill="none" 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
+          <path
+            d="M16 1 31 9.5v18.8L16 37 1 28.3V9.5ZM1 9.5 16 18l15-8.5M16 18v19M8.5 5.3 23.5 14v18.5M23.5 5.3 8.5 14v18.5M1 19l15 8.5L31 19M1 28.3 23.5 14M31 28.3 8.5 14"
+            stroke="rgba(255,255,255,0.9)"
+            strokeWidth="1.15"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <ellipse cx="16" cy="28" rx="9" ry="5.1" stroke="rgba(255,255,255,0.9)" strokeWidth="1.15" fill="none" />
           <ellipse cx="16" cy="28" rx="6" ry="3.4" stroke="rgba(255,255,255,0.9)" strokeWidth="1.15" fill="none" />
@@ -55,15 +55,15 @@ export const BrandHeader: React.FC<BrandHeaderProps> = ({
 
       {/* Centered Desktop Navigation */}
       <nav className="nav hidden md:flex items-center" aria-label="Main Navigation">
-        <a 
-          href="#overview" 
+        <a
+          href="#overview"
           onClick={(e) => { e.preventDefault(); onNavigateProgress(0); }}
           className="hover:text-[#8FC2FF] focus-visible:text-[#8FC2FF] focus-visible:outline-none"
         >
           OVERVIEW
         </a>
-        <a 
-          href="#method" 
+        <a
+          href="#method"
           onClick={(e) => { e.preventDefault(); onNavigateProgress(0.34); }}
           className="hover:text-[#8FC2FF] focus-visible:text-[#8FC2FF] focus-visible:outline-none"
         >
@@ -72,8 +72,8 @@ export const BrandHeader: React.FC<BrandHeaderProps> = ({
             <path d="M1 1 5 5 9 1" />
           </svg>
         </a>
-        <a 
-          href="#verification" 
+        <a
+          href="#verification"
           onClick={(e) => { e.preventDefault(); onNavigateProgress(0.96); }}
           className="hover:text-[#8FC2FF] focus-visible:text-[#8FC2FF] focus-visible:outline-none"
         >
@@ -99,12 +99,35 @@ export const BrandHeader: React.FC<BrandHeaderProps> = ({
         </button>
       </nav>
 
-      {/* Top-Right CTA: Open Workspace */}
-      <div className="hidden md:flex">
+      {/* Top-Right CTAs: AI Chat Bot & Open Workspace */}
+      <div className="hidden md:flex items-center gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            if ((window as any).openCivoraAIChat) {
+              (window as any).openCivoraAIChat();
+            } else {
+              document.getElementById('civora-widget-trigger')?.click();
+            }
+          }}
+          className="navcta open-ai-chat group focus-visible:outline-none !static !border !border-[#7C3AED]/40 !bg-[#7C3AED]/15 hover:!bg-[#7C3AED]/25 transition-all text-[#C4B5FD] hover:text-white"
+          aria-label="Open TrueFoundry AI Chatbot"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-[12px] font-semibold tracking-[0.085em]">
+            AI CHAT BOT
+          </span>
+          <span className="square !bg-[#7C3AED] shadow-[0_0_9px_rgba(124,58,237,.5)]">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+          </span>
+        </button>
+
         <button
           type="button"
           onClick={onOpenWorkspace}
-          className="navcta group focus-visible:outline-none"
+          className="navcta group focus-visible:outline-none !static"
           aria-label="Open Mission Control Workspace"
         >
           <span className="text-[12px] font-semibold tracking-[0.085em] group-hover:text-[#8FC2FF] transition-colors">
@@ -119,7 +142,7 @@ export const BrandHeader: React.FC<BrandHeaderProps> = ({
       </div>
 
       {/* Mobile Hamburger Button */}
-      <button 
+      <button
         type="button"
         id="burger"
         className="lg:hidden absolute right-5 top-4 w-10 h-10 border border-white/20 rounded-lg flex items-center justify-center bg-white/5 backdrop-blur-md text-white hover:border-white/40 focus-visible:outline-none z-50 pointer-events-auto cursor-pointer"

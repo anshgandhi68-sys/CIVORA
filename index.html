@@ -60,7 +60,10 @@ button{font:inherit;cursor:pointer}
 .mark{position:absolute;left:35px;top:19.5px;width:32px;height:38px;overflow:visible}
 .mark path,.mark ellipse{fill:none;stroke:rgba(255,255,255,.88);stroke-width:1.15;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
 .wordmark{position:absolute;left:75.5px;top:20px;font-family:var(--font-mark);font-weight:var(--w-mark);font-size:27px;line-height:37px;letter-spacing:.13em;color:white}
-.nav{position:absolute;left:50%;transform:translateX(-50%);margin-left:0;top:26px;height:24px;display:flex;align-items:center;gap:21.7px}
+.nav{position:absolute;left:calc(50% - 45px);transform:translateX(-50%);margin-left:0;top:26px;height:24px;display:flex;align-items:center;gap:15px}
+.nav-actions{position:absolute;right:38px;top:21px;display:flex;align-items:center;gap:12px;z-index:6;pointer-events:auto}
+.nav-actions .navcta{position:static}
+@media (max-width:1200px){.nav{left:calc(50% - 60px);gap:11px}.nav-actions{right:20px;gap:8px}}
 .nav a,.navcta{font-family:var(--font-text);font-weight:var(--w-nav);font-size:var(--t-nav);line-height:1;letter-spacing:var(--tr-nav);display:flex;align-items:center;gap:9px;white-space:nowrap;text-decoration:none;transition:color .25s ease}
 .nav a:hover,.nav a:focus-visible,.navcta:hover,.navcta:focus-visible,.mnav>a:hover,.mnav>a:focus-visible{color:#8FC2FF}
 .chev{width:10px;height:6px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:square}
@@ -1210,16 +1213,18 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
         <a href="#benchmark" id="navBenchmark">BENCHMARK<svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1 5 5 9 1"/></svg></a>
         <a href="https://github.com/anshgandhi68-sys/CIVORA" target="_blank" rel="noopener noreferrer" id="navProject" aria-label="CIVORA GitHub Project Repository">PROJECT<svg viewBox="0 0 24 24" fill="currentColor" style="width:13px;height:13px;opacity:0.85;margin-left:2px;"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
       </nav>
-      <a class="navcta open-ai-chat" href="#ai-chat" id="btnOpenAIChat" style="right: 215px; display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px 0 14px; border-radius: 9999px; background: rgba(0, 113, 255, 0.16); border: 1px solid rgba(56, 189, 248, 0.45); box-shadow: 0 0 16px rgba(0, 113, 255, 0.25), inset 0 0 10px rgba(56, 189, 248, 0.1); color: #ffffff !important; text-decoration: none; transition: all 0.25s ease;" aria-label="Open CIVORA AI Assistant">
-        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#38BDF8;box-shadow:0 0 8px #38BDF8, 0 0 14px #0071FF;flex-shrink:0;"></span>
-        <span style="color:#ffffff !important;font-family:var(--font-text);font-weight:700;font-size:12px;letter-spacing:0.09em;white-space:nowrap;">CIVORA AI</span>
-        <span class="square" style="background:#0071FF;box-shadow:0 0 10px rgba(0,113,255,0.7);border-radius:6px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;margin-left:2px;flex-shrink:0;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
-        </span>
-      </a>
-      <a class="navcta" href="#workspace" id="btnOpenWorkspace">OPEN WORKSPACE<span class="square"><svg viewBox="0 0 13 13" aria-hidden="true"><path d="M2 11 11 2M2 2h9v9"/></svg></span></a>
+      <div class="nav-actions">
+        <a class="navcta open-ai-chat" href="#ai-chat" id="btnOpenAIChat" style="position:static;display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px 0 14px;border-radius:9999px;background:rgba(0, 113, 255, 0.16);border:1px solid rgba(56, 189, 248, 0.45);box-shadow:0 0 16px rgba(0, 113, 255, 0.25), inset 0 0 10px rgba(56, 189, 248, 0.1);color:#ffffff !important;text-decoration:none;transition:all 0.25s ease;" aria-label="Open CIVORA AI Assistant">
+          <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#38BDF8;box-shadow:0 0 8px #38BDF8, 0 0 14px #0071FF;flex-shrink:0;"></span>
+          <span style="color:#ffffff !important;font-family:var(--font-text);font-weight:700;font-size:12px;letter-spacing:0.09em;white-space:nowrap;">CIVORA AI</span>
+          <span class="square" style="background:#0071FF;box-shadow:0 0 10px rgba(0,113,255,0.7);border-radius:6px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;margin-left:2px;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </span>
+        </a>
+        <a class="navcta" href="#workspace" id="btnOpenWorkspace" style="position:static;">OPEN WORKSPACE<span class="square"><svg viewBox="0 0 13 13" aria-hidden="true"><path d="M2 11 11 2M2 2h9v9"/></svg></span></a>
+      </div>
       <button type="button" class="burger" id="burger" aria-controls="mnav" aria-expanded="false" aria-label="Open navigation"><span></span><span></span><span></span></button>
     </header>
     <div class="body" id="studio">

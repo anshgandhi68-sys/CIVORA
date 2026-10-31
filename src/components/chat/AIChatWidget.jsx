@@ -1,6 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-export default function AIChatWidget({ apiEndpoint = '/api/chat', title = 'CIVORA AI Engineer' }) {
+export default function AIChatWidget({
+  apiEndpoint = '/api/chat',
+  title = 'CIVORA AI Engineer',
+  showFloatingButton = false,
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Hello! I am CIVORA AI Engineer. How can I assist you with your repository onboarding and documentation verification?' }
@@ -18,6 +22,17 @@ export default function AIChatWidget({ apiEndpoint = '/api/chat', title = 'CIVOR
       scrollToBottom();
     }
   }, [messages, isOpen]);
+
+  useEffect(() => {
+    const handleOpen = () => setIsOpen(true);
+    const handleClose = () => setIsOpen(false);
+    window.addEventListener('open-civora-chat', handleOpen);
+    window.addEventListener('close-civora-chat', handleClose);
+    return () => {
+      window.removeEventListener('open-civora-chat', handleOpen);
+      window.removeEventListener('close-civora-chat', handleClose);
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,10 +66,14 @@ export default function AIChatWidget({ apiEndpoint = '/api/chat', title = 'CIVOR
     }
   };
 
+  if (!isOpen && !showFloatingButton) {
+    return null;
+  }
+
   return (
     <div className="fixed bottom-5 right-5 z-50 font-sans">
-      {/* Toggle Button */}
-      {!isOpen && (
+      {/* Optional Toggle Button */}
+      {showFloatingButton && !isOpen && (
         <button
           onClick={() => setIsOpen(true)}
           className="bg-[#0071FF] hover:bg-[#005cd6] text-white rounded-full p-4 shadow-[0_0_20px_rgba(0,113,255,0.6)] flex items-center justify-center transition-all duration-300 hover:scale-105"

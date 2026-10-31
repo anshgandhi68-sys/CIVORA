@@ -108,10 +108,10 @@ export const BrandHeader: React.FC<BrandHeaderProps> = ({
         <button
           type="button"
           onClick={() => {
-            if ((window as any).openCivoraAIChat) {
+            if (typeof window !== 'undefined' && (window as any).openCivoraAIChat) {
               (window as any).openCivoraAIChat();
             } else {
-              document.getElementById('civora-widget-trigger')?.click();
+              document.getElementById('civora-chat-container')?.classList.add('active');
             }
           }}
           className="open-ai-chat group focus-visible:outline-none !static inline-flex items-center gap-2 h-[34px] px-3.5 rounded-full bg-[#0071FF]/15 hover:bg-[#0071FF]/30 border border-[#38BDF8]/40 hover:border-[#38BDF8] shadow-[0_0_16px_rgba(0,113,255,0.25)] hover:shadow-[0_0_24px_rgba(56,189,248,0.45)] text-white transition-all cursor-pointer"

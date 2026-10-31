@@ -498,6 +498,16 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
   box-shadow: 0 0 20px rgba(0, 113, 255, 0.95) !important;
 }
 
+/* Ensure bottom-right floating trigger button is completely hidden */
+#civora-widget-trigger,
+#civora-widget-badge,
+#ai-chat-toggle {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
 /* ==========================================================================
    CIVORA CINEMATIC EXTENDED ARCHITECTURE & DATA SHOWCASE
    Matches editorial heritage, dark obsidian ink, survey HUD coordinates
@@ -2487,6 +2497,20 @@ html:not(.motion-done) .annot{opacity:0;animation:e-fade .4s ease-out 1.32s forw
     window.AIChatConfig.apiEndpoint = '/api/chat';
     window.AIChatConfig.title = 'CIVORA AI Engineer';
   }
+
+  // Early modal openers so navbar and hero buttons respond immediately
+  window.openCivoraAIChat = window.openCivoraAIChat || function () {
+    var c = document.getElementById('civora-chat-container');
+    if (c) {
+      c.classList.add('active');
+      var input = document.getElementById('civora-chat-input');
+      if (input) input.focus();
+    }
+  };
+  window.closeCivoraAIChat = window.closeCivoraAIChat || function () {
+    var c = document.getElementById('civora-chat-container');
+    if (c) c.classList.remove('active');
+  };
 </script>
 <script src="https://your-domain.com/embed-widget.js" async onerror="this.onerror=null;var s=document.createElement('script');s.src='/embed-widget.js';s.async=true;document.body.appendChild(s);"></script>
 </body>

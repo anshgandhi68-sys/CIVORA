@@ -23,48 +23,20 @@
   var style = document.createElement('style');
   style.id = 'civora-ai-chat-styles';
   style.textContent = [
-    '#civora-widget-trigger {',
-    '  position: fixed;',
-    '  bottom: 24px;',
-    '  right: 24px;',
-    '  width: 56px;',
-    '  height: 56px;',
-    '  border-radius: 50%;',
-    '  background: linear-gradient(135deg, #0071FF 0%, #0052CC 100%);',
-    '  border: 1px solid rgba(255, 255, 255, 0.25);',
-    '  box-shadow: 0 4px 20px rgba(0, 113, 255, 0.45);',
-    '  cursor: pointer;',
-    '  z-index: 99999;',
-    '  display: flex;',
-    '  align-items: center;',
-    '  justify-content: center;',
-    '  transition: transform 0.25s ease, box-shadow 0.25s ease;',
-    '}',
-    '#civora-widget-trigger:hover {',
-    '  transform: scale(1.08);',
-    '  box-shadow: 0 6px 28px rgba(0, 113, 255, 0.7);',
-    '}',
-    '#civora-widget-badge {',
-    '  position: absolute;',
-    '  top: -3px;',
-    '  right: -3px;',
-    '  background: #38BDF8;',
-    '  color: #01030F;',
-    '  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;',
-    '  font-size: 9px;',
-    '  font-weight: 700;',
-    '  padding: 2px 5px;',
-    '  border-radius: 8px;',
-    '  border: 1px solid #01030F;',
+    '#civora-widget-trigger, #civora-widget-badge {',
+    '  display: none !important;',
+    '  opacity: 0 !important;',
+    '  pointer-events: none !important;',
+    '  visibility: hidden !important;',
     '}',
     '#civora-chat-container {',
     '  position: fixed;',
-    '  bottom: 92px;',
+    '  bottom: 24px;',
     '  right: 24px;',
     '  width: 380px;',
     '  max-width: calc(100vw - 32px);',
     '  height: 540px;',
-    '  max-height: calc(100vh - 120px);',
+    '  max-height: calc(100vh - 48px);',
     '  background: rgba(1, 3, 15, 0.95);',
     '  backdrop-filter: blur(16px);',
     '  -webkit-backdrop-filter: blur(16px);',
@@ -207,16 +179,11 @@
   ].join('\n');
   document.head.appendChild(style);
 
-  // Trigger button
+  // Invisible trigger hook for programmatic compatibility (no visible floating button)
   var trigger = document.createElement('div');
   trigger.id = 'civora-widget-trigger';
-  trigger.setAttribute('aria-label', 'Open CIVORA AI Assistant');
-  trigger.innerHTML = [
-    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">',
-    '  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>',
-    '</svg>',
-    '<span id="civora-widget-badge">AI</span>'
-  ].join('');
+  trigger.style.display = 'none';
+  trigger.setAttribute('aria-hidden', 'true');
 
   // Container
   var container = document.createElement('div');
@@ -268,6 +235,14 @@
 
   window.openCivoraAIChat = openWidget;
   window.closeCivoraAIChat = closeWidget;
+  window.toggleCivoraAIChat = function () {
+    var isOpen = container.classList.contains('active');
+    if (isOpen) {
+      closeWidget();
+    } else {
+      openWidget();
+    }
+  };
 
   // Global click delegate for any button with .open-ai-chat
   document.addEventListener('click', function (e) {

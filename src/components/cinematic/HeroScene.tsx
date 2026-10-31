@@ -68,7 +68,7 @@ export const HeroScene: React.FC<HeroSceneProps> = ({
             if (typeof window !== 'undefined' && (window as any).openCivoraAIChat) {
               (window as any).openCivoraAIChat();
             } else {
-              document.getElementById('civora-widget-trigger')?.click();
+              document.getElementById('civora-chat-container')?.classList.add('active');
             }
           }}
           className="open-ai-chat group !relative !left-auto !top-auto !translate-y-0 w-[218px] h-[56px] px-4 rounded-lg bg-[#0071FF]/15 hover:bg-[#0071FF]/30 border border-[#38BDF8]/40 hover:border-[#38BDF8] shadow-[0_0_20px_rgba(0,113,255,0.25)] hover:shadow-[0_0_28px_rgba(56,189,248,0.5)] flex items-center justify-between backdrop-blur-md transition-all cursor-pointer"

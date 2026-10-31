@@ -92,10 +92,10 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           type="button"
           onClick={() => {
             onClose();
-            if ((window as any).openCivoraAIChat) {
+            if (typeof window !== 'undefined' && (window as any).openCivoraAIChat) {
               (window as any).openCivoraAIChat();
             } else {
-              document.getElementById('civora-widget-trigger')?.click();
+              document.getElementById('civora-chat-container')?.classList.add('active');
             }
           }}
           className="w-full py-3.5 px-6 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-white font-mono text-xs font-semibold tracking-widest rounded-lg flex items-center justify-center gap-3 transition-colors"

@@ -2,11 +2,26 @@
 
 Exposes read-only repository inspection tools via the official Model Context
 Protocol (MCP) Streamable HTTP transport.
+
+Security Architecture:
+  - MCPAuthMiddleware wraps the COMPLETE MCP Starlette application (not just
+    the route endpoint) so SDK-owned transport-security middleware is preserved
+    inside the MCP app stack, while CIVORA shared-header token enforcement is
+    applied first at the ASGI boundary.
+  - TransportSecuritySettings is configured with explicit allowed_hosts and
+    allowed_origins from application settings. DNS-rebinding protection is
+    always enabled (never set to False).
+  - get_mcp_routes() mounts the authenticated MCP proxy at both /mcp and /mcp/
+    using direct Starlette routes to avoid HTTP 307 redirects.
+  - refresh_mcp_session_manager() creates a NEW Starlette app (and therefore a
+    NEW StreamableHTTPSessionManager) on every lifespan entry so that repeated
+    application starts never hit the "session manager already run" RuntimeError.
 """
 
 import logging
 import time
-from typing import Any, Dict, Optional
+from typing import Any, Optional
+
 from mcp.server.mcpserver import MCPServer
 from mcp.server.transport_security import TransportSecuritySettings
 from starlette.routing import Route
@@ -41,9 +56,12 @@ mcp_server = MCPServer(
 # ==============================================================================
 @mcp_server.tool(
     name="repo_get_metadata",
-    description="Retrieve live GitHub repository metadata, visibility, default branch, and current default branch commit SHA.",
+    description=(
+        "Retrieve live GitHub repository metadata: full_name, visibility, default_branch, "
+        "default_branch_head_sha, repository_url, and archived status."
+    ),
 )
-async def handle_repo_get_metadata(owner: str, repo: str) -> Dict[str, Any]:
+async def handle_repo_get_metadata(owner: str, repo: str) -> dict[str, Any]:
     start = time.time()
     logger.info("MCP tool 'repo_get_metadata' started for repository '%s/%s'", owner, repo)
     try:
@@ -70,13 +88,17 @@ async def handle_repo_get_metadata(owner: str, repo: str) -> Dict[str, Any]:
 # ==============================================================================
 @mcp_server.tool(
     name="repo_list_tree",
-    description="List all file paths, types, sizes, and git SHAs in the repository tree. Resolves default branch HEAD if ref is omitted.",
+    description=(
+        "List all file paths, types, sizes, and git SHAs in the repository tree. "
+        "Resolves default branch HEAD if ref is omitted. "
+        "Reports truncated=true when the tree exceeds GitHub API limits."
+    ),
 )
 async def handle_repo_list_tree(
     owner: str,
     repo: str,
     ref: Optional[str] = None,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     start = time.time()
     logger.info("MCP tool 'repo_list_tree' started for '%s/%s' (ref=%s)", owner, repo, ref or "default")
     try:
@@ -104,14 +126,20 @@ async def handle_repo_list_tree(
 # ==============================================================================
 @mcp_server.tool(
     name="repo_read_file",
-    description="Safely inspect and redact text file contents from the repository. Blocks secrets, private keys, binaries, and path traversal.",
+    description=(
+        "Safely inspect and redact text file contents from the repository. "
+        "Blocks: secret files (.env, .pem, .key, id_rsa), binary files, "
+        "path traversal (.. or absolute paths), files > 256KB. "
+        "Automatically redacts: AWS keys, GitHub tokens, Bearer tokens, "
+        "private key blocks, credential assignments, and database connection strings."
+    ),
 )
 async def handle_repo_read_file(
     owner: str,
     repo: str,
     path: str,
     ref: Optional[str] = None,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     start = time.time()
     logger.info("MCP tool 'repo_read_file' started for '%s/%s' path='%s'", owner, repo, path)
     try:
@@ -134,9 +162,12 @@ async def handle_repo_read_file(
 # ==============================================================================
 @mcp_server.tool(
     name="ci_get_workflows",
-    description="Retrieve all configured GitHub Actions workflow definitions, IDs, states, and paths for the repository.",
+    description=(
+        "Retrieve all configured GitHub Actions workflow definitions, IDs, states, "
+        "and paths for the repository. Results are bounded to a safe maximum page size."
+    ),
 )
-async def handle_ci_get_workflows(owner: str, repo: str) -> Dict[str, Any]:
+async def handle_ci_get_workflows(owner: str, repo: str) -> dict[str, Any]:
     start = time.time()
     logger.info("MCP tool 'ci_get_workflows' started for '%s/%s'", owner, repo)
     try:
@@ -159,13 +190,17 @@ async def handle_ci_get_workflows(owner: str, repo: str) -> Dict[str, Any]:
 # ==============================================================================
 @mcp_server.tool(
     name="ci_get_check_runs",
-    description="Retrieve live GitHub check run executions, conclusions (success, failure, pending, cancelled, etc.) for a commit reference.",
+    description=(
+        "Retrieve live GitHub check run executions, conclusions "
+        "(success, failure, pending, cancelled, etc.) for a commit reference. "
+        "Results are bounded to a safe maximum page size."
+    ),
 )
 async def handle_ci_get_check_runs(
     owner: str,
     repo: str,
     ref: Optional[str] = None,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     start = time.time()
     logger.info("MCP tool 'ci_get_check_runs' started for '%s/%s' (ref=%s)", owner, repo, ref or "default")
     try:
@@ -188,13 +223,19 @@ async def handle_ci_get_check_runs(
 # ==============================================================================
 @mcp_server.tool(
     name="docs_extract_setup_steps",
-    description="Inspect README, CONTRIBUTING, package.json, pyproject.toml and extract setup steps, commands, and environment variables. (UNTRUSTED DATA)",
+    description=(
+        "Inspect README.md, CONTRIBUTING.md, package.json, pyproject.toml, "
+        "requirements.txt, Cargo.toml, and go.mod to extract setup steps, "
+        "commands, and environment variable names. "
+        "All repository content is treated as UNTRUSTED DATA. "
+        "Extracted commands are never executed. Source file and line numbers are reported."
+    ),
 )
 async def handle_docs_extract_setup_steps(
     owner: str,
     repo: str,
     ref: Optional[str] = None,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     start = time.time()
     logger.info("MCP tool 'docs_extract_setup_steps' started for '%s/%s' (ref=%s)", owner, repo, ref or "default")
     try:
@@ -217,36 +258,88 @@ async def handle_docs_extract_setup_steps(
         }
 
 
+def _build_transport_security() -> TransportSecuritySettings:
+    """Constructs TransportSecuritySettings from application configuration.
+
+    DNS-rebinding protection is always enabled. Allowed hosts and origins are
+    sourced from MCP_ALLOWED_HOSTS and MCP_ALLOWED_ORIGINS settings respectively.
+    In production, MCP_ALLOWED_HOSTS is required (validated in config.py).
+    """
+    return TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=list(settings.MCP_ALLOWED_HOSTS),
+        allowed_origins=list(settings.MCP_ALLOWED_ORIGINS),
+    )
+
+
 class MCPProxyApp:
-    """Dynamic ASGI proxy allowing session manager recreation across lifespans."""
+    """Dynamic ASGI proxy allowing MCP Starlette app recreation across lifespans.
+
+    Wraps the COMPLETE Starlette application returned by streamable_http_app()
+    (not a single route endpoint) so that SDK-owned middleware stack (transport
+    security, body size limits) is fully preserved. MCPAuthMiddleware is then
+    applied around this complete app at the ASGI boundary.
+
+    Trailing-slash normalisation: the SDK Starlette app registers only `/mcp`
+    (no trailing slash). A trailing-slash request would cause Starlette's own
+    redirect_slashes middleware to emit HTTP 307. To avoid that redirect while
+    still serving `/mcp/` transparently, this proxy strips a trailing slash
+    from `scope["path"]` and `scope["raw_path"]` before forwarding.
+    """
 
     def __init__(self) -> None:
         self.target: Optional[Any] = None
+        self._canonical_path: str = ""
 
     async def __call__(self, scope: Any, receive: Any, send: Any) -> None:
-        if self.target is not None:
-            await self.target(scope, receive, send)
+        if self.target is None:
+            return
+
+        # Normalise trailing slash to avoid SDK-internal HTTP 307 redirects.
+        if scope.get("type") == "http":
+            path: str = scope.get("path", "")
+            if path != self._canonical_path and path == self._canonical_path + "/":
+                scope = dict(scope)
+                scope["path"] = self._canonical_path
+                raw = scope.get("raw_path", b"")
+                if raw.endswith(b"/"):
+                    scope["raw_path"] = raw[:-1]
+
+        await self.target(scope, receive, send)
 
 
 _mcp_proxy = MCPProxyApp()
 
 
 def refresh_mcp_session_manager() -> None:
-    """Initializes or refreshes the StreamableHTTP session manager and routes."""
-    transport_sec = TransportSecuritySettings(enable_dns_rebinding_protection=False)
+    """Initializes or refreshes the StreamableHTTP session manager.
+
+    Creates a brand-new MCP Starlette app (and therefore a new
+    StreamableHTTPSessionManager) on every call. This prevents the
+    'session manager already run' RuntimeError across lifespan restarts
+    or repeated test fixture entries.
+
+    The complete Starlette app is wrapped in MCPAuthMiddleware so that:
+    1. CIVORA shared-header token authentication is enforced first.
+    2. SDK transport-security (DNS-rebinding protection, body size limits)
+       is preserved inside the wrapped app's own middleware chain.
+    """
+    transport_sec = _build_transport_security()
+    endpoint_path = settings.MCP_ENDPOINT.rstrip("/")
     mcp_starlette_app = mcp_server.streamable_http_app(
-        streamable_http_path=settings.MCP_ENDPOINT,
+        streamable_http_path=endpoint_path,
         transport_security=transport_sec,
     )
-    raw_endpoint = mcp_starlette_app.routes[0].endpoint
-    _mcp_proxy.target = MCPAuthMiddleware(raw_endpoint)
+    # Wrap the COMPLETE Starlette ASGI app — preserves SDK middleware chain
+    _mcp_proxy.target = MCPAuthMiddleware(mcp_starlette_app)
+    _mcp_proxy._canonical_path = endpoint_path
 
 
 def get_mcp_routes() -> list[Route]:
     """Builds authenticated Starlette routes for the MCP Streamable HTTP endpoint.
 
-    Provides direct routing for both `/mcp` and `/mcp/` without temporary HTTP redirects,
-    guaranteeing strict client compatibility across TrueForge and curl.
+    Provides direct routing for both `/mcp` and `/mcp/` without temporary HTTP
+    redirects, guaranteeing strict client compatibility across TrueForge and curl.
     """
     refresh_mcp_session_manager()
     methods = ["GET", "POST", "DELETE", "OPTIONS", "HEAD"]
@@ -256,4 +349,3 @@ def get_mcp_routes() -> list[Route]:
         Route(endpoint_path, endpoint=_mcp_proxy, methods=methods),
         Route(f"{endpoint_path}/", endpoint=_mcp_proxy, methods=methods),
     ]
-

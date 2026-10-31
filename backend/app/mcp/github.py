@@ -13,8 +13,21 @@ from app.core.config import settings
 
 logger = logging.getLogger("civora.mcp.github")
 
-# Safe owner/repo slug validator
+# Safe owner/repo slug validator — prevents injection through repository identifiers
 SLUG_PATTERN = re.compile(r"^[a-zA-Z0-9_.-]+$")
+
+# Safe ref/branch/SHA validator — only alphanumeric, dash, dot, underscore, slash
+REF_PATTERN = re.compile(r"^[a-zA-Z0-9_./-]{1,200}$")
+
+# Encoded path traversal detection (catches %2F, %2e%2e, etc.)
+ENCODED_TRAVERSAL_PATTERN = re.compile(r"(%2e|%2f|%5c)", re.IGNORECASE)
+
+# Maximum bytes read from GitHub API JSON responses (2 MB)
+MAX_RESPONSE_BODY_BYTES = 2 * 1024 * 1024
+
+# Pagination safety limits
+MAX_WORKFLOWS_PAGE_SIZE = 100
+MAX_CHECK_RUNS_PAGE_SIZE = 100
 
 # In-memory cache for installation tokens: {repo_key: (token, expiry_unix_timestamp)}
 _INSTALLATION_TOKEN_CACHE: Dict[str, Tuple[str, float]] = {}
@@ -45,7 +58,13 @@ class GitHubAppClient:
         base_url: Optional[str] = None,
         http_client: Optional[httpx.AsyncClient] = None,
     ) -> None:
-        self.base_url = (base_url or settings.GITHUB_API_BASE_URL).rstrip("/")
+        raw_url = (base_url or settings.GITHUB_API_BASE_URL).rstrip("/")
+        # Validate HTTPS at construction time to prevent SSRF through injected base_url
+        if not raw_url.startswith("https://"):
+            raise ValueError(
+                f"GitHub API base URL must use HTTPS; got: {raw_url!r}"
+            )
+        self.base_url = raw_url
         self._http_client = http_client
 
     def is_configured(self) -> bool:
@@ -66,6 +85,36 @@ class GitHubAppClient:
             raise GitHubAppError(
                 "INVALID_REPOSITORY_NAME",
                 f"Invalid repo format '{repo}'. Must contain only alphanumeric characters, dashes, underscores, or periods.",
+                400,
+            )
+
+    def _validate_ref(self, ref: str) -> None:
+        """Validates branch names, tags, and commit SHAs to prevent header/path injection.
+
+        Allowed: alphanumeric chars, underscore, dash, dot, forward slash.
+        Explicitly blocked: '..' sequences (path traversal within refs), null bytes,
+        newlines, and other control characters.
+        """
+        if not ref or not REF_PATTERN.match(ref):
+            raise GitHubAppError(
+                "INVALID_REF_FORMAT",
+                f"Invalid ref format '{ref}'. Must be a valid branch name, tag, or commit SHA.",
+                400,
+            )
+        # Explicitly block '..' sequences regardless of surrounding context
+        if ".." in ref:
+            raise GitHubAppError(
+                "SECURITY_VIOLATION_REF_TRAVERSAL",
+                f"Path traversal sequence '..' detected in ref '{ref}'.",
+                400,
+            )
+
+    def _validate_path(self, path: str) -> None:
+        """Validates file paths for encoded path traversal attacks."""
+        if ENCODED_TRAVERSAL_PATTERN.search(path):
+            raise GitHubAppError(
+                "SECURITY_VIOLATION_ENCODED_TRAVERSAL",
+                f"Encoded path traversal detected in '{path}'.",
                 400,
             )
 
@@ -107,6 +156,38 @@ class GitHubAppClient:
                 500,
             ) from exc
 
+    async def _read_bounded_json(self, resp: httpx.Response) -> Any:
+        """Reads and parses a JSON response with an enforced maximum body size.
+
+        Raises GitHubAppError if the response body exceeds MAX_RESPONSE_BODY_BYTES.
+        This prevents memory exhaustion from unexpectedly large GitHub API responses.
+        """
+        content_length = resp.headers.get("content-length")
+        if content_length is not None:
+            try:
+                declared_size = int(content_length)
+                if declared_size > MAX_RESPONSE_BODY_BYTES:
+                    raise GitHubAppError(
+                        "RESPONSE_TOO_LARGE",
+                        f"GitHub API response Content-Length ({declared_size} bytes) exceeds "
+                        f"the safe maximum ({MAX_RESPONSE_BODY_BYTES} bytes).",
+                        502,
+                    )
+            except ValueError:
+                pass
+
+        # Also enforce on actual received body size
+        body = resp.content
+        if len(body) > MAX_RESPONSE_BODY_BYTES:
+            raise GitHubAppError(
+                "RESPONSE_TOO_LARGE",
+                f"GitHub API response body ({len(body)} bytes) exceeds "
+                f"the safe maximum ({MAX_RESPONSE_BODY_BYTES} bytes).",
+                502,
+            )
+
+        return resp.json()
+
     async def _get_installation_token(self, owner: str, repo: str, client: httpx.AsyncClient) -> str:
         """Retrieves and caches an installation-scoped token for the given repository."""
         cache_key = f"{owner.lower()}/{repo.lower()}"
@@ -146,7 +227,7 @@ class GitHubAppClient:
                 resp.status_code,
             )
 
-        installation_data = resp.json()
+        installation_data = await self._read_bounded_json(resp)
         installation_id = installation_data.get("id")
         if not installation_id:
             raise GitHubAppError(
@@ -155,7 +236,7 @@ class GitHubAppClient:
                 502,
             )
 
-        # Step 2: Exchange JWT for an installation access token (Strict read-only permissions requested)
+        # Step 2: Exchange JWT for an installation access token (strict read-only permissions)
         access_token_url = f"{self.base_url}/app/installations/{installation_id}/access_tokens"
         payload = {
             "permissions": {
@@ -178,7 +259,7 @@ class GitHubAppClient:
                 tok_resp.status_code,
             )
 
-        tok_data = tok_resp.json()
+        tok_data = await self._read_bounded_json(tok_resp)
         token = tok_data.get("token")
         expires_at_str = tok_data.get("expires_at")
 
@@ -204,6 +285,9 @@ class GitHubAppClient:
     ) -> Any:
         """Executes an authenticated read-only request against GitHub REST API."""
         self._validate_slugs(owner, repo)
+
+        # Validate for encoded path traversal in the endpoint string
+        self._validate_path(endpoint)
 
         if not self.is_configured():
             raise GitHubAppError(
@@ -263,7 +347,7 @@ class GitHubAppClient:
                     resp.status_code,
                 )
 
-            return resp.json()
+            return await self._read_bounded_json(resp)
 
         if self._http_client is not None:
             return await _do_req(self._http_client)

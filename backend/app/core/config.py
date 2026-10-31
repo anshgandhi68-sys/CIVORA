@@ -78,11 +78,30 @@ class Settings(BaseSettings):
         default="civora-mcp-local-dev-token",
         description="Token required to connect TrueForge to the MCP endpoint",
     )
+    # DNS-rebinding protection: explicit allowlists for Host and Origin headers.
+    # Empty list = allow-all (acceptable only for local development).
+    # Production MUST set at least one entry for MCP_ALLOWED_HOSTS.
+    MCP_ALLOWED_HOSTS: List[str] = Field(
+        default=["localhost", "localhost:*", "127.0.0.1", "127.0.0.1:*"],
+        description=(
+            "Allowed Host header values for MCP Streamable HTTP DNS-rebinding protection. "
+            "Empty list permits any host (development only). "
+            "Production MUST set explicit hostname(s) via MCP_ALLOWED_HOSTS env var."
+        ),
+    )
+    MCP_ALLOWED_ORIGINS: List[str] = Field(
+        default=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8000", "http://127.0.0.1:8000"],
+        description=(
+            "Allowed Origin header values for MCP Streamable HTTP DNS-rebinding protection. "
+            "Empty list permits absent Origin (same-origin only). "
+            "Production MUST set explicit origin(s) via MCP_ALLOWED_ORIGINS env var."
+        ),
+    )
 
     # GitHub App Credentials
     GITHUB_API_BASE_URL: str = Field(
         default="https://api.github.com",
-        description="Base URL for the GitHub REST API origin",
+        description="Base URL for the GitHub REST API origin. Must be https://api.github.com in production.",
     )
     GITHUB_APP_ID: Optional[str] = Field(default=None, description="GitHub App ID")
     GITHUB_APP_PRIVATE_KEY_PATH: Optional[str] = Field(default=None, description="Path to PEM file")
@@ -117,6 +136,18 @@ class Settings(BaseSettings):
         if v.startswith("postgresql://"):
             return v.replace("postgresql://", "postgresql+asyncpg://")
         return v
+
+    @field_validator("GITHUB_API_BASE_URL")
+    @classmethod
+    def validate_github_api_base_url(cls, v: str) -> str:
+        """Ensures the GitHub API base URL uses HTTPS and is not modifiable to an arbitrary origin."""
+        if not v.startswith("https://"):
+            raise ValueError(
+                "GITHUB_API_BASE_URL must use HTTPS. "
+                "Non-HTTPS GitHub API origins are not permitted."
+            )
+        # Strip trailing slash for consistent URL construction
+        return v.rstrip("/")
 
     @model_validator(mode="after")
     def validate_production_secrets(self) -> "Settings":
@@ -155,8 +186,21 @@ class Settings(BaseSettings):
                     "Known development default PROVENANCE_HMAC_SECRET is strictly prohibited in production."
                 )
 
+            # 4. MCP_ALLOWED_HOSTS must be non-empty in production (fail closed)
+            if not self.MCP_ALLOWED_HOSTS:
+                raise ValueError(
+                    "Production requires MCP_ALLOWED_HOSTS to be explicitly set. "
+                    "An empty allowlist is only acceptable for local development."
+                )
+
+            # 5. GITHUB_API_BASE_URL must be the official GitHub API in production
+            if self.GITHUB_API_BASE_URL != "https://api.github.com":
+                raise ValueError(
+                    "Production GITHUB_API_BASE_URL must be 'https://api.github.com'. "
+                    "Arbitrary GitHub API origins are not permitted in production."
+                )
+
         return self
 
 
 settings = Settings()
-

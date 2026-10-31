@@ -29,12 +29,20 @@ DENIED_BINARY_EXTENSIONS = {
 # Maximum allowable file size to inspect (256 KB)
 MAX_FILE_SIZE_BYTES = 256 * 1024
 
-# Secret redaction patterns
+# Secret redaction patterns — ordered from most specific to most general
 SECRET_REDACTION_PATTERNS = [
+    # AWS Access Key IDs (AKIA prefix, 20 chars total)
     (re.compile(r"AKIA[0-9A-Z]{16}"), "[REDACTED_AWS_KEY]"),
+    # GitHub personal/oauth/server/refresh/user tokens
     (re.compile(r"gh[pousr]_[A-Za-z0-9_]{36,255}"), "[REDACTED_GITHUB_TOKEN]"),
+    # PEM private key blocks (RSA, EC, OpenSSH, PKCS8, PGP)
     (re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----"), "[REDACTED_PRIVATE_KEY]"),
-    (re.compile(r"(?i)(api[_-]?key|client[_-]?secret|auth[_-]?token|password)\s*[:=]\s*['\"][^'\"]{8,}['\"]"), r"\1='[REDACTED_CREDENTIAL]'"),
+    # Bearer / Authorization token header values
+    (re.compile(r"(?i)(authorization|bearer)\s*[:\s]+[A-Za-z0-9_\-\.]{20,}"), r"\1: [REDACTED_BEARER_TOKEN]"),
+    # Database connection strings with embedded passwords: scheme://user:pass@host
+    (re.compile(r"(?i)(postgres(?:ql)?|mysql|mongodb|redis|amqp)://[^:@\s]+:[^@\s]+@"), r"\1://[REDACTED_DB_CREDENTIALS]@"),
+    # Unquoted or quoted API_KEY, CLIENT_SECRET, AUTH_TOKEN, PASSWORD assignments
+    (re.compile(r"(?i)(api[_-]?key|client[_-]?secret|auth[_-]?token|password)\s*[:=]\s*['\"]?([^'\";\s]{8,})['\"]?"), r"\1=[REDACTED_CREDENTIAL]"),
 ]
 
 

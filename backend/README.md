@@ -19,24 +19,27 @@ CIVORA Core provides the high-performance backend foundation and Model Context P
 
 CIVORA Core implements an official MCP server using the MCP Python SDK v2 (`mcp==2.3.0`) mounted directly on the FastAPI ASGI application at `/mcp`.
 
-### 1. Zero-Trust MCP Authentication
-Every request reaching `/mcp` is authenticated via a custom header:
-- Header Name: `X-CIVORA-MCP-TOKEN` (configurable via `MCP_AUTH_HEADER_NAME`)
-- Token: Configured via `MCP_AUTH_TOKEN`
-- Verification: Constant-time comparison using `hmac.compare_digest` to eliminate timing side-channel attacks.
-- Missing, empty, or mismatched tokens immediately return `401 Unauthorized`.
+### 1. Zero-Trust MCP Authentication & Transport Security
+Every request reaching `/mcp` is authenticated and validated before processing:
+- **Header Authentication**: Custom header `X-CIVORA-MCP-TOKEN` (configurable via `MCP_AUTH_HEADER_NAME`).
+- **Constant-Time Verification**: Uses `hmac.compare_digest` to prevent timing side-channel attacks.
+- **Fail-Closed Policy**: If `MCP_AUTH_TOKEN` is unset or empty, requests immediately return `401 Unauthorized`.
+- **DNS-Rebinding Protection**: Transport-level security is enforced via `TransportSecuritySettings`:
+  - Host header must match configured `MCP_ALLOWED_HOSTS` (defaults to `["localhost", "localhost:*", "127.0.0.1", "127.0.0.1:*"]`; invalid hosts return `421 Misdirected Request`).
+  - Origin header must match configured `MCP_ALLOWED_ORIGINS` (invalid origins return `403 Forbidden`).
+  - Production fails closed if `MCP_ALLOWED_HOSTS` is empty.
 
 ### 2. Available Read-Only Engineering Tools
 CIVORA exposes **strictly read-only** tools for deep repository understanding. No write tools, code execution, or shell execution capabilities exist on the MCP server:
 
 | Tool Name | Parameters | Description |
 |:---|:---|:---|
-| `repo_get_metadata` | `owner`, `repo` | Fetches repository details, default branch, stars, language, topics, and permissions. |
-| `repo_list_tree` | `owner`, `repo`, `branch?`, `recursive?` | Retrieves tree hierarchy (directories and files), reporting `truncated: true` if limits are exceeded. |
-| `repo_read_file` | `owner`, `repo`, `path`, `ref?` | Safely reads file contents. Enforces path traversal blocking (`..`, absolute paths), size limits (<=256KB), binary blocking, and automatic secret redaction. |
-| `ci_get_workflows` | `owner`, `repo` | Lists GitHub Actions workflows defined in `.github/workflows/`. |
-| `ci_get_check_runs` | `owner`, `repo`, `ref?` | Retrieves check runs and suites for a commit or HEAD, classifying statuses (`success`, `failure`, `pending`). |
-| `docs_extract_setup_steps` | `owner`, `repo`, `path?` | Parses Markdown/RST documentation files (e.g. `README.md`), identifying setup instructions, code blocks, prerequisites, and line numbers. |
+| `repo_get_metadata` | `owner: str`, `repo: str` | Retrieves live metadata: `repository_id`, `full_name`, `visibility`, `default_branch`, `default_branch_head_sha`, `repository_url`, and `archived` status. |
+| `repo_list_tree` | `owner: str`, `repo: str`, `ref?: str` | Retrieves full file hierarchy (path, type, size, sha) using recursive tree inspection. Resolves default branch HEAD if `ref` is omitted. Reports `truncated: true` if GitHub limits are reached. |
+| `repo_read_file` | `owner: str`, `repo: str`, `path: str`, `ref?: str` | Safely reads text files. Enforces: path traversal (`..`) blocking, forbidden credential files (`.env*`, `*.pem`, `*.key`, `*id_rsa*`), binary extension rejection, file size limit (<=256KB), and automatic redaction of AWS keys, GitHub tokens, Bearer tokens, private keys, database credentials, and API secrets. |
+| `ci_get_workflows` | `owner: str`, `repo: str` | Lists GitHub Actions workflows defined under `.github/workflows/`. Results are safely bounded to a maximum of 100 entries (`bounded_at: 100`). |
+| `ci_get_check_runs` | `owner: str`, `repo: str`, `ref?: str` | Retrieves check runs and suites for a commit reference (or default branch HEAD), classifying conclusions (`success`, `failure`, `pending`). Results are safely bounded to a maximum of 100 entries (`bounded_at: 100`). |
+| `docs_extract_setup_steps` | `owner: str`, `repo: str`, `ref?: str` | Discovers and inspects onboarding files (`README.md`, `CONTRIBUTING.md`, `package.json`, `pyproject.toml`, `requirements.txt`). Extracts shell commands categorized by type (`dependency_install`, `dev_command`, `build_command`, etc.) with exact source line numbers and referenced environment variable names. All extracted data is tagged `UNTRUSTED DATA`. |
 
 ### 3. GitHub App Authentication & Least Privilege
 Repository inspection is powered by GitHub App installation tokens:

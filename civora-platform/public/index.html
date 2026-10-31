@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIVORA AI | Autonomous Engineering Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: { 400: '#34d399', 500: '#10b981', 600: '#059669' },
+                        teal: { 400: '#2dd4bf', 500: '#14b8a6' },
+                        dark: { 900: '#020617', 800: '#0f172a', 700: '#1e293b' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(52, 211, 153, 0.1); }
+        .terminal { font-family: 'Fira Code', monospace; background: #000; border: 1px solid #1e293b; }
+        .neon-border { box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+        .tab-active { border-left: 3px solid #10b981; background: rgba(16, 185, 129, 0.1); color: #10b981; }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 glass border-r border-slate-800 flex flex-col h-full z-20">
+        <div class="p-6 border-b border-slate-800 flex items-center space-x-3">
+            <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                <i class="fas fa-microchip text-dark-900 text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-black tracking-tighter text-white">CIVORA <span class="text-emerald-500">AI</span></h1>
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Autonomous Agent</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-2 mt-4 text-sm font-medium">
+            <button onclick="showTab('dashboard')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all tab-active">
+                <i class="fas fa-th-large w-5"></i><span>Dashboard</span>
+            </button>
+            <button onclick="showTab('intelligence')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all text-slate-400">
+                <i class="fas fa-search w-5"></i><span>Repo Intelligence</span>
+            </button>
+            <button onclick="showTab('terminal')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all text-slate-400">
+                <i class="fas fa-terminal w-5"></i><span>Sandbox Terminal</span>
+            </button>
+            <button onclick="showTab('chat')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-slate-800/50 transition-all text-slate-400">
+                <i class="fas fa-comment-dots w-5"></i><span>AI Engineering Chat</span>
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-slate-800 bg-slate-900/50">
+            <div class="flex items-center space-x-3">
+                <div class="relative">
+                    <div class="w-2 h-2 bg-emerald-500 rounded-full absolute -top-1 -right-1 animate-ping"></div>
+                    <div class="w-2 h-2 bg-emerald-500 rounded-full absolute -top-1 -right-1"></div>
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=10b981&color=fff" class="w-8 h-8 rounded-full border border-slate-700">
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-white">Active Session</p>
+                    <p class="text-[10px] text-emerald-400">Agent Connected</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col min-w-0 bg-dark-900 overflow-hidden">
+        
+        <!-- TOP NAV -->
+        <header class="h-16 border-b border-slate-800 flex items-center justify-between px-8 bg-dark-800/50 z-10">
+            <div class="flex items-center space-x-4">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Active Repository:</span>
+                <select id="repo-select" class="bg-slate-900 border border-slate-700 text-xs rounded-lg px-3 py-1.5 text-emerald-400 font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                    <option>facebook/react (main)</option>
+                    <option>expressjs/express (master)</option>
+                    <option>civora/engine (dev)</option>
+                </select>
+            </div>
+            <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-700">
+                    <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                    <span class="text-[10px] font-bold text-slate-300 uppercase">Sandbox: Healthy</span>
+                </div>
+                <button class="text-slate-400 hover:text-white transition-colors"><i class="fas fa-bell"></i></button>
+                <button class="bg-emerald-500 text-dark-900 text-xs font-black px-4 py-1.5 rounded-lg shadow-lg shadow-emerald-500/20 hover:scale-105 transition-all">DEVOPS OPS</button>
+            </div>
+        </header>
+
+        <!-- DASHBOARD TAB -->
+        <div id="tab-dashboard" class="tab-content flex-1 overflow-y-auto p-8 space-y-8">
+            <div class="flex justify-between items-end">
+                <div>
+                    <h2 class="text-3xl font-black text-white">Engineering Overview</h2>
+                    <p class="text-slate-400 text-sm mt-1">Autonomous monitoring of repository health and documentation drift.</p>
+                </div>
+                <button onclick="scanRepo()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-6 py-2.5 rounded-xl border border-slate-700 transition-all">
+                    <i class="fas fa-sync-alt mr-2"></i>Trigger Full Scan
+                </button>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-4 gap-6">
+                <div class="glass p-6 rounded-2xl neon-border">
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Repos Analyzed</p>
+                    <h3 class="text-4xl font-black text-white mt-2">124</h3>
+                    <div class="mt-4 flex items-center text-emerald-400 text-[10px] font-bold">
+                        <i class="fas fa-arrow-up mr-1"></i> 12% FROM LAST MONTH
+                    </div>
+                </div>
+                <div class="glass p-6 rounded-2xl">
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Drift Detected</p>
+                    <h3 class="text-4xl font-black text-amber-500 mt-2">18</h3>
+                    <div class="mt-4 flex items-center text-amber-400 text-[10px] font-bold">
+                        <i class="fas fa-exclamation-triangle mr-1"></i> REQUIRES VERIFICATION
+                    </div>
+                </div>
+                <div class="glass p-6 rounded-2xl">
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Patches Verified</p>
+                    <h3 class="text-4xl font-black text-teal-400 mt-2">892</h3>
+                    <div class="mt-4 flex items-center text-teal-400 text-[10px] font-bold">
+                        <i class="fas fa-check-circle mr-1"></i> 100% SUCCESS RATE
+                    </div>
+                </div>
+                <div class="glass p-6 rounded-2xl">
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Sandbox Runtime</p>
+                    <h3 class="text-4xl font-black text-white mt-2">420h</h3>
+                    <div class="mt-4 flex items-center text-slate-400 text-[10px] font-bold">
+                        <i class="fas fa-server mr-1"></i> ISOLATED DOCKER ENV
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Workspace Area -->
+            <div class="grid grid-cols-3 gap-8">
+                <div class="col-span-2 glass rounded-3xl p-8 border border-slate-800">
+                    <h4 class="text-lg font-black text-white mb-6 flex items-center">
+                        <i class="fas fa-history text-emerald-500 mr-3"></i>Autonomous Workflow Pipeline
+                    </h4>
+                    <div class="space-y-6">
+                        <div class="flex items-center space-x-6 p-4 bg-slate-900/50 rounded-2xl border border-slate-800">
+                            <div class="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-black">1</div>
+                            <div class="flex-1">
+                                <h5 class="text-sm font-bold text-white">Repository Ingestion</h5>
+                                <p class="text-xs text-slate-500">Mapping directory structure and manifest resolution.</p>
+                            </div>
+                            <div class="text-emerald-500 text-[10px] font-bold uppercase tracking-widest bg-emerald-500/10 px-3 py-1 rounded-full">Completed</div>
+                        </div>
+                        <div class="flex items-center space-x-6 p-4 bg-slate-900/50 rounded-2xl border border-slate-800">
+                            <div class="w-12 h-12 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center font-black">2</div>
+                            <div class="flex-1">
+                                <h5 class="text-sm font-bold text-white">Documentation Drift Detection</h5>
+                                <p class="text-xs text-slate-500">Comparing README.md with package.json engine specs.</p>
+                            </div>
+                            <div class="text-amber-500 text-[10px] font-bold uppercase tracking-widest bg-amber-500/10 px-3 py-1 rounded-full">3 Issues Detected</div>
+                        </div>
+                        <div class="flex items-center space-x-6 p-4 bg-slate-900/50 rounded-2xl border border-slate-800">
+                            <div class="w-12 h-12 rounded-full bg-slate-800 text-slate-500 flex items-center justify-center font-black">3</div>
+                            <div class="flex-1">
+                                <h5 class="text-sm font-bold text-white">Counterfactual Verification</h5>
+                                <p class="text-xs text-slate-500">Executing fix candidates in isolated sandbox.</p>
+                            </div>
+                            <div class="text-slate-500 text-[10px] font-bold uppercase tracking-widest bg-slate-800 px-3 py-1 rounded-full">Waiting...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass rounded-3xl p-8 border border-slate-800 flex flex-col">
+                    <h4 class="text-lg font-black text-white mb-6">Recent Reports</h4>
+                    <div class="space-y-4 flex-1">
+                        <div class="p-4 bg-dark-900 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition-all cursor-pointer">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Verification</span>
+                                <span class="text-[10px] text-slate-500">2m ago</span>
+                            </div>
+                            <p class="text-xs font-bold text-white">Clean-room PR #422 verified successfully.</p>
+                        </div>
+                        <div class="p-4 bg-dark-900 rounded-xl border border-slate-800">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[10px] font-black text-amber-500 uppercase tracking-widest">Security Audit</span>
+                                <span class="text-[10px] text-slate-500">1h ago</span>
+                            </div>
+                            <p class="text-xs font-bold text-white">Detected outdated Axios dependency (v1.3.4).</p>
+                        </div>
+                    </div>
+                    <button class="w-full mt-6 bg-slate-800 py-3 rounded-xl text-xs font-bold text-slate-300 hover:text-white transition-all">View All Reports</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- REPO INTELLIGENCE TAB -->
+        <div id="tab-intelligence" class="tab-content hidden flex-1 overflow-y-auto p-8 space-y-8">
+            <div class="flex justify-between items-end">
+                <div>
+                    <h2 class="text-3xl font-black text-white">Repository Intelligence & Drift Radar</h2>
+                    <p class="text-slate-400 text-sm mt-1">Cross-analyzing README instructions against CI workflows and package manifests.</p>
+                </div>
+                <button onclick="scanRepo()" class="bg-emerald-500 hover:bg-emerald-600 text-dark-900 text-xs font-black px-6 py-2.5 rounded-xl transition-all">
+                    <i class="fas fa-radar mr-2"></i>Run Radar Scan
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div class="glass p-6 rounded-2xl border border-slate-800">
+                    <h4 class="text-sm font-bold text-white mb-4 flex items-center">
+                        <i class="fas fa-file-code text-emerald-400 mr-2"></i>Documentation Drift Analysis
+                    </h4>
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 bg-slate-900/70 rounded-lg border border-red-500/30 flex items-start justify-between">
+                            <div>
+                                <span class="font-bold text-red-400">[HIGH] Node.js Version Mismatch</span>
+                                <p class="text-slate-400 mt-1">README suggests v16.x but package.json engines require &gt;=18.0.0.</p>
+                            </div>
+                            <span class="text-[10px] font-mono text-red-400 bg-red-500/10 px-2 py-0.5 rounded">DRIFT</span>
+                        </div>
+                        <div class="p-3 bg-slate-900/70 rounded-lg border border-amber-500/30 flex items-start justify-between">
+                            <div>
+                                <span class="font-bold text-amber-400">[MEDIUM] Missing .env.example Key</span>
+                                <p class="text-slate-400 mt-1">DATABASE_URL referenced in source but absent from .env.example.</p>
+                            </div>
+                            <span class="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">CONFIG</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-2xl border border-slate-800">
+                    <h4 class="text-sm font-bold text-white mb-4 flex items-center">
+                        <i class="fas fa-shield-alt text-teal-400 mr-2"></i>Zero-Trust Provenance Audit
+                    </h4>
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 bg-slate-900/70 rounded-lg border border-emerald-500/30 flex items-start justify-between">
+                            <div>
+                                <span class="font-bold text-emerald-400">[SAFE] Shell Command Verification</span>
+                                <p class="text-slate-400 mt-1">All documented commands validated against isolated execution sandbox.</p>
+                            </div>
+                            <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">PASSED</span>
+                        </div>
+                        <div class="p-3 bg-slate-900/70 rounded-lg border border-slate-700 flex items-start justify-between">
+                            <div>
+                                <span class="font-bold text-slate-200">[READY] Devcontainer Synthesis</span>
+                                <p class="text-slate-400 mt-1">Auto-generated clean-room reproducible development container ready.</p>
+                            </div>
+                            <span class="text-[10px] font-mono text-slate-300 bg-slate-700/50 px-2 py-0.5 rounded">READY</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TERMINAL TAB -->
+        <div id="tab-terminal" class="tab-content hidden flex-1 flex flex-col p-8 overflow-hidden">
+            <div class="mb-6">
+                <h2 class="text-2xl font-black text-white">Sandbox Execution Center</h2>
+                <p class="text-slate-400 text-sm">Isolated Docker-based environment for safe repo setup and testing.</p>
+            </div>
+            <div class="terminal flex-1 rounded-2xl shadow-2xl flex flex-col overflow-hidden border-2 border-slate-800">
+                <div class="bg-slate-900 px-4 py-2 border-b border-slate-800 flex justify-between items-center">
+                    <div class="flex space-x-2">
+                        <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <div class="w-3 h-3 bg-amber-500 rounded-full"></div>
+                        <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
+                    </div>
+                    <span class="text-[10px] font-mono text-slate-500">civora-sandbox-v1 ~ user@autonomous-agent</span>
+                </div>
+                <div id="terminal-log" class="flex-1 p-6 font-mono text-xs text-emerald-500 overflow-y-auto space-y-1">
+                    <p class="text-emerald-500/50"># Civora Engine Initialized.</p>
+                    <p class="text-emerald-500/50"># Sandbox Ready. Zero-Trust Policy Active.</p>
+                    <p class="text-white mt-2">$ civora --status</p>
+                    <p class="text-emerald-400">STATUS: READY | REPO: REACT-CORE | MODE: ISOLATED</p>
+                </div>
+                <form onsubmit="runCommand(event)" class="bg-slate-900/50 p-4 border-t border-slate-800 flex items-center space-x-3">
+                    <span class="text-emerald-500 font-mono text-sm">$</span>
+                    <input id="term-input" type="text" class="flex-1 bg-transparent border-none outline-none text-white font-mono text-sm" placeholder="npm test, node -v, cat README.md..." autocomplete="off">
+                </form>
+            </div>
+        </div>
+
+        <!-- CHAT TAB -->
+        <div id="tab-chat" class="tab-content hidden flex-1 flex flex-col p-8 overflow-hidden">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-2xl font-black text-white">Repository-Aware AI</h2>
+                    <p class="text-slate-400 text-sm">Autonomous Engineering Agent + General Coding Assistant.</p>
+                </div>
+                <div class="flex bg-slate-800 p-1 rounded-xl border border-slate-700">
+                    <button onclick="setMode('agent')" id="mode-agent" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-500 text-dark-900 transition-all">AGENT OPS</button>
+                    <button onclick="setMode('general')" id="mode-general" class="px-4 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all">GENERAL LLM</button>
+                </div>
+            </div>
+            
+            <div class="flex-1 glass rounded-3xl flex flex-col overflow-hidden">
+                <div id="chat-box" class="flex-1 p-8 overflow-y-auto space-y-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-dark-900 font-black text-xs">AI</div>
+                        <div class="bg-slate-800/80 p-4 rounded-2xl rounded-tl-none border border-slate-700 max-w-2xl">
+                            <p class="text-sm leading-relaxed">System initialized. I am your **Civora Principal Engineer**. I have analyzed the active repository architecture. How can I assist you in investigating failures or generating patches today?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 border-t border-slate-800">
+                    <form onsubmit="sendChat(event)" class="relative">
+                        <input id="chat-input" type="text" class="w-full bg-slate-900 border border-slate-700 rounded-2xl pl-6 pr-32 py-4 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="Ask about repo architecture, fix errors, or generate patches...">
+                        <div class="absolute right-2 top-2 flex items-center space-x-2">
+                            <button type="submit" class="bg-emerald-500 text-dark-900 px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all">Send Agent</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        let currentMode = 'agent';
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+            const target = document.getElementById('tab-' + tabId);
+            if (target) target.classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.classList.remove('tab-active');
+                b.classList.add('text-slate-400');
+            });
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('tab-active');
+                event.currentTarget.classList.remove('text-slate-400');
+            }
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('mode-agent').className = mode === 'agent' ? 'px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-500 text-dark-900' : 'px-4 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white';
+            document.getElementById('mode-general').className = mode === 'general' ? 'px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-500 text-dark-900' : 'px-4 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white';
+        }
+
+        async function runCommand(e) {
+            e.preventDefault();
+            const input = document.getElementById('term-input');
+            const log = document.getElementById('terminal-log');
+            const cmd = input.value;
+            if(!cmd) return;
+
+            log.innerHTML += `<p class="text-white mt-3">$ ${cmd}</p>`;
+            input.value = '';
+
+            try {
+                const res = await fetch('/api/sandbox/exec', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ command: cmd })
+                });
+                const data = await res.json();
+                
+                if(data.status === 'SUCCESS') {
+                    log.innerHTML += `<pre class="text-emerald-400 mt-1 whitespace-pre-wrap">${data.stdout || 'Done.'}</pre>`;
+                } else {
+                    log.innerHTML += `<pre class="text-rose-500 mt-1 whitespace-pre-wrap">${data.stderr || 'Command failed.'}</pre>`;
+                }
+            } catch (err) {
+                log.innerHTML += `<pre class="text-rose-500 mt-1 whitespace-pre-wrap">Connection error: ${err.message}</pre>`;
+            }
+            log.scrollTop = log.scrollHeight;
+        }
+
+        async function sendChat(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const box = document.getElementById('chat-box');
+            const text = input.value;
+            if(!text) return;
+
+            box.innerHTML += `
+                <div class="flex items-start justify-end space-x-4">
+                    <div class="bg-emerald-500 text-dark-900 p-4 rounded-2xl rounded-tr-none border border-emerald-400 max-w-2xl">
+                        <p class="text-sm leading-relaxed font-bold">${text}</p>
+                    </div>
+                </div>
+            `;
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
+
+            try {
+                const res = await fetch('/api/ai/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ 
+                        messages: [{role: 'user', content: text}],
+                        mode: currentMode
+                    })
+                });
+                const data = await res.json();
+
+                box.innerHTML += `
+                    <div class="flex items-start space-x-4">
+                        <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-dark-900 font-black text-xs">AI</div>
+                        <div class="bg-slate-800/80 p-4 rounded-2xl rounded-tl-none border border-slate-700 max-w-2xl">
+                            <p class="text-sm leading-relaxed text-slate-300">${(data.reply || 'No response').replace(/\n/g, '<br>')}</p>
+                        </div>
+                    </div>
+                `;
+            } catch (err) {
+                box.innerHTML += `
+                    <div class="flex items-start space-x-4">
+                        <div class="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center text-white font-black text-xs">!</div>
+                        <div class="bg-slate-800/80 p-4 rounded-2xl rounded-tl-none border border-red-500/50 max-w-2xl">
+                            <p class="text-sm leading-relaxed text-red-400">Error reaching backend: ${err.message}</p>
+                        </div>
+                    </div>
+                `;
+            }
+            box.scrollTop = box.scrollHeight;
+        }
+
+        async function scanRepo() {
+            const select = document.getElementById('repo-select');
+            const repoVal = select ? select.value : 'Sample/Repo';
+            try {
+                const res = await fetch('/api/repo/scan', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ url: repoVal })
+                });
+                const data = await res.json();
+                alert("Scan Complete. Found " + (data.driftIssues ? data.driftIssues.length : 0) + " documentation drift issues for " + data.repo + ".");
+            } catch (err) {
+                alert("Scan failed: " + err.message);
+            }
+        }
+    </script>
+</body>
+</html>

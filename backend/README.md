@@ -29,8 +29,11 @@ source .venv/bin/activate
 # Upgrade pip and install pip-tools
 pip install --upgrade pip pip-tools
 
-# Install dependencies from locked requirements with hash verification
-pip install --require-hashes -r requirements.lock
+# Install development/test dependencies with hash verification
+pip install --require-hashes -r requirements-dev.lock
+
+# Or install production runtime-only dependencies
+pip install --require-hashes -r requirements-prod.lock
 ```
 
 ### 3. Environment Variables

@@ -113,3 +113,44 @@ def test_production_rejects_short_hmac_secret():
             PROVENANCE_HMAC_SECRET="short-hmac-secret",
         )
 
+
+def test_production_rejects_missing_secrets():
+    """Verify production rejects empty or missing secrets."""
+    import pytest
+    with pytest.raises(ValueError, match="requires a strong SECRET_KEY"):
+        Settings(
+            ENVIRONMENT="production",
+            SECRET_KEY="",
+            MCP_AUTH_TOKEN="m" * 24,
+            PROVENANCE_HMAC_SECRET="p" * 32,
+        )
+
+    with pytest.raises(ValueError, match="requires a strong MCP_AUTH_TOKEN"):
+        Settings(
+            ENVIRONMENT="production",
+            SECRET_KEY="c" * 32,
+            MCP_AUTH_TOKEN="",
+            PROVENANCE_HMAC_SECRET="p" * 32,
+        )
+
+    with pytest.raises(ValueError, match="requires a strong PROVENANCE_HMAC_SECRET"):
+        Settings(
+            ENVIRONMENT="production",
+            SECRET_KEY="c" * 32,
+            MCP_AUTH_TOKEN="m" * 24,
+            PROVENANCE_HMAC_SECRET="",
+        )
+
+
+def test_secret_values_never_leak_in_error_messages():
+    """Verify rejected secret values are never reflected in exception messages."""
+    import pytest
+    leaked_token = "civora-mcp-local-dev-token"
+    with pytest.raises(ValueError) as exc_info:
+        Settings(
+            ENVIRONMENT="production",
+            SECRET_KEY="c" * 32,
+            MCP_AUTH_TOKEN=leaked_token,
+            PROVENANCE_HMAC_SECRET="p" * 32,
+        )
+    assert leaked_token not in str(exc_info.value)

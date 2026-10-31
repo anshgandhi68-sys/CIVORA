@@ -122,15 +122,15 @@ export const BrandHeader: React.FC<BrandHeaderProps> = ({
               document.getElementById('civora-widget-trigger')?.click();
             }
           }}
-          className="navcta open-ai-chat group focus-visible:outline-none !static text-white hover:text-[#8FC2FF] transition-colors"
+          className="open-ai-chat group focus-visible:outline-none !static inline-flex items-center gap-2 h-[34px] px-3.5 rounded-full bg-[#0071FF]/15 hover:bg-[#0071FF]/30 border border-[#38BDF8]/40 hover:border-[#38BDF8] shadow-[0_0_16px_rgba(0,113,255,0.25)] hover:shadow-[0_0_24px_rgba(56,189,248,0.45)] text-white transition-all cursor-pointer"
           aria-label="Open CIVORA AI Chatbot"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] shadow-[0_0_6px_#38BDF8]" />
-          <span className="text-[12px] font-semibold tracking-[0.085em]">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] shadow-[0_0_8px_#38BDF8] shrink-0" />
+          <span className="text-[12px] font-bold tracking-[0.09em] text-white">
             CIVORA AI
           </span>
-          <span className="square">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+          <span className="w-[22px] h-[22px] rounded-md bg-[#0071FF] shadow-[0_0_10px_rgba(0,113,255,0.7)] group-hover:shadow-[0_0_18px_rgba(0,113,255,0.95)] flex items-center justify-center shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
           </span>

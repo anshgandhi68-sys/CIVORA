@@ -6,6 +6,7 @@ import { VerificationScene } from './VerificationScene';
 import { SurveyHud } from './SurveyHud';
 import { SystemNoteDialog } from './SystemNoteDialog';
 import { MobileMenu } from './MobileMenu';
+import { ExtendedContentSection } from './ExtendedContentSection';
 
 interface CivoraCinematicSiteProps {
   onOpenWorkspace: () => void;
@@ -149,8 +150,8 @@ export const CivoraCinematicSite: React.FC<CivoraCinematicSiteProps> = ({
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
-      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      targetProgressRef.current = clamp01(scrollY / maxScroll);
+      const scrubDistance = Math.max(1, window.innerHeight * 6.5);
+      targetProgressRef.current = clamp01(scrollY / scrubDistance);
 
       if (!rafIdRef.current) {
         rafIdRef.current = requestAnimationFrame(tick);
@@ -204,9 +205,9 @@ export const CivoraCinematicSite: React.FC<CivoraCinematicSiteProps> = ({
   // Smooth programmatic scroll navigation
   const navigateToProgress = (p: number) => {
     setMobileMenuOpen(false);
-    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const scrubDistance = Math.max(1, window.innerHeight * 6.5);
     window.scrollTo({
-      top: maxScroll * p,
+      top: scrubDistance * p,
       behavior: 'smooth',
     });
   };
@@ -227,6 +228,12 @@ export const CivoraCinematicSite: React.FC<CivoraCinematicSiteProps> = ({
     <>
       {/* 700vh Scroll Track */}
       <div className="track" aria-hidden="true" />
+
+      {/* Extended Content & Deep-Dive Data Pages */}
+      <ExtendedContentSection
+        onOpenWorkspace={onOpenWorkspace}
+        onOpenBenchmark={onOpenBenchmark}
+      />
 
       {/* Fixed Full-Screen Visual Frame */}
       <div className="frame">

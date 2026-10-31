@@ -65,21 +65,21 @@ export const HeroScene: React.FC<HeroSceneProps> = ({
         <button
           type="button"
           onClick={() => {
-            if ((window as any).openCivoraAIChat) {
+            if (typeof window !== 'undefined' && (window as any).openCivoraAIChat) {
               (window as any).openCivoraAIChat();
             } else {
               document.getElementById('civora-widget-trigger')?.click();
             }
           }}
-          className="cta open-ai-chat group !relative !left-auto !top-auto !translate-y-0"
+          className="open-ai-chat group !relative !left-auto !top-auto !translate-y-0 w-[218px] h-[56px] px-4 rounded-lg bg-[#0071FF]/15 hover:bg-[#0071FF]/30 border border-[#38BDF8]/40 hover:border-[#38BDF8] shadow-[0_0_20px_rgba(0,113,255,0.25)] hover:shadow-[0_0_28px_rgba(56,189,248,0.5)] flex items-center justify-between backdrop-blur-md transition-all cursor-pointer"
           aria-label="Chat with CIVORA AI Agent"
         >
-          <span className="cta-label !text-white group-hover:!text-[#8FC2FF] transition-colors flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] shadow-[0_0_6px_#38BDF8]" />
+          <span className="text-white flex items-center gap-2 font-['Manrope'] font-bold text-xs tracking-[0.085em]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] shadow-[0_0_8px_#38BDF8] shrink-0" />
             CIVORA AI
           </span>
-          <span className="square">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+          <span className="w-6 h-6 rounded-md bg-[#0071FF] shadow-[0_0_12px_rgba(0,113,255,0.7)] group-hover:shadow-[0_0_20px_rgba(0,113,255,0.95)] flex items-center justify-center shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
           </span>
